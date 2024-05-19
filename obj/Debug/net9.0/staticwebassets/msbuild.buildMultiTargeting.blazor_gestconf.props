@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\blazor_gestconf.props" />
+</Project>

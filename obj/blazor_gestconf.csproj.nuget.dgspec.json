@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Programmation\\Visual Studio 2022\\source\\blazor_gestconf\\blazor_gestconf.csproj": {}
+    "C:\\Users\\koudj\\Desktop\\BLAZOR PROJECT\\blazor_gestconf\\blazor_gestconf.csproj": {}
   },
   "projects": {
-    "E:\\Programmation\\Visual Studio 2022\\source\\blazor_gestconf\\blazor_gestconf.csproj": {
+    "C:\\Users\\koudj\\Desktop\\BLAZOR PROJECT\\blazor_gestconf\\blazor_gestconf.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Programmation\\Visual Studio 2022\\source\\blazor_gestconf\\blazor_gestconf.csproj",
+        "projectUniqueName": "C:\\Users\\koudj\\Desktop\\BLAZOR PROJECT\\blazor_gestconf\\blazor_gestconf.csproj",
         "projectName": "blazor_gestconf",
-        "projectPath": "E:\\Programmation\\Visual Studio 2022\\source\\blazor_gestconf\\blazor_gestconf.csproj",
-        "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
-        "outputPath": "E:\\Programmation\\Visual Studio 2022\\source\\blazor_gestconf\\obj\\",
+        "projectPath": "C:\\Users\\koudj\\Desktop\\BLAZOR PROJECT\\blazor_gestconf\\blazor_gestconf.csproj",
+        "packagesPath": "C:\\Users\\koudj\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\koudj\\Desktop\\BLAZOR PROJECT\\blazor_gestconf\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\koudj\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -44,6 +44,16 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
+          "dependencies": {
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[8.4.0, )"
+            },
+            "MySqlConnector": {
+              "target": "Package",
+              "version": "[2.3.7, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
