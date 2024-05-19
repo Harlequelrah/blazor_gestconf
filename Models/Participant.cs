@@ -2,6 +2,6 @@
 {
     public class Participant:User
     {
-       public Participant() : base() { }
+        public Participant() : base() { }
     }
 }

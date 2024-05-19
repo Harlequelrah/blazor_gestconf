@@ -9,6 +9,7 @@
         private DateTime? DateSoumissionDebut { get; set; }
         private DateTime? DateRemiseResultats { get;set; }
         private DateTime? DateSoumissionFin { get; set; }
+        private DateTime? DateInscriptionDebut { get; set; }
         private DateTime? DateInscriptionFin { get; set; }
         private DateTime? DateConferenceDebut { get; set; }
         private DateTime? DateConferenceFin { get; set; }

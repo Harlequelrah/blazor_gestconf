@@ -2,12 +2,14 @@
 {
     public class Article
     {
-        private int id { get; set; }
-        private string? title { get; set; }
-        private string? description { get; set; }
+        private int Id { get; set; }
+        private string? Title { get; set; }
+        private string? Description { get; set; }
         private string? FichierPdf { get; set; }
-        private string? Statut { get; set; }
-        private int authorId { get; set; }
-        private int conferenceId { get; set; }
+        
+        public List<ArticleAuthor> Authors { get; set; }
+        public List<ArticleAuthor> ProofReaders { get; set; }
+
+        private int ConferenceId { get; set; }
     }
 }

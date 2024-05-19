@@ -8,6 +8,8 @@
         private int noteFond { get; set; }
         private int noteForme { get; set; }
         private int notePertinenceScientifique { get; set; }
-        private string? comment { get; set; }
+        private string? Justification { get; set; }
+        private string? Comments { get; set; }
+        private string? Statut { get; set; }
     }
 }
