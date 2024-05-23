@@ -1,7 +1,21 @@
-﻿namespace blazor_gestconf.Models
+﻿using blazor_gestconf.Services;
+
+namespace blazor_gestconf.Models
 {
-    public class Participant:User
+    public class Participant : User
     {
-        public Participant() : base() { }
+        private readonly IParticipantService _participantService;
+
+        public Participant(IParticipantService participantService):base()
+        {
+            _participantService = participantService;
+        }
+
+
+
+        public Participant() : base()
+        {
+
+        }
     }
 }

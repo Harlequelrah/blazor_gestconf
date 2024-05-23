@@ -1,23 +1,27 @@
-﻿namespace blazor_gestconf.Models
+﻿using blazor_gestconf.Services;
+using System.Collections.Generic;
+
+namespace blazor_gestconf.Models
 {
     public class Author : User
     {
+        private readonly IAuthorService _authorService;
+
         public string? University { get; set; }
         public string? Entreprise { get; set; }
+        public ICollection<ArticleAuthor> Articles { get; set; } = new List<ArticleAuthor>(); 
 
-        // Liste des articles associés à cet auteur
-        public List<ArticleAuthor> Articles { get; set; }
-
-        public Author() : base()
+        public Author(IAuthorService authorService) : base()
         {
-            Articles = new List<ArticleAuthor>();
+            _authorService = authorService ?? throw new ArgumentNullException(nameof(authorService));
         }
 
-        public Author(int id, string name, string email, string password, string university, string entreprise) : base(id, name, email, password)
+        public Author(int id, string name, string email, string password, string university, string entreprise, IAuthorService authorService)
+            : base(id, name, email, password)
         {
-            this.University = university;
-            this.Entreprise = entreprise;
-            Articles = new List<ArticleAuthor>();
+            _authorService = authorService ?? throw new ArgumentNullException(nameof(authorService));
+            University = university;
+            Entreprise = entreprise;
         }
     }
 }

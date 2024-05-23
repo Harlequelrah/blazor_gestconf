@@ -1,7 +1,16 @@
-﻿namespace blazor_gestconf.Models
+﻿using blazor_gestconf.Services;
+
+namespace blazor_gestconf.Models
 {
     public class Conference
     {
+        private readonly IConferenceService _conferenceService;
+
+        public Conference(IConferenceService conferenceService)
+        {
+            _conferenceService = conferenceService;
+        }
+
         private int Id { get; set; }
         private string? Name { get; set; }
         private string? Sigle { get; set; }
@@ -13,6 +22,5 @@
         private DateTime? DateInscriptionFin { get; set; }
         private DateTime? DateConferenceDebut { get; set; }
         private DateTime? DateConferenceFin { get; set; }
-
     }
 }

@@ -1,8 +1,14 @@
-﻿namespace blazor_gestconf.Models
+﻿using blazor_gestconf.Services;
+
+namespace blazor_gestconf.Models
 {
-    public class CommitteeMember:User
+    public class CommitteeMember : User
     {
-        public CommitteeMember() : base() { }
-    
+        private readonly ICommitteeMemberService _committeeMemberService;
+
+        public CommitteeMember(ICommitteeMemberService committeeMemberService)
+        {
+            _committeeMemberService = committeeMemberService;
+        }
     }
 }
