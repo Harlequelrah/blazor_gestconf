@@ -1,0 +1,51 @@
+@page "/article"
+@using blazor_gestconf.Models;
+@using blazor_gestconf.Services;
+@inject IArticleService ArticleService
+
+
+
+
+<h3>Liste des Articles</h3>
+
+@if (ListArticles == null)
+{
+    <p><em>Chargement...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var  article in ListArticles)
+            {
+                <tr>
+                    <td>@article.Title</td>
+                    <td>@article.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Article> ListArticles = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListArticles = await ArticleService.GetArticlesAsync();
+    }
+
+
+}
+
+
+
+
+
+

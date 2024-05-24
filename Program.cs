@@ -1,5 +1,6 @@
 using blazor_gestconf.Components;
 using blazor_gestconf.Data;
+using blazor_gestconf.Models;
 using blazor_gestconf.Services ;// Assurez-vous que cet espace de noms est correct pour votre projet
 using Microsoft.EntityFrameworkCore;
 

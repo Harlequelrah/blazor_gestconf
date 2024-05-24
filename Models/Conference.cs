@@ -6,12 +6,16 @@ namespace blazor_gestconf.Models
     {
         private readonly IConferenceService _conferenceService;
 
-        public Conference(IConferenceService conferenceService)
-        {
-            _conferenceService = conferenceService;
+        // public Conference(IConferenceService conferenceService)
+        // {
+        //     _conferenceService = conferenceService;
+        // }
+
+        public Conference(){
+
         }
 
-        private int Id { get; set; }
+        public int Id { get; set; }
         private string? Name { get; set; }
         private string? Sigle { get; set; }
         private string? Theme { get; set; }

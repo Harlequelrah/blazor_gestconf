@@ -6,9 +6,11 @@ namespace blazor_gestconf.Models
     {
         private readonly ICommitteeMemberService _committeeMemberService;
 
-        public CommitteeMember(ICommitteeMemberService committeeMemberService)
-        {
-            _committeeMemberService = committeeMemberService;
-        }
+        public CommitteeMember():base(){}
+
+        // public CommitteeMember(ICommitteeMemberService committeeMemberService)
+        // {
+        //     _committeeMemberService = committeeMemberService;
+        // }
     }
 }

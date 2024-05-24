@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using blazor_gestconf.Services;
 using System.Collections.Generic;
 
@@ -7,9 +8,9 @@ namespace blazor_gestconf.Models
     {
         private readonly IArticleProofReaderService _articleProofReaderService;
 
-        public ArticleProofReader(IArticleProofReaderService articleProofReaderService)
+        public ArticleProofReader()
         {
-            _articleProofReaderService = articleProofReaderService;
+
         }
 
         public int ArticleId { get; set; }
@@ -18,9 +19,8 @@ namespace blazor_gestconf.Models
         public int ProofReaderId { get; set; }
         public ProofReader ProofReader { get; set; }
 
-        // Correction : Ajout de la propriété Relecture
+        [ForeignKey("Relecture")]
+        public int? RelectureId { get; set; } // Permet de stocker la clé étrangère de Relecture
         public Relecture Relecture { get; set; }
-
-    
     }
 }

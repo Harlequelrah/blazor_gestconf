@@ -6,10 +6,10 @@ namespace blazor_gestconf.Models
     {
         private readonly IParticipantService _participantService;
 
-        public Participant(IParticipantService participantService):base()
-        {
-            _participantService = participantService;
-        }
+        // public Participant(IParticipantService participantService):base()
+        // {
+        //     _participantService = participantService;
+        // }
 
 
 

@@ -1,6 +1,5 @@
 ﻿using blazor_gestconf.Services;
 using System.Collections.Generic;
-
 namespace blazor_gestconf.Models
 {
     public class Article
@@ -15,9 +14,20 @@ namespace blazor_gestconf.Models
         public ICollection<ArticleAuthor> Authors { get; set; } = new List<ArticleAuthor>();
         public ICollection<ArticleProofReader> ArticleProofReaders { get; set; } = new List<ArticleProofReader>();
 
-        private readonly IArticleService _articleService;
+        private readonly IArticleService _ArticleService;
 
-        public Article(int id, string title, string description, string fichierPdf, string statut, int conferenceId, IArticleService articleService)
+        // public Article(int id, string title, string description, string fichierPdf, string statut, int conferenceId, IArticleService articleService)
+        // {
+        //     Id = id;
+        //     Title = title;
+        //     Description = description;
+        //     FichierPdf = fichierPdf;
+        //     Statut = statut;
+        //     ConferenceId = conferenceId;
+        //     _ArticleService = articleService;
+        // }
+
+        public Article(int id, string title, string description, string fichierPdf, string statut, int conferenceId)
         {
             Id = id;
             Title = title;
@@ -25,7 +35,8 @@ namespace blazor_gestconf.Models
             FichierPdf = fichierPdf;
             Statut = statut;
             ConferenceId = conferenceId;
-            _articleService = articleService;
         }
+
+
     }
 }

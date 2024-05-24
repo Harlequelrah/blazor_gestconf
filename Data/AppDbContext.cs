@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using blazor_gestconf.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace blazor_gestconf.Data
 {
@@ -50,11 +51,24 @@ namespace blazor_gestconf.Data
                 .WithMany(pr => pr.Articles)
                 .HasForeignKey(apr => apr.ProofReaderId);
 
+            // Configuration de la relation un-à-un entre ArticleProofReader et Relecture
+            modelBuilder.Entity<Relecture>()
+                .HasOne(r => r.ArticleProofReader)
+                .WithOne(apr => apr.Relecture)
+                .HasForeignKey<ArticleProofReader>(apr => apr.RelectureId) // Utilisez la clé étrangère appropriée ici
+                .OnDelete(DeleteBehavior.Cascade); // Supprimez cette ligne si la suppression en cascade n'est pas souhaitée
+
             // Configuration de la relation entre ProofReader et Relecture
             modelBuilder.Entity<ProofReader>()
                 .HasMany(pr => pr.Relectures)
                 .WithOne(r => r.ProofReader)
                 .HasForeignKey(r => r.ProofReaderId);
+
+            // Configuration des clés primaires pour toutes les entités
+            modelBuilder.Entity<Conference>()
+                .HasKey(c => c.Id);
+
+            // Ajoutez les configurations pour d'autres entités si nécessaire
         }
     }
 }

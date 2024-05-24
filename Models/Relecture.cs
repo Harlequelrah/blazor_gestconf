@@ -3,14 +3,13 @@ namespace blazor_gestconf.Models
 {
     public class Relecture
     {
-        private readonly IRelectureService _relectureService;
-
         public Relecture()
         {
-
         }
 
         public int Id { get; set; }
+
+        private readonly IRelectureService _RelectureService;
         public int ProofReaderId { get; set; }
         public ProofReader ProofReader { get; set; }
         public int ArticleProofReaderId { get; set; }
