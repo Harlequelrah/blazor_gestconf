@@ -1,3 +1,4 @@
+// RelectureService
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -6,46 +7,42 @@ using blazor_gestconf.Models;
 
 namespace blazor_gestconf.Services
 {
-    public class RelectureService : IRelectureService
-{
-    private readonly AppDbContext _context;
-
-    public RelectureService(AppDbContext context)
+    public class RelectureService : GenericCrudService<Relecture>
     {
-        _context = context;
-    }
-
-    public async Task<List<Relecture>> GetRelecturesServiceAsync()
-    {
-        return await _context.Relectures.ToListAsync();
-    }
-
-    public async Task<Relecture> GetRelectureServiceByIdAsync(int id)
-    {
-        return await _context.Relectures.FindAsync(id);
-    }
-
-    public async Task AddRelectureServiceAsync(Relecture relecture)
-    {
-        _context.Relectures.Add(relecture);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task UpdateRelectureServiceAsync(Relecture relecture)
-    {
-        _context.Relectures.Update(relecture);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task DeleteRelectureAsync(int id)
-    {
-        var relecture = await _context.Relectures.FindAsync(id);
-        if (relecture != null)
+        public RelectureService(AppDbContext context) : base(context)
         {
-            _context.Relectures.Remove(relecture);
+        }
+
+        public override async Task<List<Relecture>> GetAllAsync()
+        {
+            return await _context.Relectures.ToListAsync();
+        }
+
+        public override async Task<Relecture> GetByIdAsync(int id)
+        {
+            return await _context.Relectures.FindAsync(id);
+        }
+
+        public override async Task AddAsync(Relecture entity)
+        {
+            _context.Relectures.Add(entity);
             await _context.SaveChangesAsync();
         }
-    }
-}
 
+        public override async Task UpdateAsync(Relecture entity)
+        {
+            _context.Relectures.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public override async Task DeleteAsync(int id)
+        {
+            var entity = await _context.Relectures.FindAsync(id);
+            if (entity != null)
+            {
+                _context.Relectures.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
+        }
+    }
 }

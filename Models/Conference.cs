@@ -4,12 +4,7 @@ namespace blazor_gestconf.Models
 {
     public class Conference
     {
-        private readonly IConferenceService _conferenceService;
-
-        // public Conference(IConferenceService conferenceService)
-        // {
-        //     _conferenceService = conferenceService;
-        // }
+  
 
         public Conference(){
 

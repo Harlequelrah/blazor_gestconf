@@ -1,3 +1,4 @@
+// AuthorService
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -6,46 +7,42 @@ using blazor_gestconf.Models;
 
 namespace blazor_gestconf.Services
 {
-    public class AuthorService : IAuthorService
-{
-    private readonly AppDbContext _context;
-
-    public AuthorService(AppDbContext context)
+    public class AuthorService : GenericCrudService<Author>
     {
-        _context = context;
-    }
-
-    public async Task<List<Author>> GetAuthorsAsync()
-    {
-        return await _context.Authors.ToListAsync();
-    }
-
-    public async Task<Author> GetAuthorByIdAsync(int id)
-    {
-        return await _context.Authors.FindAsync(id);
-    }
-
-    public async Task AddAuthorAsync(Author author)
-    {
-        _context.Authors.Add(author);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task UpdateAuthorAsync(Author author)
-    {
-        _context.Authors.Update(author);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task DeleteAuthorAsync(int id)
-    {
-        var author = await _context.Authors.FindAsync(id);
-        if (author != null)
+        public AuthorService(AppDbContext context) : base(context)
         {
-            _context.Authors.Remove(author);
+        }
+
+        public override async Task<List<Author>> GetAllAsync()
+        {
+            return await _context.Authors.ToListAsync();
+        }
+
+        public override async Task<Author> GetByIdAsync(int id)
+        {
+            return await _context.Authors.FindAsync(id);
+        }
+
+        public override async Task AddAsync(Author entity)
+        {
+            _context.Authors.Add(entity);
             await _context.SaveChangesAsync();
         }
-    }
-}
 
+        public override async Task UpdateAsync(Author entity)
+        {
+            _context.Authors.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public override async Task DeleteAsync(int id)
+        {
+            var entity = await _context.Authors.FindAsync(id);
+            if (entity != null)
+            {
+                _context.Authors.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
+        }
+    }
 }

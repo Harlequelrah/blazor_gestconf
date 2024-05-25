@@ -1,3 +1,4 @@
+// ParticipantService
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -6,46 +7,42 @@ using blazor_gestconf.Models;
 
 namespace blazor_gestconf.Services
 {
-    public class ParticipantService : IParticipantService
-{
-    private readonly AppDbContext _context;
-
-    public ParticipantService(AppDbContext context)
+    public class ParticipantService : GenericCrudService<Participant>
     {
-        _context = context;
-    }
-
-    public async Task<List<Participant>> GetParticipantsAsync()
-    {
-        return await _context.Participants.ToListAsync();
-    }
-
-    public async Task<Participant> GetParticipantByIdAsync(int id)
-    {
-        return await _context.Participants.FindAsync(id);
-    }
-
-    public async Task AddParticipantAsync(Participant participant)
-    {
-        _context.Participants.Add(participant);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task UpdateParticipantAsync(Participant participant)
-    {
-        _context.Participants.Update(participant);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task DeleteParticipantAsync(int id)
-    {
-        var participant = await _context.Participants.FindAsync(id);
-        if (participant != null)
+        public ParticipantService(AppDbContext context) : base(context)
         {
-            _context.Participants.Remove(participant);
+        }
+
+        public override async Task<List<Participant>> GetAllAsync()
+        {
+            return await _context.Participants.ToListAsync();
+        }
+
+        public override async Task<Participant> GetByIdAsync(int id)
+        {
+            return await _context.Participants.FindAsync(id);
+        }
+
+        public override async Task AddAsync(Participant entity)
+        {
+            _context.Participants.Add(entity);
             await _context.SaveChangesAsync();
         }
-    }
-}
 
+        public override async Task UpdateAsync(Participant entity)
+        {
+            _context.Participants.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public override async Task DeleteAsync(int id)
+        {
+            var entity = await _context.Participants.FindAsync(id);
+            if (entity != null)
+            {
+                _context.Participants.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
+        }
+    }
 }

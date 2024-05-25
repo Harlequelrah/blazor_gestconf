@@ -6,46 +6,45 @@ using blazor_gestconf.Models;
 
 namespace blazor_gestconf.Services
 {
-    public class AdministratorService : IAdministratorService
-{
-    private readonly AppDbContext _context;
-
-    public AdministratorService(AppDbContext context)
+    public class AdministratorService : GenericCrudService<Administrator>
     {
-        _context = context;
-    }
-
-    public async Task<List<Administrator>> GetAdministratorsAsync()
-    {
-        return await _context.Administrators.ToListAsync();
-    }
-
-    public async Task<Administrator> GetAdministratorByIdAsync(int id)
-    {
-        return await _context.Administrators.FindAsync(id);
-    }
-
-    public async Task AddAdministratorAsync(Administrator administrator)
-    {
-        _context.Administrators.Add(administrator);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task UpdateAdministratorAsync(Administrator administrator)
-    {
-        _context.Administrators.Update(administrator);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task DeleteAdministratorAsync(int id)
-    {
-        var administrator = await _context.Administrators.FindAsync(id);
-        if (administrator != null)
+        public AdministratorService(AppDbContext context) : base(context)
         {
-            _context.Administrators.Remove(administrator);
+        }
+
+        // Implémentation des méthodes CRUD spécifiques à Administrator
+        public override async Task<List<Administrator>> GetAllAsync()
+        {
+            return await _context.Administrators.ToListAsync();
+        }
+
+        public override async Task<Administrator> GetByIdAsync(int id)
+        {
+            return await _context.Administrators.FindAsync(id);
+        }
+
+        public override async Task AddAsync(Administrator administrator)
+        {
+            _context.Administrators.Add(administrator);
             await _context.SaveChangesAsync();
         }
-    }
-}
 
+        public override async Task UpdateAsync(Administrator administrator)
+        {
+            _context.Administrators.Update(administrator);
+            await _context.SaveChangesAsync();
+        }
+
+        public override async Task DeleteAsync(int id)
+        {
+            var administrator = await _context.Administrators.FindAsync(id);
+            if (administrator != null)
+            {
+                _context.Administrators.Remove(administrator);
+                await _context.SaveChangesAsync();
+            }
+        }
+    }
+
+    // Faire de même pour les autres classes d'entité...
 }

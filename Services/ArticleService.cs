@@ -6,46 +6,43 @@ using blazor_gestconf.Models;
 
 namespace blazor_gestconf.Services
 {
-    public class ArticleService : IArticleService
-{
-    private readonly AppDbContext _context;
-
-    public ArticleService(AppDbContext context)
+    public class ArticleService : GenericCrudService<Article>
     {
-        _context = context;
-    }
-
-    public async Task<List<Article>> GetArticlesAsync()
-    {
-        return await _context.Articles.ToListAsync();
-    }
-
-    public async Task<Article> GetArticleByIdAsync(int id)
-    {
-        return await _context.Articles.FindAsync(id);
-    }
-
-    public async Task AddArticleAsync(Article article)
-    {
-        _context.Articles.Add(article);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task UpdateArticleAsync(Article article)
-    {
-        _context.Articles.Update(article);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task DeleteArticleAsync(int id)
-    {
-        var article = await _context.Articles.FindAsync(id);
-        if (article != null)
+        public ArticleService(AppDbContext context) : base(context)
         {
-            _context.Articles.Remove(article);
+        }
+
+        // Implémentation des méthodes CRUD spécifiques à Article
+        public override async Task<List<Article>> GetAllAsync()
+        {
+            return await _context.Articles.ToListAsync();
+        }
+
+        public override async Task<Article> GetByIdAsync(int id)
+        {
+            return await _context.Articles.FindAsync(id);
+        }
+
+        public override async Task AddAsync(Article article)
+        {
+            _context.Articles.Add(article);
             await _context.SaveChangesAsync();
         }
-    }
-}
 
+        public override async Task UpdateAsync(Article article)
+        {
+            _context.Articles.Update(article);
+            await _context.SaveChangesAsync();
+        }
+
+        public override async Task DeleteAsync(int id)
+        {
+            var article = await _context.Articles.FindAsync(id);
+            if (article != null)
+            {
+                _context.Articles.Remove(article);
+                await _context.SaveChangesAsync();
+            }
+        }
+    }
 }

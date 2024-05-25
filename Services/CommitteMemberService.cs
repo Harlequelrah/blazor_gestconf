@@ -6,47 +6,42 @@ using blazor_gestconf.Models;
 
 namespace blazor_gestconf.Services
 {
-public class CommitteeMemberService : ICommitteeMemberService
-{
-    private readonly AppDbContext _context;
-
-    public CommitteeMemberService(AppDbContext context)
+    public class CommitteeMemberService : GenericCrudService<CommitteeMember>
     {
-        _context = context;
-    }
-
-    public async Task<List<CommitteeMember>> GetCommitteeMembersAsync()
-    {
-        return await _context.CommitteeMembers.ToListAsync();
-    }
-
-    public async Task<CommitteeMember> GetCommitteeMemberByIdAsync(int id)
-    {
-        return await _context.CommitteeMembers.FindAsync(id);
-    }
-
-    public async Task AddCommitteeMemberAsync(CommitteeMember CommitteeMember)
-    {
-        _context.CommitteeMembers.Add(CommitteeMember);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task UpdateCommitteeMemberAsync(CommitteeMember CommitteeMember)
-    {
-        _context.CommitteeMembers.Update(CommitteeMember);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task DeleteCommitteeMemberAsync(int id)
-    {
-        var CommitteeMember = await _context.CommitteeMembers.FindAsync(id);
-        if (CommitteeMember != null)
+        public CommitteeMemberService(AppDbContext context) : base(context)
         {
-            _context.CommitteeMembers.Remove(CommitteeMember);
+        }
+
+        public override async Task<List<CommitteeMember>> GetAllAsync()
+        {
+            return await _context.CommitteeMembers.ToListAsync();
+        }
+
+        public override async Task<CommitteeMember> GetByIdAsync(int id)
+        {
+            return await _context.CommitteeMembers.FindAsync(id);
+        }
+
+        public override async Task AddAsync(CommitteeMember entity)
+        {
+            _context.CommitteeMembers.Add(entity);
             await _context.SaveChangesAsync();
         }
+
+        public override async Task UpdateAsync(CommitteeMember entity)
+        {
+            _context.CommitteeMembers.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public override async Task DeleteAsync(int id)
+        {
+            var entity = await _context.CommitteeMembers.FindAsync(id);
+            if (entity != null)
+            {
+                _context.CommitteeMembers.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
-}
-
-
 }

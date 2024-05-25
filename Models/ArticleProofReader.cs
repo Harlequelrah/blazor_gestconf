@@ -6,7 +6,7 @@ namespace blazor_gestconf.Models
 {
     public class ArticleProofReader
     {
-        private readonly IArticleProofReaderService _articleProofReaderService;
+
 
         public ArticleProofReader()
         {

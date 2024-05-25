@@ -20,16 +20,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 
-builder.Services.AddScoped<IAuthorService, AuthorService>();
-builder.Services.AddScoped<IArticleService, ArticleService>();
-builder.Services.AddScoped<IProofReaderService, ProofReaderService>();
-builder.Services.AddScoped<IConferenceService, ConferenceService>();
-builder.Services.AddScoped<IRelectureService, RelectureService>();
-builder.Services.AddScoped<IParticipantService, ParticipantService>();
-builder.Services.AddScoped<ICommitteeMemberService, CommitteeMemberService>();
-builder.Services.AddScoped<IAdministratorService, AdministratorService>();
-builder.Services.AddScoped<IArticleAuthorService, ArticleAuthorService>();
-builder.Services.AddScoped<IArticleProofReaderService, ArticleProofReaderService>();
+builder.Services.AddScoped<AuthorService>();
+builder.Services.AddScoped<ArticleService>();
+builder.Services.AddScoped<ProofReaderService>();
+builder.Services.AddScoped<ConferenceService>();
+builder.Services.AddScoped<RelectureService>();
+builder.Services.AddScoped<ParticipantService>();
+builder.Services.AddScoped<CommitteeMemberService>();
+builder.Services.AddScoped<AdministratorService>();
+builder.Services.AddScoped<ArticleAuthorService>();
+builder.Services.AddScoped<ArticleProofReaderService>();
 
 var app = builder.Build();
 

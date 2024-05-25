@@ -14,18 +14,6 @@ namespace blazor_gestconf.Models
         public ICollection<ArticleAuthor> Authors { get; set; } = new List<ArticleAuthor>();
         public ICollection<ArticleProofReader> ArticleProofReaders { get; set; } = new List<ArticleProofReader>();
 
-        private readonly IArticleService _ArticleService;
-
-        // public Article(int id, string title, string description, string fichierPdf, string statut, int conferenceId, IArticleService articleService)
-        // {
-        //     Id = id;
-        //     Title = title;
-        //     Description = description;
-        //     FichierPdf = fichierPdf;
-        //     Statut = statut;
-        //     ConferenceId = conferenceId;
-        //     _ArticleService = articleService;
-        // }
 
         public Article(int id, string title, string description, string fichierPdf, string statut, int conferenceId)
         {

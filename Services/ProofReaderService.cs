@@ -1,50 +1,48 @@
+// ProofReaderService
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using blazor_gestconf.Data;
 using blazor_gestconf.Models;
 
-namespace blazor_gestconf.Services{
-    public class ProofReaderService : IProofReaderService
+namespace blazor_gestconf.Services
 {
-    private readonly AppDbContext _context;
-
-    public ProofReaderService(AppDbContext context)
+    public class ProofReaderService : GenericCrudService<ProofReader>
     {
-        _context = context;
-    }
-
-    public async Task<List<ProofReader>> GetProofReadersServiceAsync()
-    {
-        return await _context.ProofReaders.ToListAsync();
-    }
-
-    public async Task<ProofReader> GetProofReaderServiceByIdAsync(int id)
-    {
-        return await _context.ProofReaders.FindAsync(id);
-    }
-
-    public async Task AddProofReaderServiceAsync(ProofReader proofReader)
-    {
-        _context.ProofReaders.Add(proofReader);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task UpdateProofReaderServiceAsync(ProofReader proofReader)
-    {
-        _context.ProofReaders.Update(proofReader);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task DeleteProofReaderServiceAsync(int id)
-    {
-        var proofReader = await _context.ProofReaders.FindAsync(id);
-        if (proofReader != null)
+        public ProofReaderService(AppDbContext context) : base(context)
         {
-            _context.ProofReaders.Remove(proofReader);
+        }
+
+        public override async Task<List<ProofReader>> GetAllAsync()
+        {
+            return await _context.ProofReaders.ToListAsync();
+        }
+
+        public override async Task<ProofReader> GetByIdAsync(int id)
+        {
+            return await _context.ProofReaders.FindAsync(id);
+        }
+
+        public override async Task AddAsync(ProofReader entity)
+        {
+            _context.ProofReaders.Add(entity);
             await _context.SaveChangesAsync();
         }
-    }
-}
 
+        public override async Task UpdateAsync(ProofReader entity)
+        {
+            _context.ProofReaders.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public override async Task DeleteAsync(int id)
+        {
+            var entity = await _context.ProofReaders.FindAsync(id);
+            if (entity != null)
+            {
+                _context.ProofReaders.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
+        }
+    }
 }

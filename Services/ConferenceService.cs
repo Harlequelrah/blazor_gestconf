@@ -1,3 +1,4 @@
+// ConferenceService
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -6,46 +7,42 @@ using blazor_gestconf.Models;
 
 namespace blazor_gestconf.Services
 {
-    public class ConferenceService : IConferenceService
-{
-    private readonly AppDbContext _context;
-
-    public ConferenceService(AppDbContext context)
+    public class ConferenceService : GenericCrudService<Conference>
     {
-        _context = context;
-    }
-
-    public async Task<List<Conference>> GetConferencesAsync()
-    {
-        return await _context.Conferences.ToListAsync();
-    }
-
-    public async Task<Conference> GetConferenceByIdAsync(int id)
-    {
-        return await _context.Conferences.FindAsync(id);
-    }
-
-    public async Task AddConferenceAsync(Conference conference)
-    {
-        _context.Conferences.Add(conference);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task UpdateConferenceAsync(Conference conference)
-    {
-        _context.Conferences.Update(conference);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task DeleteConferenceAsync(int id)
-    {
-        var conference = await _context.Conferences.FindAsync(id);
-        if (conference != null)
+        public ConferenceService(AppDbContext context) : base(context)
         {
-            _context.Conferences.Remove(conference);
+        }
+
+        public override async Task<List<Conference>> GetAllAsync()
+        {
+            return await _context.Conferences.ToListAsync();
+        }
+
+        public override async Task<Conference> GetByIdAsync(int id)
+        {
+            return await _context.Conferences.FindAsync(id);
+        }
+
+        public override async Task AddAsync(Conference entity)
+        {
+            _context.Conferences.Add(entity);
             await _context.SaveChangesAsync();
         }
-    }
-}
 
+        public override async Task UpdateAsync(Conference entity)
+        {
+            _context.Conferences.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public override async Task DeleteAsync(int id)
+        {
+            var entity = await _context.Conferences.FindAsync(id);
+            if (entity != null)
+            {
+                _context.Conferences.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
+        }
+    }
 }

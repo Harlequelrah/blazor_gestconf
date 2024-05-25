@@ -1,3 +1,4 @@
+// ArticleProofReaderService
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -6,46 +7,42 @@ using blazor_gestconf.Models;
 
 namespace blazor_gestconf.Services
 {
-    public class ArticleProofReaderService : IArticleProofReaderService
-{
-    private readonly AppDbContext _context;
-
-    public ArticleProofReaderService(AppDbContext context)
+    public class ArticleProofReaderService : GenericCrudService<ArticleProofReader>
     {
-        _context = context;
-    }
-
-    public async Task<List<ArticleProofReader>> GetArticleProofReadersAsync()
-    {
-        return await _context.ArticleProofReaders.ToListAsync();
-    }
-
-    public async Task<ArticleProofReader> GetArticleProofReaderByIdAsync(int id)
-    {
-        return await _context.ArticleProofReaders.FindAsync(id);
-    }
-
-    public async Task AddArticleProofReaderAsync(ArticleProofReader ArticleProofReader)
-    {
-        _context.ArticleProofReaders.Add(ArticleProofReader);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task UpdateArticleProofReaderAsync(ArticleProofReader ArticleProofReader)
-    {
-        _context.ArticleProofReaders.Update(ArticleProofReader);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task DeleteArticleProofReaderAsync(int id)
-    {
-        var ArticleProofReader = await _context.ArticleProofReaders.FindAsync(id);
-        if (ArticleProofReader != null)
+        public ArticleProofReaderService(AppDbContext context) : base(context)
         {
-            _context.ArticleProofReaders.Remove(ArticleProofReader);
+        }
+
+        public override async Task<List<ArticleProofReader>> GetAllAsync()
+        {
+            return await _context.ArticleProofReaders.ToListAsync();
+        }
+
+        public override async Task<ArticleProofReader> GetByIdAsync(int id)
+        {
+            return await _context.ArticleProofReaders.FindAsync(id);
+        }
+
+        public override async Task AddAsync(ArticleProofReader entity)
+        {
+            _context.ArticleProofReaders.Add(entity);
             await _context.SaveChangesAsync();
         }
-    }
-}
 
+        public override async Task UpdateAsync(ArticleProofReader entity)
+        {
+            _context.ArticleProofReaders.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public override async Task DeleteAsync(int id)
+        {
+            var entity = await _context.ArticleProofReaders.FindAsync(id);
+            if (entity != null)
+            {
+                _context.ArticleProofReaders.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
+        }
+    }
 }
