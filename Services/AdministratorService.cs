@@ -12,7 +12,6 @@ namespace blazor_gestconf.Services
         {
         }
 
-        // Implémentation des méthodes CRUD spécifiques à Administrator
         public override async Task<List<Administrator>> GetAllAsync()
         {
             return await _context.Administrators.ToListAsync();
@@ -45,6 +44,4 @@ namespace blazor_gestconf.Services
             }
         }
     }
-
-    // Faire de même pour les autres classes d'entité...
 }

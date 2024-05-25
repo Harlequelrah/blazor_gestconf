@@ -19,9 +19,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 
-
-builder.Services.AddScoped<AuthorService>();
 builder.Services.AddScoped<ArticleService>();
+builder.Services.AddScoped<AuthorService>();
 builder.Services.AddScoped<ProofReaderService>();
 builder.Services.AddScoped<ConferenceService>();
 builder.Services.AddScoped<RelectureService>();

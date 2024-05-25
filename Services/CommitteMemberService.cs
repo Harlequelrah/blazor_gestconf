@@ -22,24 +22,24 @@ namespace blazor_gestconf.Services
             return await _context.CommitteeMembers.FindAsync(id);
         }
 
-        public override async Task AddAsync(CommitteeMember entity)
+        public override async Task AddAsync(CommitteeMember committeeMember)
         {
-            _context.CommitteeMembers.Add(entity);
+            _context.CommitteeMembers.Add(committeeMember);
             await _context.SaveChangesAsync();
         }
 
-        public override async Task UpdateAsync(CommitteeMember entity)
+        public override async Task UpdateAsync(CommitteeMember committeeMember)
         {
-            _context.CommitteeMembers.Update(entity);
+            _context.CommitteeMembers.Update(committeeMember);
             await _context.SaveChangesAsync();
         }
 
         public override async Task DeleteAsync(int id)
         {
-            var entity = await _context.CommitteeMembers.FindAsync(id);
-            if (entity != null)
+            var committeeMember = await _context.CommitteeMembers.FindAsync(id);
+            if (committeeMember != null)
             {
-                _context.CommitteeMembers.Remove(entity);
+                _context.CommitteeMembers.Remove(committeeMember);
                 await _context.SaveChangesAsync();
             }
         }

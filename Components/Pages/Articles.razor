@@ -2,10 +2,11 @@
 @using blazor_gestconf.Models
 @using blazor_gestconf.Services
 @inject ArticleService ArticleService
+@rendermode InteractiveServer
 
 <h3>Liste des Articles</h3>
 
-@if (ListArticles == null)
+@if (ListArticles == null || ListArticles.Count == 0)
 {
     <p><em>Chargement...</em></p>
 }
@@ -14,27 +15,111 @@ else
     <table class="table">
         <thead>
             <tr>
+                <th>Id</th>
                 <th>Title</th>
                 <th>Description</th>
+                <th>Statut</th>
+                <th>FichierPdf</th>
+                <th>ConferenceId</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var article in ListArticles)
             {
                 <tr>
+                    <td>@article.Id</td>
                     <td>@article.Title</td>
                     <td>@article.Description</td>
+                    <td>@article.Statut</td>
+                    <td>@article.FichierPdf</td>
+                    <td>@article.ConferenceId</td>
                 </tr>
             }
         </tbody>
     </table>
 }
 
+<form>
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="inputGroup-sizing-default">Id</span>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" @bind="A.Id" />
+    </div>
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="inputGroup-sizing-default">Titre</span>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" @bind="A.Title" />
+    </div>
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="inputGroup-sizing-default">Description</span>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" @bind="A.Description" />
+    </div>
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="inputGroup-sizing-default">FichierPdf</span>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" @bind="A.FichierPdf" />
+    </div>
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="inputGroup-sizing-default">Statut</span>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" @bind="A.Statut" />
+    </div>
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="inputGroup-sizing-default">ConferenceID</span>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" @bind="A.ConferenceId" />
+    </div>
+
+    <div>
+        <button type="button" class="btn btn-danger" @onclick="InsertArt">Insert</button>
+        <button type="button" class="btn btn-danger" @onclick="DeleteArt">Delete</button>
+    </div>
+</form>
+
 @code {
-    private List<Article> ListArticles = new();
+    private List<Article> ListArticles = new List<Article>();
+    private Article A = new Article();
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadArticlesAsync();
+    }
+
+    private async Task LoadArticlesAsync()
+    {
         ListArticles = await ArticleService.GetAllAsync();
+    }
+
+    private async Task InsertArt()
+    {
+        Console.WriteLine("InsertArt method started");
+
+        if (!string.IsNullOrWhiteSpace(A.Title) && !string.IsNullOrWhiteSpace(A.Description))
+        {
+            Console.WriteLine("Inserting article: " + A.Title);
+            await ArticleService.AddAsync(A);
+            await LoadArticlesAsync();
+            A = new Article();
+        }
+        else
+        {
+            Console.WriteLine("Title or Description is empty");
+        }
+
+        Console.WriteLine("InsertArt method finished");
+    }
+
+    private async Task DeleteArt()
+    {
+        Console.WriteLine("DeleteArt method started");
+
+        if (A.Id != 0)
+        {
+            Console.WriteLine("Deleting article with Id: " + A.Id);
+            await ArticleService.DeleteAsync(A.Id);
+            await LoadArticlesAsync();
+            A = new Article();
+        }
+        else
+        {
+            Console.WriteLine("Article Id is zero");
+        }
+
+        Console.WriteLine("DeleteArt method finished");
     }
 }

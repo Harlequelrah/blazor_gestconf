@@ -4,22 +4,22 @@ namespace blazor_gestconf.Models
 {
     public class Conference
     {
-  
+
 
         public Conference(){
 
         }
 
         public int Id { get; set; }
-        private string? Name { get; set; }
-        private string? Sigle { get; set; }
-        private string? Theme { get; set; }
-        private DateTime? DateSoumissionDebut { get; set; }
-        private DateTime? DateRemiseResultats { get;set; }
-        private DateTime? DateSoumissionFin { get; set; }
-        private DateTime? DateInscriptionDebut { get; set; }
-        private DateTime? DateInscriptionFin { get; set; }
-        private DateTime? DateConferenceDebut { get; set; }
-        private DateTime? DateConferenceFin { get; set; }
+        public string? Name { get; set; }
+        public string? Sigle { get; set; }
+        public string? Theme { get; set; }
+        public DateTime? DateSoumissionDebut { get; set; }
+        public DateTime? DateRemiseResultats { get;set; }
+        public DateTime? DateSoumissionFin { get; set; }
+        public DateTime? DateInscriptionDebut { get; set; }
+        public DateTime? DateInscriptionFin { get; set; }
+        public DateTime? DateConferenceDebut { get; set; }
+        public DateTime? DateConferenceFin { get; set; }
     }
 }

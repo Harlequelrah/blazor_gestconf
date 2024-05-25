@@ -1,4 +1,3 @@
-// ConferenceService
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -23,24 +22,24 @@ namespace blazor_gestconf.Services
             return await _context.Conferences.FindAsync(id);
         }
 
-        public override async Task AddAsync(Conference entity)
+        public override async Task AddAsync(Conference conference)
         {
-            _context.Conferences.Add(entity);
+            _context.Conferences.Add(conference);
             await _context.SaveChangesAsync();
         }
 
-        public override async Task UpdateAsync(Conference entity)
+        public override async Task UpdateAsync(Conference conference)
         {
-            _context.Conferences.Update(entity);
+            _context.Conferences.Update(conference);
             await _context.SaveChangesAsync();
         }
 
         public override async Task DeleteAsync(int id)
         {
-            var entity = await _context.Conferences.FindAsync(id);
-            if (entity != null)
+            var conference = await _context.Conferences.FindAsync(id);
+            if (conference != null)
             {
-                _context.Conferences.Remove(entity);
+                _context.Conferences.Remove(conference);
                 await _context.SaveChangesAsync();
             }
         }

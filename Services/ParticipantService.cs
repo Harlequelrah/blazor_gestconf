@@ -1,4 +1,3 @@
-// ParticipantService
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -23,24 +22,24 @@ namespace blazor_gestconf.Services
             return await _context.Participants.FindAsync(id);
         }
 
-        public override async Task AddAsync(Participant entity)
+        public override async Task AddAsync(Participant participant)
         {
-            _context.Participants.Add(entity);
+            _context.Participants.Add(participant);
             await _context.SaveChangesAsync();
         }
 
-        public override async Task UpdateAsync(Participant entity)
+        public override async Task UpdateAsync(Participant participant)
         {
-            _context.Participants.Update(entity);
+            _context.Participants.Update(participant);
             await _context.SaveChangesAsync();
         }
 
         public override async Task DeleteAsync(int id)
         {
-            var entity = await _context.Participants.FindAsync(id);
-            if (entity != null)
+            var participant = await _context.Participants.FindAsync(id);
+            if (participant != null)
             {
-                _context.Participants.Remove(entity);
+                _context.Participants.Remove(participant);
                 await _context.SaveChangesAsync();
             }
         }

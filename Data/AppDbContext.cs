@@ -55,8 +55,8 @@ namespace blazor_gestconf.Data
             modelBuilder.Entity<Relecture>()
                 .HasOne(r => r.ArticleProofReader)
                 .WithOne(apr => apr.Relecture)
-                .HasForeignKey<ArticleProofReader>(apr => apr.RelectureId) // Utilisez la clé étrangère appropriée ici
-                .OnDelete(DeleteBehavior.Cascade); // Supprimez cette ligne si la suppression en cascade n'est pas souhaitée
+                .HasForeignKey<ArticleProofReader>(apr => apr.RelectureId) ;// Utilisez la clé étrangère appropriée ici
+                // .OnDelete(DeleteBehavior.Cascade); Supprimez cette ligne si la suppression en cascade n'est pas souhaitée
 
             // Configuration de la relation entre ProofReader et Relecture
             modelBuilder.Entity<ProofReader>()

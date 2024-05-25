@@ -1,4 +1,3 @@
-// ArticleProofReaderService
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -23,24 +22,24 @@ namespace blazor_gestconf.Services
             return await _context.ArticleProofReaders.FindAsync(id);
         }
 
-        public override async Task AddAsync(ArticleProofReader entity)
+        public override async Task AddAsync(ArticleProofReader articleProofReader)
         {
-            _context.ArticleProofReaders.Add(entity);
+            _context.ArticleProofReaders.Add(articleProofReader);
             await _context.SaveChangesAsync();
         }
 
-        public override async Task UpdateAsync(ArticleProofReader entity)
+        public override async Task UpdateAsync(ArticleProofReader articleProofReader)
         {
-            _context.ArticleProofReaders.Update(entity);
+            _context.ArticleProofReaders.Update(articleProofReader);
             await _context.SaveChangesAsync();
         }
 
         public override async Task DeleteAsync(int id)
         {
-            var entity = await _context.ArticleProofReaders.FindAsync(id);
-            if (entity != null)
+            var articleProofReader = await _context.ArticleProofReaders.FindAsync(id);
+            if (articleProofReader != null)
             {
-                _context.ArticleProofReaders.Remove(entity);
+                _context.ArticleProofReaders.Remove(articleProofReader);
                 await _context.SaveChangesAsync();
             }
         }

@@ -22,24 +22,24 @@ namespace blazor_gestconf.Services
             return await _context.ArticleAuthors.FindAsync(id);
         }
 
-        public override async Task AddAsync(ArticleAuthor entity)
+        public override async Task AddAsync(ArticleAuthor articleAuthor)
         {
-            _context.ArticleAuthors.Add(entity);
+            _context.ArticleAuthors.Add(articleAuthor);
             await _context.SaveChangesAsync();
         }
 
-        public override async Task UpdateAsync(ArticleAuthor entity)
+        public override async Task UpdateAsync(ArticleAuthor articleAuthor)
         {
-            _context.ArticleAuthors.Update(entity);
+            _context.ArticleAuthors.Update(articleAuthor);
             await _context.SaveChangesAsync();
         }
 
         public override async Task DeleteAsync(int id)
         {
-            var entity = await _context.ArticleAuthors.FindAsync(id);
-            if (entity != null)
+            var articleAuthor = await _context.ArticleAuthors.FindAsync(id);
+            if (articleAuthor != null)
             {
-                _context.ArticleAuthors.Remove(entity);
+                _context.ArticleAuthors.Remove(articleAuthor);
                 await _context.SaveChangesAsync();
             }
         }

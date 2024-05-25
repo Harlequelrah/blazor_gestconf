@@ -1,4 +1,3 @@
-// AuthorService
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -23,24 +22,24 @@ namespace blazor_gestconf.Services
             return await _context.Authors.FindAsync(id);
         }
 
-        public override async Task AddAsync(Author entity)
+        public override async Task AddAsync(Author author)
         {
-            _context.Authors.Add(entity);
+            _context.Authors.Add(author);
             await _context.SaveChangesAsync();
         }
 
-        public override async Task UpdateAsync(Author entity)
+        public override async Task UpdateAsync(Author author)
         {
-            _context.Authors.Update(entity);
+            _context.Authors.Update(author);
             await _context.SaveChangesAsync();
         }
 
         public override async Task DeleteAsync(int id)
         {
-            var entity = await _context.Authors.FindAsync(id);
-            if (entity != null)
+            var author = await _context.Authors.FindAsync(id);
+            if (author != null)
             {
-                _context.Authors.Remove(entity);
+                _context.Authors.Remove(author);
                 await _context.SaveChangesAsync();
             }
         }

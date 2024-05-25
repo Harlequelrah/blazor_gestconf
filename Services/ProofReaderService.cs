@@ -1,4 +1,3 @@
-// ProofReaderService
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -23,24 +22,24 @@ namespace blazor_gestconf.Services
             return await _context.ProofReaders.FindAsync(id);
         }
 
-        public override async Task AddAsync(ProofReader entity)
+        public override async Task AddAsync(ProofReader proofReader)
         {
-            _context.ProofReaders.Add(entity);
+            _context.ProofReaders.Add(proofReader);
             await _context.SaveChangesAsync();
         }
 
-        public override async Task UpdateAsync(ProofReader entity)
+        public override async Task UpdateAsync(ProofReader proofReader)
         {
-            _context.ProofReaders.Update(entity);
+            _context.ProofReaders.Update(proofReader);
             await _context.SaveChangesAsync();
         }
 
         public override async Task DeleteAsync(int id)
         {
-            var entity = await _context.ProofReaders.FindAsync(id);
-            if (entity != null)
+            var proofReader = await _context.ProofReaders.FindAsync(id);
+            if (proofReader != null)
             {
-                _context.ProofReaders.Remove(entity);
+                _context.ProofReaders.Remove(proofReader);
                 await _context.SaveChangesAsync();
             }
         }

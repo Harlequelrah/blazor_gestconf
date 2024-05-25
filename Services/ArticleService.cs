@@ -12,7 +12,6 @@ namespace blazor_gestconf.Services
         {
         }
 
-        // Implémentation des méthodes CRUD spécifiques à Article
         public override async Task<List<Article>> GetAllAsync()
         {
             return await _context.Articles.ToListAsync();
