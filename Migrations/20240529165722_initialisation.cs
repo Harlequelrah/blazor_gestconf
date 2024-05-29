@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace blazor_gestconf.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class initialisation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,11 +21,11 @@ namespace blazor_gestconf.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true)
+                    Name = table.Column<string>(type: "varchar(150)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Email = table.Column<string>(type: "longtext", nullable: true)
+                    Email = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Password = table.Column<string>(type: "longtext", nullable: true)
+                    Password = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -39,13 +40,13 @@ namespace blazor_gestconf.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Title = table.Column<string>(type: "longtext", nullable: false)
+                    Title = table.Column<string>(type: "varchar(100)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "longtext", nullable: false)
+                    Description = table.Column<string>(type: "varchar(150)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    FichierPdf = table.Column<string>(type: "longtext", nullable: false)
+                    FichierPdf = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Statut = table.Column<string>(type: "longtext", nullable: false)
+                    Statut = table.Column<string>(type: "varchar(100)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ConferenceId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -61,15 +62,15 @@ namespace blazor_gestconf.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    University = table.Column<string>(type: "longtext", nullable: true)
+                    University = table.Column<string>(type: "varchar(100)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Entreprise = table.Column<string>(type: "longtext", nullable: true)
+                    Entreprise = table.Column<string>(type: "varchar(100)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Name = table.Column<string>(type: "longtext", nullable: true)
+                    Name = table.Column<string>(type: "varchar(150)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Email = table.Column<string>(type: "longtext", nullable: true)
+                    Email = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Password = table.Column<string>(type: "longtext", nullable: true)
+                    Password = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -84,11 +85,11 @@ namespace blazor_gestconf.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true)
+                    Name = table.Column<string>(type: "varchar(150)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Email = table.Column<string>(type: "longtext", nullable: true)
+                    Email = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Password = table.Column<string>(type: "longtext", nullable: true)
+                    Password = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -102,7 +103,20 @@ namespace blazor_gestconf.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "varchar(155)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Sigle = table.Column<string>(type: "varchar(155)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Theme = table.Column<string>(type: "varchar(155)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DateSoumissionDebut = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    DateRemiseResultats = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    DateSoumissionFin = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    DateInscriptionDebut = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    DateInscriptionFin = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    DateConferenceDebut = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    DateConferenceFin = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -116,11 +130,11 @@ namespace blazor_gestconf.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true)
+                    Name = table.Column<string>(type: "varchar(150)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Email = table.Column<string>(type: "longtext", nullable: true)
+                    Email = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Password = table.Column<string>(type: "longtext", nullable: true)
+                    Password = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -135,11 +149,11 @@ namespace blazor_gestconf.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true)
+                    Name = table.Column<string>(type: "varchar(150)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Email = table.Column<string>(type: "longtext", nullable: true)
+                    Email = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Password = table.Column<string>(type: "longtext", nullable: true)
+                    Password = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -174,6 +188,31 @@ namespace blazor_gestconf.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "ParticipantConferences",
+                columns: table => new
+                {
+                    ParticipantId = table.Column<int>(type: "int", nullable: false),
+                    ConferenceId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParticipantConferences", x => new { x.ParticipantId, x.ConferenceId });
+                    table.ForeignKey(
+                        name: "FK_ParticipantConferences_Conferences_ConferenceId",
+                        column: x => x.ConferenceId,
+                        principalTable: "Conferences",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ParticipantConferences_Participants_ParticipantId",
+                        column: x => x.ParticipantId,
+                        principalTable: "Participants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Relectures",
                 columns: table => new
                 {
@@ -184,9 +223,9 @@ namespace blazor_gestconf.Migrations
                     NoteFond = table.Column<int>(type: "int", nullable: false),
                     NoteForme = table.Column<int>(type: "int", nullable: false),
                     NotePertinenceScientifique = table.Column<int>(type: "int", nullable: false),
-                    Justification = table.Column<string>(type: "longtext", nullable: true)
+                    Justification = table.Column<string>(type: "varchar(100)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Comments = table.Column<string>(type: "longtext", nullable: true)
+                    Comments = table.Column<string>(type: "varchar(100)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -228,8 +267,7 @@ namespace blazor_gestconf.Migrations
                         name: "FK_ArticleProofReaders_Relectures_RelectureId",
                         column: x => x.RelectureId,
                         principalTable: "Relectures",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -248,6 +286,11 @@ namespace blazor_gestconf.Migrations
                 table: "ArticleProofReaders",
                 column: "RelectureId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParticipantConferences_ConferenceId",
+                table: "ParticipantConferences",
+                column: "ConferenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Relectures_ProofReaderId",
@@ -271,10 +314,7 @@ namespace blazor_gestconf.Migrations
                 name: "CommitteeMembers");
 
             migrationBuilder.DropTable(
-                name: "Conferences");
-
-            migrationBuilder.DropTable(
-                name: "Participants");
+                name: "ParticipantConferences");
 
             migrationBuilder.DropTable(
                 name: "Authors");
@@ -284,6 +324,12 @@ namespace blazor_gestconf.Migrations
 
             migrationBuilder.DropTable(
                 name: "Relectures");
+
+            migrationBuilder.DropTable(
+                name: "Conferences");
+
+            migrationBuilder.DropTable(
+                name: "Participants");
 
             migrationBuilder.DropTable(
                 name: "ProofReaders");

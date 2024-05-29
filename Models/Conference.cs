@@ -21,5 +21,7 @@ namespace blazor_gestconf.Models
         public DateTime? DateInscriptionFin { get; set; }
         public DateTime? DateConferenceDebut { get; set; }
         public DateTime? DateConferenceFin { get; set; }
+
+        public ICollection<ParticipantConference> Participants { get; set; } = new List<ParticipantConference>();
     }
 }

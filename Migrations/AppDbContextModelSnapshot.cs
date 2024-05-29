@@ -31,13 +31,16 @@ namespace blazor_gestconf.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(150)");
 
                     b.Property<string>("Password")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -57,19 +60,19 @@ namespace blazor_gestconf.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(150)");
 
                     b.Property<string>("FichierPdf")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Statut")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
@@ -121,19 +124,22 @@ namespace blazor_gestconf.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Entreprise")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(150)");
 
                     b.Property<string>("Password")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("University")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
@@ -149,13 +155,16 @@ namespace blazor_gestconf.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(150)");
 
                     b.Property<string>("Password")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -192,13 +201,13 @@ namespace blazor_gestconf.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(155)");
 
                     b.Property<string>("Sigle")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(155)");
 
                     b.Property<string>("Theme")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(155)");
 
                     b.HasKey("Id");
 
@@ -214,17 +223,35 @@ namespace blazor_gestconf.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(150)");
 
                     b.Property<string>("Password")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Participants");
+                });
+
+            modelBuilder.Entity("blazor_gestconf.Models.ParticipantConference", b =>
+                {
+                    b.Property<int>("ParticipantId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ConferenceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ParticipantId", "ConferenceId");
+
+                    b.HasIndex("ConferenceId");
+
+                    b.ToTable("ParticipantConferences");
                 });
 
             modelBuilder.Entity("blazor_gestconf.Models.ProofReader", b =>
@@ -236,13 +263,16 @@ namespace blazor_gestconf.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(150)");
 
                     b.Property<string>("Password")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -261,10 +291,10 @@ namespace blazor_gestconf.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Comments")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Justification")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int>("NoteFond")
                         .HasColumnType("int");
@@ -329,6 +359,25 @@ namespace blazor_gestconf.Migrations
                     b.Navigation("Relecture");
                 });
 
+            modelBuilder.Entity("blazor_gestconf.Models.ParticipantConference", b =>
+                {
+                    b.HasOne("blazor_gestconf.Models.Conference", "Conference")
+                        .WithMany("Participants")
+                        .HasForeignKey("ConferenceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("blazor_gestconf.Models.Participant", "Participant")
+                        .WithMany("Conferences")
+                        .HasForeignKey("ParticipantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Conference");
+
+                    b.Navigation("Participant");
+                });
+
             modelBuilder.Entity("blazor_gestconf.Models.Relecture", b =>
                 {
                     b.HasOne("blazor_gestconf.Models.ProofReader", "ProofReader")
@@ -350,6 +399,16 @@ namespace blazor_gestconf.Migrations
             modelBuilder.Entity("blazor_gestconf.Models.Author", b =>
                 {
                     b.Navigation("Articles");
+                });
+
+            modelBuilder.Entity("blazor_gestconf.Models.Conference", b =>
+                {
+                    b.Navigation("Participants");
+                });
+
+            modelBuilder.Entity("blazor_gestconf.Models.Participant", b =>
+                {
+                    b.Navigation("Conferences");
                 });
 
             modelBuilder.Entity("blazor_gestconf.Models.ProofReader", b =>

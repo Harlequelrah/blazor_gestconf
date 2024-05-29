@@ -14,7 +14,7 @@ builder.Services.AddRazorComponents()
 
 // Add database context
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("blazor_gestconf"), new MySqlServerVersion(new Version(8, 0, 29))));
+    options.UseMySql(builder.Configuration.GetConnectionString("blazor_gestconf"), new MySqlServerVersion(new Version(8, 0, 37))));
 
 
 

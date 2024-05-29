@@ -19,7 +19,6 @@ namespace blazor_gestconf.Models
         public int ProofReaderId { get; set; }
         public ProofReader ProofReader { get; set; }
 
-        [ForeignKey("Relecture")]
         public int? RelectureId { get; set; } // Permet de stocker la clé étrangère de Relecture
         public Relecture Relecture { get; set; }
     }

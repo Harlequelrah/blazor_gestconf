@@ -13,9 +13,12 @@ namespace blazor_gestconf.Data
         public DbSet<Article> Articles { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<ArticleAuthor> ArticleAuthors { get; set; }
+
+        public DbSet<ParticipantConference> ParticipantConferences { get; set; }
         public DbSet<ArticleProofReader> ArticleProofReaders { get; set; }
         public DbSet<Administrator> Administrators { get; set; }
-        public DbSet<Conference> Conferences { get; set; }
+        public DbSet<Conference> Conferences { get; set;}
+        // public DbSet<User> Users { get; set; }
         public DbSet<Relecture> Relectures { get; set; }
         public DbSet<CommitteeMember> CommitteeMembers { get; set; }
         public DbSet<ProofReader> ProofReaders { get; set; }
@@ -27,10 +30,23 @@ namespace blazor_gestconf.Data
             modelBuilder.Entity<ArticleAuthor>()
                 .HasKey(aa => new { aa.ArticleId, aa.AuthorId });
 
+            modelBuilder.Entity<ParticipantConference>()
+                .HasKey(aa => new { aa.ParticipantId, aa.ConferenceId });
+
             modelBuilder.Entity<ArticleAuthor>()
                 .HasOne(aa => aa.Article)
                 .WithMany(a => a.Authors)
                 .HasForeignKey(aa => aa.ArticleId);
+
+            modelBuilder.Entity<ParticipantConference>()
+                .HasOne(aa => aa.Participant)
+                .WithMany(a => a.Conferences)
+                .HasForeignKey(aa => aa.ParticipantId);
+
+            modelBuilder.Entity<ParticipantConference>()
+                .HasOne(aa => aa.Conference)
+                .WithMany(a => a.Participants)
+                .HasForeignKey(aa => aa.ConferenceId);
 
             modelBuilder.Entity<ArticleAuthor>()
                 .HasOne(aa => aa.Author)
@@ -45,6 +61,8 @@ namespace blazor_gestconf.Data
                 .HasOne(apr => apr.Article)
                 .WithMany(a => a.ArticleProofReaders)
                 .HasForeignKey(apr => apr.ArticleId);
+
+
 
             modelBuilder.Entity<ArticleProofReader>()
                 .HasOne(apr => apr.ProofReader)
@@ -64,9 +82,44 @@ namespace blazor_gestconf.Data
                 .WithOne(r => r.ProofReader)
                 .HasForeignKey(r => r.ProofReaderId);
 
+
+            // modelBuilder.Entity<User>(entity =>
+            // {
+            //     entity.Property(e => e.Name).HasColumnType("varchar(100)");
+            //     entity.Property(e => e.Email).HasColumnType("varchar(255)");
+            //     entity.Property(e => e.Password).HasColumnType("varchar(255)");
+            // });
+
+
+            modelBuilder.Entity<Conference>(entity =>
+            {
+                entity.Property(e => e.Name).HasColumnType("varchar(155)");
+                entity.Property(e => e.Sigle).HasColumnType("varchar(155)");
+                entity.Property(e => e.Theme).HasColumnType("varchar(155)");
+            });
+
+            modelBuilder.Entity<Author>(entity =>
+            {
+                entity.Property(e => e.Entreprise).HasColumnType("varchar(100)");
+                entity.Property(e => e.University).HasColumnType("varchar(100)");
+            });
+
+            modelBuilder.Entity<Relecture>(entity =>
+            {
+                entity.Property(e => e.Justification).HasColumnType("varchar(100)");
+                entity.Property(e => e.Comments).HasColumnType("varchar(100)");
+            });
+
+            modelBuilder.Entity<Article>(entity =>
+            {
+                entity.Property(e => e.Title).HasColumnType("varchar(100)");
+                entity.Property(e => e.Description).HasColumnType("varchar(150)");
+                entity.Property(e => e.FichierPdf).HasColumnType("varchar(255)");
+                entity.Property(e => e.Statut).HasColumnType("varchar(100)");
+            });
+
             // Configuration des clés primaires pour toutes les entités
-            modelBuilder.Entity<Conference>()
-                .HasKey(c => c.Id);
+
 
             // Ajoutez les configurations pour d'autres entités si nécessaire
         }
