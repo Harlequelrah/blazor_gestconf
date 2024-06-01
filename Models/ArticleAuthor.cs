@@ -17,7 +17,7 @@ namespace blazor_gestconf.Models
         public Article Article { get; set; }
 
         public int AuthorId { get; set; }
-        public Author Author { get; set; }
+        public Auteur Author { get; set; }
 
     }
 }

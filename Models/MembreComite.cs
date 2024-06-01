@@ -2,11 +2,11 @@
 
 namespace blazor_gestconf.Models
 {
-    public class CommitteeMember : User
+    public class MembreComite : Utilisateur
     {
 
 
-        public CommitteeMember() : base() { }
+        public MembreComite() : base() { }
 
     }
 }

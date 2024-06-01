@@ -6,40 +6,40 @@ using blazor_gestconf.Models;
 
 namespace blazor_gestconf.Services
 {
-    public class AuthorService : GenericCrudService<Author>
+    public class AuthorService : GenericCrudService<Auteur>
     {
         public AuthorService(AppDbContext context) : base(context)
         {
         }
 
-        public override async Task<List<Author>> GetAllAsync()
+        public override async Task<List<Auteur>> GetAllAsync()
         {
-            return await _context.Authors.ToListAsync();
+            return await _context.Auteurs.ToListAsync();
         }
 
-        public override async Task<Author> GetByIdAsync(int id)
+        public override async Task<Auteur> GetByIdAsync(int id)
         {
-            return await _context.Authors.FindAsync(id);
+            return await _context.Auteurs.FindAsync(id);
         }
 
-        public override async Task AddAsync(Author author)
+        public override async Task AddAsync(Auteur author)
         {
-            _context.Authors.Add(author);
+            _context.Auteurs.Add(author);
             await _context.SaveChangesAsync();
         }
 
-        public override async Task UpdateAsync(Author author)
+        public override async Task UpdateAsync(Auteur author)
         {
-            _context.Authors.Update(author);
+            _context.Auteurs.Update(author);
             await _context.SaveChangesAsync();
         }
 
         public override async Task DeleteAsync(int id)
         {
-            var author = await _context.Authors.FindAsync(id);
+            var author = await _context.Auteurs.FindAsync(id);
             if (author != null)
             {
-                _context.Authors.Remove(author);
+                _context.Auteurs.Remove(author);
                 await _context.SaveChangesAsync();
             }
         }

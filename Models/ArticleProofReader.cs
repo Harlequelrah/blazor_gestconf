@@ -17,7 +17,7 @@ namespace blazor_gestconf.Models
         public Article Article { get; set; }
 
         public int ProofReaderId { get; set; }
-        public ProofReader ProofReader { get; set; }
+        public Relecteur ProofReader { get; set; }
 
         public int? RelectureId { get; set; } // Permet de stocker la clé étrangère de Relecture
         public Relecture Relecture { get; set; }

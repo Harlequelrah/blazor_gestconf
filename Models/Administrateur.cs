@@ -2,10 +2,10 @@
 
 namespace blazor_gestconf.Models
 {
-    public class Administrator : User
+    public class Administrateur : Utilisateur
     {
 
-        public Administrator() : base()
+        public Administrateur() : base()
         {
         }
     }

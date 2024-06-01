@@ -11,17 +11,17 @@ namespace blazor_gestconf.Data
         }
 
         public DbSet<Article> Articles { get; set; }
-        public DbSet<Author> Authors { get; set; }
+        public DbSet<Auteur> Auteurs { get; set; }
         public DbSet<ArticleAuthor> ArticleAuthors { get; set; }
 
         public DbSet<ParticipantConference> ParticipantConferences { get; set; }
         public DbSet<ArticleProofReader> ArticleProofReaders { get; set; }
-        public DbSet<Administrator> Administrators { get; set; }
+        public DbSet<Administrateur> Administrateurs { get; set; }
         public DbSet<Conference> Conferences { get; set;}
         // public DbSet<User> Users { get; set; }
         public DbSet<Relecture> Relectures { get; set; }
-        public DbSet<CommitteeMember> CommitteeMembers { get; set; }
-        public DbSet<ProofReader> ProofReaders { get; set; }
+        public DbSet<MembreComite> MembreComites { get; set; }
+        public DbSet<Relecteur> Relecteurs{ get; set; }
         public DbSet<Participant> Participants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -35,7 +35,7 @@ namespace blazor_gestconf.Data
 
             modelBuilder.Entity<ArticleAuthor>()
                 .HasOne(aa => aa.Article)
-                .WithMany(a => a.Authors)
+                .WithMany(a => a.Author)
                 .HasForeignKey(aa => aa.ArticleId);
 
             modelBuilder.Entity<ParticipantConference>()
@@ -77,7 +77,7 @@ namespace blazor_gestconf.Data
                 // .OnDelete(DeleteBehavior.Cascade); Supprimez cette ligne si la suppression en cascade n'est pas souhaitée
 
             // Configuration de la relation entre ProofReader et Relecture
-            modelBuilder.Entity<ProofReader>()
+            modelBuilder.Entity<Relecteur>()
                 .HasMany(pr => pr.Relectures)
                 .WithOne(r => r.ProofReader)
                 .HasForeignKey(r => r.ProofReaderId);
@@ -93,15 +93,15 @@ namespace blazor_gestconf.Data
 
             modelBuilder.Entity<Conference>(entity =>
             {
-                entity.Property(e => e.Name).HasColumnType("varchar(155)");
+                entity.Property(e => e.Nom).HasColumnType("varchar(155)");
                 entity.Property(e => e.Sigle).HasColumnType("varchar(155)");
                 entity.Property(e => e.Theme).HasColumnType("varchar(155)");
             });
 
-            modelBuilder.Entity<Author>(entity =>
+            modelBuilder.Entity<Auteur>(entity =>
             {
                 entity.Property(e => e.Entreprise).HasColumnType("varchar(100)");
-                entity.Property(e => e.University).HasColumnType("varchar(100)");
+                entity.Property(e => e.Universite).HasColumnType("varchar(100)");
             });
 
             modelBuilder.Entity<Relecture>(entity =>
@@ -112,7 +112,7 @@ namespace blazor_gestconf.Data
 
             modelBuilder.Entity<Article>(entity =>
             {
-                entity.Property(e => e.Title).HasColumnType("varchar(100)");
+                entity.Property(e => e.Titre).HasColumnType("varchar(100)");
                 entity.Property(e => e.Description).HasColumnType("varchar(150)");
                 entity.Property(e => e.FichierPdf).HasColumnType("varchar(255)");
                 entity.Property(e => e.Statut).HasColumnType("varchar(100)");
