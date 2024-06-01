@@ -9,10 +9,10 @@ namespace blazor_gestconf.Models
 
         public int Id { get; set; }
 
-        public int ProofReaderId { get; set; }
-        public Relecteur ProofReader { get; set; }
-        public int ArticleProofReaderId { get; set; }
-        public ArticleProofReader ArticleProofReader { get; set; }
+        public int RelecteurId { get; set; }
+        public Relecteur Relecteur { get; set; }
+        public int ArticleRelecteurId { get; set; }
+        public ArticleRelecteur ArticleRelecteur { get; set; }
         public int NoteFond { get; set; }
         public int NoteForme { get; set; }
         public int NotePertinenceScientifique { get; set; }

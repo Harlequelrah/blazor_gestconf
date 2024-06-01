@@ -12,10 +12,10 @@ namespace blazor_gestconf.Data
 
         public DbSet<Article> Articles { get; set; }
         public DbSet<Auteur> Auteurs { get; set; }
-        public DbSet<ArticleAuthor> ArticleAuthors { get; set; }
+        public DbSet<ArticleAuteur> ArticleAuteurs { get; set; }
 
         public DbSet<ParticipantConference> ParticipantConferences { get; set; }
-        public DbSet<ArticleProofReader> ArticleProofReaders { get; set; }
+        public DbSet<ArticleRelecteur> ArticleRelecteurs { get; set; }
         public DbSet<Administrateur> Administrateurs { get; set; }
         public DbSet<Conference> Conferences { get; set;}
         // public DbSet<User> Users { get; set; }
@@ -26,16 +26,16 @@ namespace blazor_gestconf.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configuration de la table de jonction ArticleAuthor
-            modelBuilder.Entity<ArticleAuthor>()
-                .HasKey(aa => new { aa.ArticleId, aa.AuthorId });
+            // Configuration de la table de jonction ArticleAuteur
+            modelBuilder.Entity<ArticleAuteur>()
+                .HasKey(aa => new { aa.ArticleId, aa.AuteurId });
 
             modelBuilder.Entity<ParticipantConference>()
                 .HasKey(aa => new { aa.ParticipantId, aa.ConferenceId });
 
-            modelBuilder.Entity<ArticleAuthor>()
+            modelBuilder.Entity<ArticleAuteur>()
                 .HasOne(aa => aa.Article)
-                .WithMany(a => a.Author)
+                .WithMany(a => a.Auteur)
                 .HasForeignKey(aa => aa.ArticleId);
 
             modelBuilder.Entity<ParticipantConference>()
@@ -48,39 +48,39 @@ namespace blazor_gestconf.Data
                 .WithMany(a => a.Participants)
                 .HasForeignKey(aa => aa.ConferenceId);
 
-            modelBuilder.Entity<ArticleAuthor>()
-                .HasOne(aa => aa.Author)
+            modelBuilder.Entity<ArticleAuteur>()
+                .HasOne(aa => aa.Auteur)
                 .WithMany(a => a.Articles)
-                .HasForeignKey(aa => aa.AuthorId);
+                .HasForeignKey(aa => aa.AuteurId);
 
-            // Configuration de la table de jonction ArticleProofReader
-            modelBuilder.Entity<ArticleProofReader>()
-                .HasKey(apr => new { apr.ArticleId, apr.ProofReaderId });
+            // Configuration de la table de jonction ArticleRelecteur
+            modelBuilder.Entity<ArticleRelecteur>()
+                .HasKey(apr => new { apr.ArticleId, apr.RelecteurId });
 
-            modelBuilder.Entity<ArticleProofReader>()
+            modelBuilder.Entity<ArticleRelecteur>()
                 .HasOne(apr => apr.Article)
-                .WithMany(a => a.ArticleProofReaders)
+                .WithMany(a => a.ArticleRelecteurs)
                 .HasForeignKey(apr => apr.ArticleId);
 
 
 
-            modelBuilder.Entity<ArticleProofReader>()
-                .HasOne(apr => apr.ProofReader)
+            modelBuilder.Entity<ArticleRelecteur>()
+                .HasOne(apr => apr.Relecteur)
                 .WithMany(pr => pr.Articles)
-                .HasForeignKey(apr => apr.ProofReaderId);
+                .HasForeignKey(apr => apr.RelecteurId);
 
-            // Configuration de la relation un-à-un entre ArticleProofReader et Relecture
+            // Configuration de la relation un-à-un entre ArticleRelecteur et Relecture
             modelBuilder.Entity<Relecture>()
-                .HasOne(r => r.ArticleProofReader)
+                .HasOne(r => r.ArticleRelecteur)
                 .WithOne(apr => apr.Relecture)
-                .HasForeignKey<ArticleProofReader>(apr => apr.RelectureId) ;// Utilisez la clé étrangère appropriée ici
+                .HasForeignKey<ArticleRelecteur>(apr => apr.RelectureId) ;// Utilisez la clé étrangère appropriée ici
                 // .OnDelete(DeleteBehavior.Cascade); Supprimez cette ligne si la suppression en cascade n'est pas souhaitée
 
-            // Configuration de la relation entre ProofReader et Relecture
+            // Configuration de la relation entre Relecteur et Relecture
             modelBuilder.Entity<Relecteur>()
                 .HasMany(pr => pr.Relectures)
-                .WithOne(r => r.ProofReader)
-                .HasForeignKey(r => r.ProofReaderId);
+                .WithOne(r => r.Relecteur)
+                .HasForeignKey(r => r.RelecteurId);
 
 
             // modelBuilder.Entity<User>(entity =>

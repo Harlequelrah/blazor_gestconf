@@ -9,6 +9,7 @@ namespace blazor_gestconf.Services
     public abstract class GenericCrudService<TEntity> where TEntity : class
     {
         protected readonly AppDbContext _context;
+        private readonly ILogger? _logger;
 
         public GenericCrudService(AppDbContext context)
         {

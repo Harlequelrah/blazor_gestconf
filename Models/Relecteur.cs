@@ -11,7 +11,7 @@ namespace blazor_gestconf.Models
         {
             Relectures = new List<Relecture>();
         }
-        public ICollection<ArticleProofReader> Articles { get; set; }
+        public ICollection<ArticleRelecteur> Articles { get; set; }
         public ICollection<Relecture> Relectures { get; set; }
 
     }

@@ -8,7 +8,7 @@ namespace blazor_gestconf.Models
 
         public string Universite { get; set; }
         public string Entreprise { get; set; }
-        public ICollection<ArticleAuthor> Articles { get; set; } = new List<ArticleAuthor>();
+        public ICollection<ArticleAuteur> Articles { get; set; } = new List<ArticleAuteur>();
 
         public Auteur(int id, string name, string email, string password, string university, string entreprise)
             : base(id, name, email, password)

@@ -2,11 +2,11 @@ using blazor_gestconf.Services;
 
 namespace blazor_gestconf.Models
 {
-    public class ArticleAuthor
+    public class ArticleAuteur
     {
-        
 
-        public ArticleAuthor()
+
+        public ArticleAuteur()
         {
 
 
@@ -16,8 +16,8 @@ namespace blazor_gestconf.Models
         public int ArticleId { get; set; }
         public Article Article { get; set; }
 
-        public int AuthorId { get; set; }
-        public Auteur Author { get; set; }
+        public int AuteurId { get; set; }
+        public Auteur Auteur { get; set; }
 
     }
 }

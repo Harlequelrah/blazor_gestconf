@@ -6,9 +6,9 @@ using blazor_gestconf.Models;
 
 namespace blazor_gestconf.Services
 {
-    public class AuthorService : GenericCrudService<Auteur>
+    public class AuteurService : GenericCrudService<Auteur>
     {
-        public AuthorService(AppDbContext context) : base(context)
+        public AuteurService(AppDbContext context) : base(context)
         {
         }
 
@@ -22,24 +22,24 @@ namespace blazor_gestconf.Services
             return await _context.Auteurs.FindAsync(id);
         }
 
-        public override async Task AddAsync(Auteur author)
+        public override async Task AddAsync(Auteur auteur)
         {
-            _context.Auteurs.Add(author);
+            _context.Auteurs.Add(auteur);
             await _context.SaveChangesAsync();
         }
 
-        public override async Task UpdateAsync(Auteur author)
+        public override async Task UpdateAsync(Auteur auteur)
         {
-            _context.Auteurs.Update(author);
+            _context.Auteurs.Update(auteur);
             await _context.SaveChangesAsync();
         }
 
         public override async Task DeleteAsync(int id)
         {
-            var author = await _context.Auteurs.FindAsync(id);
-            if (author != null)
+            var auteur = await _context.Auteurs.FindAsync(id);
+            if (auteur != null)
             {
-                _context.Auteurs.Remove(author);
+                _context.Auteurs.Remove(auteur);
                 await _context.SaveChangesAsync();
             }
         }

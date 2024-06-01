@@ -6,9 +6,9 @@ using blazor_gestconf.Models;
 
 namespace blazor_gestconf.Services
 {
-    public class ProofReaderService : GenericCrudService<Relecteur>
+    public class RelecteurService : GenericCrudService<Relecteur>
     {
-        public ProofReaderService(AppDbContext context) : base(context)
+        public RelecteurService(AppDbContext context) : base(context)
         {
         }
 
@@ -22,24 +22,24 @@ namespace blazor_gestconf.Services
             return await _context.Relecteurs.FindAsync(id);
         }
 
-        public override async Task AddAsync(Relecteur proofReader)
+        public override async Task AddAsync(Relecteur Relecteur)
         {
-            _context.Relecteurs.Add(proofReader);
+            _context.Relecteurs.Add(Relecteur);
             await _context.SaveChangesAsync();
         }
 
-        public override async Task UpdateAsync(Relecteur proofReader)
+        public override async Task UpdateAsync(Relecteur Relecteur)
         {
-            _context.Relecteurs.Update(proofReader);
+            _context.Relecteurs.Update(Relecteur);
             await _context.SaveChangesAsync();
         }
 
         public override async Task DeleteAsync(int id)
         {
-            var proofReader = await _context.Relecteurs.FindAsync(id);
-            if (proofReader != null)
+            var Relecteur = await _context.Relecteurs.FindAsync(id);
+            if (Relecteur != null)
             {
-                _context.Relecteurs.Remove(proofReader);
+                _context.Relecteurs.Remove(Relecteur);
                 await _context.SaveChangesAsync();
             }
         }

@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace blazor_gestconf.Models
 {
-    public class ArticleProofReader
+    public class ArticleRelecteur
     {
 
 
-        public ArticleProofReader()
+        public ArticleRelecteur()
         {
 
         }
@@ -16,8 +16,8 @@ namespace blazor_gestconf.Models
         public int ArticleId { get; set; }
         public Article Article { get; set; }
 
-        public int ProofReaderId { get; set; }
-        public Relecteur ProofReader { get; set; }
+        public int RelecteurId { get; set; }
+        public Relecteur Relecteur { get; set; }
 
         public int? RelectureId { get; set; } // Permet de stocker la clé étrangère de Relecture
         public Relecture Relecture { get; set; }

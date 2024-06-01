@@ -79,40 +79,40 @@ namespace blazor_gestconf.Migrations
                     b.ToTable("Articles");
                 });
 
-            modelBuilder.Entity("blazor_gestconf.Models.ArticleAuthor", b =>
+            modelBuilder.Entity("blazor_gestconf.Models.ArticleAuteur", b =>
                 {
                     b.Property<int>("ArticleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AuthorId")
+                    b.Property<int>("AuteurId")
                         .HasColumnType("int");
 
-                    b.HasKey("ArticleId", "AuthorId");
+                    b.HasKey("ArticleId", "AuteurId");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("AuteurId");
 
-                    b.ToTable("ArticleAuthors");
+                    b.ToTable("ArticleAuteurs");
                 });
 
-            modelBuilder.Entity("blazor_gestconf.Models.ArticleProofReader", b =>
+            modelBuilder.Entity("blazor_gestconf.Models.ArticleRelecteur", b =>
                 {
                     b.Property<int>("ArticleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProofReaderId")
+                    b.Property<int>("RelecteurId")
                         .HasColumnType("int");
 
                     b.Property<int?>("RelectureId")
                         .HasColumnType("int");
 
-                    b.HasKey("ArticleId", "ProofReaderId");
+                    b.HasKey("ArticleId", "RelecteurId");
 
-                    b.HasIndex("ProofReaderId");
+                    b.HasIndex("RelecteurId");
 
                     b.HasIndex("RelectureId")
                         .IsUnique();
 
-                    b.ToTable("ArticleProofReaders");
+                    b.ToTable("ArticleRelecteurs");
                 });
 
             modelBuilder.Entity("blazor_gestconf.Models.Auteur", b =>
@@ -292,7 +292,7 @@ namespace blazor_gestconf.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ArticleProofReaderId")
+                    b.Property<int>("ArticleRelecteurId")
                         .HasColumnType("int");
 
                     b.Property<string>("Comments")
@@ -310,56 +310,56 @@ namespace blazor_gestconf.Migrations
                     b.Property<int>("NotePertinenceScientifique")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProofReaderId")
+                    b.Property<int>("RelecteurId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProofReaderId");
+                    b.HasIndex("RelecteurId");
 
                     b.ToTable("Relectures");
                 });
 
-            modelBuilder.Entity("blazor_gestconf.Models.ArticleAuthor", b =>
+            modelBuilder.Entity("blazor_gestconf.Models.ArticleAuteur", b =>
                 {
                     b.HasOne("blazor_gestconf.Models.Article", "Article")
-                        .WithMany("Author")
+                        .WithMany("Auteur")
                         .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("blazor_gestconf.Models.Auteur", "Author")
+                    b.HasOne("blazor_gestconf.Models.Auteur", "Auteur")
                         .WithMany("Articles")
-                        .HasForeignKey("AuthorId")
+                        .HasForeignKey("AuteurId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Article");
 
-                    b.Navigation("Author");
+                    b.Navigation("Auteur");
                 });
 
-            modelBuilder.Entity("blazor_gestconf.Models.ArticleProofReader", b =>
+            modelBuilder.Entity("blazor_gestconf.Models.ArticleRelecteur", b =>
                 {
                     b.HasOne("blazor_gestconf.Models.Article", "Article")
-                        .WithMany("ArticleProofReaders")
+                        .WithMany("ArticleRelecteurs")
                         .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("blazor_gestconf.Models.Relecteur", "ProofReader")
+                    b.HasOne("blazor_gestconf.Models.Relecteur", "Relecteur")
                         .WithMany("Articles")
-                        .HasForeignKey("ProofReaderId")
+                        .HasForeignKey("RelecteurId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("blazor_gestconf.Models.Relecture", "Relecture")
-                        .WithOne("ArticleProofReader")
-                        .HasForeignKey("blazor_gestconf.Models.ArticleProofReader", "RelectureId");
+                        .WithOne("ArticleRelecteur")
+                        .HasForeignKey("blazor_gestconf.Models.ArticleRelecteur", "RelectureId");
 
                     b.Navigation("Article");
 
-                    b.Navigation("ProofReader");
+                    b.Navigation("Relecteur");
 
                     b.Navigation("Relecture");
                 });
@@ -385,20 +385,20 @@ namespace blazor_gestconf.Migrations
 
             modelBuilder.Entity("blazor_gestconf.Models.Relecture", b =>
                 {
-                    b.HasOne("blazor_gestconf.Models.Relecteur", "ProofReader")
+                    b.HasOne("blazor_gestconf.Models.Relecteur", "Relecteur")
                         .WithMany("Relectures")
-                        .HasForeignKey("ProofReaderId")
+                        .HasForeignKey("RelecteurId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ProofReader");
+                    b.Navigation("Relecteur");
                 });
 
             modelBuilder.Entity("blazor_gestconf.Models.Article", b =>
                 {
-                    b.Navigation("ArticleProofReaders");
+                    b.Navigation("ArticleRelecteurs");
 
-                    b.Navigation("Author");
+                    b.Navigation("Auteur");
                 });
 
             modelBuilder.Entity("blazor_gestconf.Models.Auteur", b =>
@@ -425,7 +425,7 @@ namespace blazor_gestconf.Migrations
 
             modelBuilder.Entity("blazor_gestconf.Models.Relecture", b =>
                 {
-                    b.Navigation("ArticleProofReader")
+                    b.Navigation("ArticleRelecteur")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

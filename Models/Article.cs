@@ -11,11 +11,11 @@ namespace blazor_gestconf.Models
         public string Statut { get; set; }
         public int ConferenceId { get; set; }
 
-        public ICollection<ArticleAuthor> Author { get; set; } = new List<ArticleAuthor>();
-        public ICollection<ArticleProofReader> ArticleProofReaders { get; set; } = new List<ArticleProofReader>();
+        public ICollection<ArticleAuteur> Auteur { get; set; } = new List<ArticleAuteur>();
+        public ICollection<ArticleRelecteur> ArticleRelecteurs { get; set; } = new List<ArticleRelecteur>();
 
         public Article(){
-            
+
         }
         public Article(int id, string title, string description, string fichierPdf, string statut, int conferenceId)
         {

@@ -6,9 +6,9 @@ using blazor_gestconf.Models;
 
 namespace blazor_gestconf.Services
 {
-    public class CommitteeMemberService : GenericCrudService<MembreComite>
+    public class MembreComiteService : GenericCrudService<MembreComite>
     {
-        public CommitteeMemberService(AppDbContext context) : base(context)
+        public MembreComiteService(AppDbContext context) : base(context)
         {
         }
 
@@ -22,24 +22,24 @@ namespace blazor_gestconf.Services
             return await _context.MembreComites.FindAsync(id);
         }
 
-        public override async Task AddAsync(MembreComite committeeMember)
+        public override async Task AddAsync(MembreComite membreComite)
         {
-            _context.MembreComites.Add(committeeMember);
+            _context.MembreComites.Add(membreComite);
             await _context.SaveChangesAsync();
         }
 
-        public override async Task UpdateAsync(MembreComite committeeMember)
+        public override async Task UpdateAsync(MembreComite membreComite)
         {
-            _context.MembreComites.Update(committeeMember);
+            _context.MembreComites.Update(membreComite);
             await _context.SaveChangesAsync();
         }
 
         public override async Task DeleteAsync(int id)
         {
-            var committeeMember = await _context.MembreComites.FindAsync(id);
-            if (committeeMember != null)
+            var membreComite = await _context.MembreComites.FindAsync(id);
+            if (membreComite != null)
             {
-                _context.MembreComites.Remove(committeeMember);
+                _context.MembreComites.Remove(membreComite);
                 await _context.SaveChangesAsync();
             }
         }

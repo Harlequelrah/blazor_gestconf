@@ -2,8 +2,6 @@ using blazor_gestconf.Components;
 using blazor_gestconf.Data;
 using blazor_gestconf.Models;
 using blazor_gestconf.Services;// Assurez-vous que cet espace de noms est correct pour votre projet
-using blazor_gestconf.Services.Administrateur;
-using blazor_gestconf.Services.Article;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,16 +20,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 
-builder.Services.AddScoped<IArticleService, ArticleService>();
-builder.Services.AddScoped<AuthorService>();
-builder.Services.AddScoped<ProofReaderService>();
+builder.Services.AddScoped<ArticleService>();
+builder.Services.AddScoped<AuteurService>();
+builder.Services.AddScoped<RelecteurService>();
 builder.Services.AddScoped<ConferenceService>();
 builder.Services.AddScoped<RelectureService>();
 builder.Services.AddScoped<ParticipantService>();
-builder.Services.AddScoped<CommitteeMemberService>();
-builder.Services.AddScoped<IAdministrateurService, AdministrateurService>();
-builder.Services.AddScoped<ArticleAuthorService>();
-builder.Services.AddScoped<ArticleProofReaderService>();
+builder.Services.AddScoped<MembreComiteService>();
+builder.Services.AddScoped<AdministrateurService>();
+builder.Services.AddScoped<ArticleAuteurService>();
+builder.Services.AddScoped<ArticleRelecteurService>();
 
 var app = builder.Build();
 
