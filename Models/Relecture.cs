@@ -9,6 +9,7 @@ namespace blazor_gestconf.Models
 
         public int Id { get; set; }
 
+
         public int RelecteurId { get; set; }
         public Relecteur Relecteur { get; set; }
         public int ArticleRelecteurId { get; set; }

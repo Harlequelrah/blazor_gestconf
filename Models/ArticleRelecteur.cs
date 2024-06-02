@@ -19,7 +19,7 @@ namespace blazor_gestconf.Models
         public int RelecteurId { get; set; }
         public Relecteur Relecteur { get; set; }
 
-        public int? RelectureId { get; set; } // Permet de stocker la clé étrangère de Relecture
+       public int? RelectureId { get; set; }  //Permet de stocker la clé étrangère de Relecture
         public Relecture Relecture { get; set; }
     }
 }

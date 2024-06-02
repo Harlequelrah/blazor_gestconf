@@ -19,7 +19,7 @@ var connectionString = builder.Configuration.GetConnectionString("blazor_gestcon
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-builder.Services.AddIdentity<Utilisateur, IdentityRole>(options =>
+builder.Services.AddIdentity<Utilisateur, IdentityRole<int>>(options =>
 {
     // Configure password requirements if needed
     options.Password.RequireDigit = false;
@@ -47,7 +47,8 @@ var app = builder.Build();
 // Create a scope to obtain the RoleManager service
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+
 
     // Créer les rôles
     string[] roleNames = { "Administrateur", "Auteur", "MembreComite", "Participant" };
@@ -58,7 +59,7 @@ using (var scope = app.Services.CreateScope())
         if (!roleExist)
         {
             // Créer le rôle s'il n'existe pas
-            await roleManager.CreateAsync(new IdentityRole(roleName));
+            await roleManager.CreateAsync(new IdentityRole<int>(roleName));
         }
     }
 }

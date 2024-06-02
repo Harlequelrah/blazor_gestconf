@@ -5,6 +5,7 @@ namespace blazor_gestconf.Models
     public class Article
     {
         public int Id { get; set; }
+        public string? RelectureId { get; set; }
         public string Titre { get; set; }
         public string Description { get; set; }
         public string FichierPdf { get; set; }
@@ -17,7 +18,8 @@ namespace blazor_gestconf.Models
         public Article(){
 
         }
-        public Article(int id, string title, string description, string fichierPdf, string statut, int conferenceId)
+
+        public Article(int  id, string title, string description, string fichierPdf, string statut, int conferenceId)
         {
             Id = id;
             Titre = title;

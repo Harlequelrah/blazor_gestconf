@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using blazor_gestconf.Models;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace blazor_gestconf.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<Utilisateur, IdentityRole<int>,int>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -12,21 +14,34 @@ namespace blazor_gestconf.Data
 
         public DbSet<Article> Articles { get; set; }
         public DbSet<Auteur> Auteurs { get; set; }
+
+        public DbSet<Role> Roles { get; set; }
         public DbSet<ArticleAuteur> ArticleAuteurs { get; set; }
 
         public DbSet<ParticipantConference> ParticipantConferences { get; set; }
         public DbSet<ArticleRelecteur> ArticleRelecteurs { get; set; }
         public DbSet<Administrateur> Administrateurs { get; set; }
-        public DbSet<Conference> Conferences { get; set;}
+        public DbSet<Conference> Conferences { get; set; }
         // public DbSet<User> Users { get; set; }
         public DbSet<Relecture> Relectures { get; set; }
         public DbSet<MembreComite> MembreComites { get; set; }
-        public DbSet<Relecteur> Relecteurs{ get; set; }
+        public DbSet<Relecteur> Relecteurs { get; set; }
         public DbSet<Participant> Participants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configuration de la table de jonction ArticleAuteur
+            modelBuilder.Entity<IdentityUserLogin<int>>()
+                .HasKey(login => login.UserId);
+
+            modelBuilder.Entity<IdentityUserRole<int>>()
+                .HasKey(ur => new { ur.UserId, ur.RoleId });
+
+            modelBuilder.Entity<IdentityUserToken<int>>(b =>
+            {
+                b.HasKey(ut => new { ut.UserId, ut.LoginProvider, ut.Name });
+            });
+
+
             modelBuilder.Entity<ArticleAuteur>()
                 .HasKey(aa => new { aa.ArticleId, aa.AuteurId });
 
@@ -73,8 +88,8 @@ namespace blazor_gestconf.Data
             modelBuilder.Entity<Relecture>()
                 .HasOne(r => r.ArticleRelecteur)
                 .WithOne(apr => apr.Relecture)
-                .HasForeignKey<ArticleRelecteur>(apr => apr.RelectureId) ;// Utilisez la clé étrangère appropriée ici
-                // .OnDelete(DeleteBehavior.Cascade); Supprimez cette ligne si la suppression en cascade n'est pas souhaitée
+                .HasForeignKey<ArticleRelecteur>(apr => apr.RelectureId);// Utilisez la clé étrangère appropriée ici
+                                                                         // .OnDelete(DeleteBehavior.Cascade); Supprimez cette ligne si la suppression en cascade n'est pas souhaitée
 
             // Configuration de la relation entre Relecteur et Relecture
             modelBuilder.Entity<Relecteur>()
