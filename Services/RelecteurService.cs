@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -14,33 +15,77 @@ namespace blazor_gestconf.Services
 
         public override async Task<List<Relecteur>> GetAllAsync()
         {
-            return await _context.Relecteurs.ToListAsync();
+            try
+            {
+                return await _context.Relecteurs.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetAllAsync: {ex.Message}");
+                return new List<Relecteur>();
+            }
         }
 
         public override async Task<Relecteur> GetByIdAsync(int id)
         {
-            return await _context.Relecteurs.FindAsync(id);
-        }
-
-        public override async Task AddAsync(Relecteur Relecteur)
-        {
-            _context.Relecteurs.Add(Relecteur);
-            await _context.SaveChangesAsync();
-        }
-
-        public override async Task UpdateAsync(Relecteur Relecteur)
-        {
-            _context.Relecteurs.Update(Relecteur);
-            await _context.SaveChangesAsync();
-        }
-
-        public override async Task DeleteAsync(int id)
-        {
-            var Relecteur = await _context.Relecteurs.FindAsync(id);
-            if (Relecteur != null)
+            try
             {
-                _context.Relecteurs.Remove(Relecteur);
+                return await _context.Relecteurs.FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetByIdAsync: {ex.Message}");
+                return null;
+            }
+        }
+
+        public override async Task<bool> AddAsync(Relecteur Relecteur)
+        {
+            try
+            {
+                _context.Relecteurs.Add(Relecteur);
                 await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in AddAsync: {ex.Message}");
+                return false;
+            }
+        }
+
+        public override async Task<bool> UpdateAsync(Relecteur Relecteur)
+        {
+            try
+            {
+                _context.Relecteurs.Update(Relecteur);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in UpdateAsync: {ex.Message}");
+                return false;
+            }
+        }
+
+        public override async Task<bool> DeleteAsync(int id)
+        {
+            try
+            {
+                var Relecteur = await _context.Relecteurs.FindAsync(id);
+                if (Relecteur != null)
+                {
+                    _context.Relecteurs.Remove(Relecteur);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in DeleteAsync: {ex.Message}");
+                return false;
             }
         }
     }

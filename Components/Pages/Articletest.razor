@@ -13,8 +13,8 @@
     <button type="button" class="btn btn-danger" @onclick="FindArt">Chercher</button>
 </form>
 @if (C.Id != 0)
-    {
-        <table class="table">
+{
+    <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
@@ -26,19 +26,17 @@
             </tr>
         </thead>
         <tbody>
-                <tr>
-                    <td>@C.Id</td>
-                    <td>@C.Titre</td>
-                    <td>@C.Description</td>
-                    <td>@C.Statut</td>
-                    <td>@C.FichierPdf</td>
-                    <td>@C.ConferenceId</td>
-                </tr>
-
+            <tr>
+                <td>@C.Id</td>
+                <td>@C.Titre</td>
+                <td>@C.Description</td>
+                <td>@C.Statut</td>
+                <td>@C.FichierPdf</td>
+                <td>@C.ConferenceId</td>
+            </tr>
         </tbody>
     </table>
-    }
-
+}
 
 <h3>Liste des Articles</h3>
 
@@ -102,11 +100,9 @@ else
     </div>
 
     <div>
-
         <button type="button" class="btn btn-danger" @onclick="InsertArt">Insert</button>
         <button type="button" class="btn btn-danger" @onclick="DeleteArt">Delete</button>
         <button type="button" class="btn btn-primary" @onclick="UpdateArticle">Mettre à jour l'article</button>
-
     </div>
 </form>
 
@@ -115,7 +111,6 @@ else
     private Article A = new Article();
     private Article B = new Article();
     private Article C = new Article();
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -134,9 +129,17 @@ else
         if (!string.IsNullOrWhiteSpace(A.Titre) && !string.IsNullOrWhiteSpace(A.Description))
         {
             Console.WriteLine("Inserting article: " + A.Titre);
-            await ArticleService.AddAsync(A);
-            await LoadArticlesAsync();
-            A = new Article();
+            bool result = await ArticleService.AddAsync(A);
+            if (result)
+            {
+                await LoadArticlesAsync();
+                A = new Article();
+            }
+            else
+            {
+                // Handle the case when insertion failed
+                Console.WriteLine("Failed to insert article.");
+            }
         }
         else
         {
@@ -145,17 +148,17 @@ else
 
         Console.WriteLine("InsertArt method finished");
     }
+
     private async Task FindArt()
     {
-
-        if (B.Id != 0){
-        var b = await ArticleService.GetByIdAsync(B.Id);
-        if (b!=null){
-            C=b;
-        }
-
-            B=new Article();
-
+        if (B.Id != 0)
+        {
+            var b = await ArticleService.GetByIdAsync(B.Id);
+            if (b != null)
+            {
+                C = b;
+            }
+            B = new Article();
         }
     }
 
@@ -163,12 +166,20 @@ else
     {
         Console.WriteLine("DeleteArt method started");
 
-        if (B.Id != 0)
+        if (A.Id != 0)
         {
-            Console.WriteLine("Deleting article with Id: " + B.Id);
-            await ArticleService.DeleteAsync(B.Id);
-            await LoadArticlesAsync();
-            B = new Article();
+            Console.WriteLine("Deleting article with Id: " + A.Id);
+            bool result = await ArticleService.DeleteAsync(A.Id);
+            if (result)
+            {
+                await LoadArticlesAsync();
+                A = new Article();
+            }
+            else
+            {
+                // Handle the case when deletion failed
+                Console.WriteLine("Failed to delete article.");
+            }
         }
         else
         {
@@ -178,19 +189,17 @@ else
         Console.WriteLine("DeleteArt method finished");
 
         await LoadArticlesAsync();
-
     }
 
     private async Task UpdateArticle()
-{
-    if (A.Id != 0)
     {
-        // Appel de la méthode GetByIdAsync pour obtenir l'article à mettre à jour
-        var existingArticle = await ArticleService.GetByIdAsync(A.Id);
-
-        if (existingArticle != null)
+        if (A.Id != 0)
         {
-            if (!string.IsNullOrWhiteSpace(A.Titre) && A.Titre != existingArticle.Titre)
+            var existingArticle = await ArticleService.GetByIdAsync(A.Id);
+
+            if (existingArticle != null)
+            {
+                if (!string.IsNullOrWhiteSpace(A.Titre) && A.Titre != existingArticle.Titre)
                 {
                     existingArticle.Titre = A.Titre;
                 }
@@ -215,30 +224,27 @@ else
                     existingArticle.ConferenceId = A.ConferenceId;
                 }
 
-            // Appel de la méthode UpdateAsync pour mettre à jour l'article dans la base de données
-            await ArticleService.UpdateAsync(existingArticle);
+                bool result = await ArticleService.UpdateAsync(existingArticle);
 
-            // Recharger la liste des articles après la mise à jour
-            await LoadArticlesAsync();
-
-            // Réinitialiser l'objet B
-            A = new Article();
-            B=new Article();
+                if (result)
+                {
+                    await LoadArticlesAsync();
+                    A = new Article();
+                }
+                else
+                {
+                    // Handle the case when update failed
+                    Console.WriteLine("Failed to update article.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Aucun article correspondant à l'ID trouvé.");
+            }
         }
         else
         {
-            // Gérer le cas où aucun article correspondant à l'ID donné n'est trouvé
-            Console.WriteLine("Aucun article correspondant à l'ID trouvé.");
-            Console.WriteLine(A.Id);
-            Console.WriteLine("Aucun article correspondant à l'ID trouvé.");
+            Console.WriteLine("ID de l'article à mettre à jour est égal à zéro.");
         }
     }
-    else
-    {
-        // Gérer le cas où l'ID de l'article à mettre à jour est égal à zéro
-        Console.WriteLine("ID de l'article à mettre à jour est égal à zéro.");
-
-    }
-}
-
 }

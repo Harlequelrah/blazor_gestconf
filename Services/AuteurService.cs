@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -14,33 +15,77 @@ namespace blazor_gestconf.Services
 
         public override async Task<List<Auteur>> GetAllAsync()
         {
-            return await _context.Auteurs.ToListAsync();
+            try
+            {
+                return await _context.Auteurs.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetAllAsync: {ex.Message}");
+                return new List<Auteur>();
+            }
         }
 
         public override async Task<Auteur> GetByIdAsync(int id)
         {
-            return await _context.Auteurs.FindAsync(id);
-        }
-
-        public override async Task AddAsync(Auteur auteur)
-        {
-            _context.Auteurs.Add(auteur);
-            await _context.SaveChangesAsync();
-        }
-
-        public override async Task UpdateAsync(Auteur auteur)
-        {
-            _context.Auteurs.Update(auteur);
-            await _context.SaveChangesAsync();
-        }
-
-        public override async Task DeleteAsync(int id)
-        {
-            var auteur = await _context.Auteurs.FindAsync(id);
-            if (auteur != null)
+            try
             {
-                _context.Auteurs.Remove(auteur);
+                return await _context.Auteurs.FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetByIdAsync: {ex.Message}");
+                return null;
+            }
+        }
+
+        public override async Task<bool> AddAsync(Auteur auteur)
+        {
+            try
+            {
+                _context.Auteurs.Add(auteur);
                 await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in AddAsync: {ex.Message}");
+                return false;
+            }
+        }
+
+        public override async Task<bool> UpdateAsync(Auteur auteur)
+        {
+            try
+            {
+                _context.Auteurs.Update(auteur);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in UpdateAsync: {ex.Message}");
+                return false;
+            }
+        }
+
+        public override async Task<bool> DeleteAsync(int id)
+        {
+            try
+            {
+                var auteur = await _context.Auteurs.FindAsync(id);
+                if (auteur != null)
+                {
+                    _context.Auteurs.Remove(auteur);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in DeleteAsync: {ex.Message}");
+                return false;
             }
         }
     }

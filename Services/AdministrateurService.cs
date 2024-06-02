@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -14,33 +15,77 @@ namespace blazor_gestconf.Services
 
         public override async Task<List<Administrateur>> GetAllAsync()
         {
-            return await _context.Administrateurs.ToListAsync();
+            try
+            {
+                return await _context.Administrateurs.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetAllAsync: {ex.Message}");
+                return new List<Administrateur>();
+            }
         }
 
         public override async Task<Administrateur> GetByIdAsync(int id)
         {
-            return await _context.Administrateurs.FindAsync(id);
-        }
-
-        public override async Task AddAsync(Administrateur administrateur)
-        {
-            _context.Administrateurs.Add(administrateur);
-            await _context.SaveChangesAsync();
-        }
-
-        public override async Task UpdateAsync(Administrateur administrateur)
-        {
-            _context.Administrateurs.Update(administrateur);
-            await _context.SaveChangesAsync();
-        }
-
-        public override async Task DeleteAsync(int id)
-        {
-            var administrateur = await _context.Administrateurs.FindAsync(id);
-            if (administrateur != null)
+            try
             {
-                _context.Administrateurs.Remove(administrateur);
+                return await _context.Administrateurs.FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetByIdAsync: {ex.Message}");
+                return null;
+            }
+        }
+
+        public override async Task<bool> AddAsync(Administrateur administrateur)
+        {
+            try
+            {
+                _context.Administrateurs.Add(administrateur);
                 await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in AddAsync: {ex.Message}");
+                return false;
+            }
+        }
+
+        public override async Task<bool> UpdateAsync(Administrateur administrateur)
+        {
+            try
+            {
+                _context.Administrateurs.Update(administrateur);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in UpdateAsync: {ex.Message}");
+                return false;
+            }
+        }
+
+        public override async Task<bool> DeleteAsync(int id)
+        {
+            try
+            {
+                var administrateur = await _context.Administrateurs.FindAsync(id);
+                if (administrateur != null)
+                {
+                    _context.Administrateurs.Remove(administrateur);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in DeleteAsync: {ex.Message}");
+                return false;
             }
         }
     }

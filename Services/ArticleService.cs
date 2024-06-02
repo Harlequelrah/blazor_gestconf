@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -14,33 +15,82 @@ namespace blazor_gestconf.Services
 
         public override async Task<List<Article>> GetAllAsync()
         {
-            return await _context.Articles.ToListAsync();
+            try
+            {
+                return await _context.Articles.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine(ex.Message);
+                return new List<Article>();
+            }
         }
 
         public override async Task<Article> GetByIdAsync(int id)
         {
-            return await _context.Articles.FindAsync(id);
-        }
-
-        public override async Task AddAsync(Article article)
-        {
-            _context.Articles.Add(article);
-            await _context.SaveChangesAsync();
-        }
-
-        public override async Task UpdateAsync(Article article)
-        {
-            _context.Articles.Update(article);
-            await _context.SaveChangesAsync();
-        }
-
-        public override async Task DeleteAsync(int id)
-        {
-            var article = await _context.Articles.FindAsync(id);
-            if (article != null)
+            try
             {
-                _context.Articles.Remove(article);
+                return await _context.Articles.FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+        public override async Task<bool> AddAsync(Article article)
+        {
+            try
+            {
+                _context.Articles.Add(article);
                 await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+        public override async Task<bool> UpdateAsync(Article article)
+        {
+            try
+            {
+                _context.Articles.Update(article);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+        public override async Task<bool> DeleteAsync(int id)
+        {
+            try
+            {
+                var article = await _context.Articles.FindAsync(id);
+                if (article != null)
+                {
+                    _context.Articles.Remove(article);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine(ex.Message);
+                return false;
             }
         }
     }

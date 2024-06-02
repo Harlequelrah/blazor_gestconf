@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -14,33 +15,77 @@ namespace blazor_gestconf.Services
 
         public override async Task<List<MembreComite>> GetAllAsync()
         {
-            return await _context.MembreComites.ToListAsync();
+            try
+            {
+                return await _context.MembreComites.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetAllAsync: {ex.Message}");
+                return new List<MembreComite>();
+            }
         }
 
         public override async Task<MembreComite> GetByIdAsync(int id)
         {
-            return await _context.MembreComites.FindAsync(id);
-        }
-
-        public override async Task AddAsync(MembreComite membreComite)
-        {
-            _context.MembreComites.Add(membreComite);
-            await _context.SaveChangesAsync();
-        }
-
-        public override async Task UpdateAsync(MembreComite membreComite)
-        {
-            _context.MembreComites.Update(membreComite);
-            await _context.SaveChangesAsync();
-        }
-
-        public override async Task DeleteAsync(int id)
-        {
-            var membreComite = await _context.MembreComites.FindAsync(id);
-            if (membreComite != null)
+            try
             {
-                _context.MembreComites.Remove(membreComite);
+                return await _context.MembreComites.FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetByIdAsync: {ex.Message}");
+                return null;
+            }
+        }
+
+        public override async Task<bool> AddAsync(MembreComite membreComite)
+        {
+            try
+            {
+                _context.MembreComites.Add(membreComite);
                 await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in AddAsync: {ex.Message}");
+                return false;
+            }
+        }
+
+        public override async Task<bool> UpdateAsync(MembreComite membreComite)
+        {
+            try
+            {
+                _context.MembreComites.Update(membreComite);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in UpdateAsync: {ex.Message}");
+                return false;
+            }
+        }
+
+        public override async Task<bool> DeleteAsync(int id)
+        {
+            try
+            {
+                var membreComite = await _context.MembreComites.FindAsync(id);
+                if (membreComite != null)
+                {
+                    _context.MembreComites.Remove(membreComite);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in DeleteAsync: {ex.Message}");
+                return false;
             }
         }
     }
