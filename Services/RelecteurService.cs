@@ -39,12 +39,22 @@ namespace blazor_gestconf.Services
             }
         }
 
-        public override async Task<bool> AddAsync(Relecteur Relecteur)
+        
+        public override async Task<bool> AddAsync(Relecteur relecteur)
         {
             try
             {
-                _context.Relecteurs.Add(Relecteur);
+                _context.Relecteurs.Add(relecteur);
                 await _context.SaveChangesAsync();
+
+                var roleResult = await _userManager.AddToRoleAsync(relecteur, "Relecteur");
+                if (!roleResult.Succeeded)
+                {
+                    _context.Relecteurs.Remove(relecteur);
+                    await _context.SaveChangesAsync();
+                    return false;
+                }
+
                 return true;
             }
             catch (Exception ex)
@@ -53,6 +63,7 @@ namespace blazor_gestconf.Services
                 return false;
             }
         }
+
 
         public override async Task<bool> UpdateAsync(Relecteur Relecteur)
         {

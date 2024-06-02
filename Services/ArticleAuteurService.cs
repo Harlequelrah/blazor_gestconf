@@ -26,11 +26,12 @@ namespace blazor_gestconf.Services
             }
         }
 
-        public override async Task<ArticleAuteur> GetByIdAsync(int id)
+        public override async Task<ArticleAuteur> GetByIdsAsync(int articleId, int auteurId)
         {
             try
             {
-                return await _context.ArticleAuteurs.FindAsync(id);
+                return await _context.ArticleAuteurs
+                    .SingleOrDefaultAsync(aa => aa.ArticleId == articleId && aa.AuteurId == auteurId);
             }
             catch (Exception ex)
             {
@@ -39,7 +40,7 @@ namespace blazor_gestconf.Services
             }
         }
 
-        public override async Task<bool> AddAsync(ArticleAuteur articleAuteur)
+        public  override async Task<bool> AddAsync(ArticleAuteur articleAuteur)
         {
             try
             {
@@ -69,11 +70,11 @@ namespace blazor_gestconf.Services
             }
         }
 
-        public override async Task<bool> DeleteAsync(int id)
+        public  override async Task<bool> DeletesAsync(int articleId, int auteurId)
         {
             try
             {
-                var articleAuteur = await _context.ArticleAuteurs.FindAsync(id);
+                var articleAuteur = await GetByIdsAsync(articleId, auteurId);
                 if (articleAuteur != null)
                 {
                     _context.ArticleAuteurs.Remove(articleAuteur);

@@ -35,7 +35,7 @@ namespace blazor_gestconf.Data
 
             modelBuilder.Entity<ArticleAuteur>()
                 .HasOne(aa => aa.Article)
-                .WithMany(a => a.Auteur)
+                .WithMany(a => a.Auteurs)
                 .HasForeignKey(aa => aa.ArticleId);
 
             modelBuilder.Entity<ParticipantConference>()
@@ -59,7 +59,7 @@ namespace blazor_gestconf.Data
 
             modelBuilder.Entity<ArticleRelecteur>()
                 .HasOne(apr => apr.Article)
-                .WithMany(a => a.ArticleRelecteurs)
+                .WithMany(a => a.Relecteurs)
                 .HasForeignKey(apr => apr.ArticleId);
 
 

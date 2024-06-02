@@ -43,8 +43,21 @@ namespace blazor_gestconf.Services
         {
             try
             {
+                // Ajouter l'administrateur
                 _context.Administrateurs.Add(administrateur);
                 await _context.SaveChangesAsync();
+
+                // Attribuer le rôle d'administrateur à l'utilisateur
+                var roleResult = await _userManager.AddToRoleAsync(administrateur, "Administrateur");
+                if (!roleResult.Succeeded)
+                {
+                    // Si l'attribution du rôle échoue, vous pouvez gérer l'erreur ici
+                    // Vous pouvez également annuler la création de l'administrateur en supprimant l'administrateur créé précédemment du contexte
+                    _context.Administrateurs.Remove(administrateur);
+                    await _context.SaveChangesAsync();
+                    return false;
+                }
+
                 return true;
             }
             catch (Exception ex)
@@ -53,6 +66,7 @@ namespace blazor_gestconf.Services
                 return false;
             }
         }
+
 
         public override async Task<bool> UpdateAsync(Administrateur administrateur)
         {

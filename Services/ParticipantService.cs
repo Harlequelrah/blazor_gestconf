@@ -45,6 +45,15 @@ namespace blazor_gestconf.Services
             {
                 _context.Participants.Add(participant);
                 await _context.SaveChangesAsync();
+
+                var roleResult = await _userManager.AddToRoleAsync(participant, "Participant");
+                if (!roleResult.Succeeded)
+                {
+                    _context.Participants.Remove(participant);
+                    await _context.SaveChangesAsync();
+                    return false;
+                }
+
                 return true;
             }
             catch (Exception ex)
@@ -53,6 +62,7 @@ namespace blazor_gestconf.Services
                 return false;
             }
         }
+
 
         public override async Task<bool> UpdateAsync(Participant participant)
         {

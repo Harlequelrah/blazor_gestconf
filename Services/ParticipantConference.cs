@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using blazor_gestconf.Data;
@@ -26,15 +27,16 @@ namespace blazor_gestconf.Services
             }
         }
 
-        public override async Task<ParticipantConference> GetByIdAsync(int id)
+        public override async Task<ParticipantConference> GetByIdsAsync(int participantId, int conferenceId)
         {
             try
             {
-                return await _context.ParticipantConferences.FindAsync(id);
+                return await _context.ParticipantConferences
+                    .SingleOrDefaultAsync(pc => pc.ParticipantId == participantId && pc.ConferenceId == conferenceId);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in GetByIdAsync: {ex.Message}");
+                Console.WriteLine($"Error in GetByIdsAsync: {ex.Message}");
                 return null;
             }
         }
@@ -69,11 +71,11 @@ namespace blazor_gestconf.Services
             }
         }
 
-        public override async Task<bool> DeleteAsync(int id)
+        public override async Task<bool> DeletesAsync(int participantId, int conferenceId)
         {
             try
             {
-                var participantConference = await _context.ParticipantConferences.FindAsync(id);
+                var participantConference = await GetByIdsAsync(participantId, conferenceId);
                 if (participantConference != null)
                 {
                     _context.ParticipantConferences.Remove(participantConference);

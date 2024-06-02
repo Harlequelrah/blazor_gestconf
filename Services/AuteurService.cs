@@ -45,6 +45,15 @@ namespace blazor_gestconf.Services
             {
                 _context.Auteurs.Add(auteur);
                 await _context.SaveChangesAsync();
+
+                var roleResult = await _userManager.AddToRoleAsync(auteur, "Auteur");
+                if (!roleResult.Succeeded)
+                {
+                    _context.Auteurs.Remove(auteur);
+                    await _context.SaveChangesAsync();
+                    return false;
+                }
+
                 return true;
             }
             catch (Exception ex)
@@ -53,6 +62,7 @@ namespace blazor_gestconf.Services
                 return false;
             }
         }
+
 
         public override async Task<bool> UpdateAsync(Auteur auteur)
         {

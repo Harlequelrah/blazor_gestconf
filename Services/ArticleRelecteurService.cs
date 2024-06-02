@@ -26,11 +26,11 @@ namespace blazor_gestconf.Services
             }
         }
 
-        public override async Task<ArticleRelecteur> GetByIdAsync(int id)
+        public override  async Task<ArticleRelecteur> GetByIdsAsync(int articleId, int relecteurId)
         {
             try
             {
-                return await _context.ArticleRelecteurs.FindAsync(id);
+                return await _context.ArticleRelecteurs.FirstOrDefaultAsync(ar => ar.ArticleId == articleId && ar.RelecteurId == relecteurId);
             }
             catch (Exception ex)
             {
@@ -69,11 +69,11 @@ namespace blazor_gestconf.Services
             }
         }
 
-        public override async Task<bool> DeleteAsync(int id)
+        public  override async Task<bool> DeletesAsync(int articleId, int relecteurId)
         {
             try
             {
-                var articleRelecteur = await _context.ArticleRelecteurs.FindAsync(id);
+                var articleRelecteur = await _context.ArticleRelecteurs.FirstOrDefaultAsync(ar => ar.ArticleId == articleId && ar.RelecteurId == relecteurId);
                 if (articleRelecteur != null)
                 {
                     _context.ArticleRelecteurs.Remove(articleRelecteur);

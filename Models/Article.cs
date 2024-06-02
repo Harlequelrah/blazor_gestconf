@@ -11,8 +11,8 @@ namespace blazor_gestconf.Models
         public string Statut { get; set; }
         public int ConferenceId { get; set; }
 
-        public ICollection<ArticleAuteur> Auteur { get; set; } = new List<ArticleAuteur>();
-        public ICollection<ArticleRelecteur> ArticleRelecteurs { get; set; } = new List<ArticleRelecteur>();
+        public ICollection<ArticleAuteur> Auteurs { get; set; } = new List<ArticleAuteur>();
+        public ICollection<ArticleRelecteur> Relecteurs { get; set; } = new List<ArticleRelecteur>();
 
         public Article(){
 
