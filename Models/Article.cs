@@ -1,4 +1,4 @@
-﻿    using blazor_gestconf.Services;
+﻿using blazor_gestconf.Services;
 using System.Collections.Generic;
 namespace blazor_gestconf.Models
 {

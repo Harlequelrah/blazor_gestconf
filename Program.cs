@@ -4,15 +4,36 @@ using blazor_gestconf.Models;
 using blazor_gestconf.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Components.Authorization;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
+using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<CustomAuthenticationStateProvider>();
+builder.Services.AddScoped<SignInManager<Utilisateur>>();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+})
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/article"; // Définir l'URL de la page de connexion
+        options.AccessDeniedPath = "/error"; // Définir l'URL de la page d'erreur d'accès refusé
+        options.LogoutPath = "/article"; // Définir l'URL de la page de déconnexion
+    });
 
 // Add database context
 var connectionString = builder.Configuration.GetConnectionString("blazor_gestconf");
@@ -67,15 +88,22 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    //app.UseHsts();
+    // app.UseExceptionHandler("/error", createScopeForErrors: true);
+    // app.UseHsts();
 }
 
-//app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+app.UseAuthentication();
+app.UseAuthorization();
+// app.UseRouting();
+// app.UseEndpoints(endpoints =>
+// {
+//     endpoints.MapBlazorHub(); // Configure Blazor Server middleware
+//     endpoints.MapFallbackToPage("/login"); // Define default entry point
+// });
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

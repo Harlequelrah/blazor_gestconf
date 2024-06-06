@@ -1,0 +1,118 @@
+
+@page "/login"
+@using System.ComponentModel.DataAnnotations;
+@using blazor_gestconf.Services;
+@using blazor_gestconf.Models;
+@using blazor_gestconf.Data;
+@using Microsoft.EntityFrameworkCore;
+@rendermode InteractiveServer
+
+
+<style>
+    body {
+        background: linear-gradient(135deg, #563d7c, #ff8c42) fixed;
+    }
+
+    .card-container {
+        max-width: 600px;
+        width: 100%;
+        transition: transform 0.3s ease-in-out; /* Ajoute une transition fluide */
+    }
+
+    .card-container:hover {
+        transform: scale(1.05); /* Agrandit légèrement le conteneur au survol */
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    /* Styles pour le bouton "Se connecter" */
+    .btn-primary {
+        background-color: #563d7c;
+        border: none;
+        transition: transform 0.3s ease-in-out; /* Ajoute une transition fluide */
+    }
+
+    /* Effet d'agrandissement au survol */
+    .btn-primary:hover {
+        transform: scale(1.1);
+    }
+
+    /* Styles pour les champs de texte */
+    .form-control {
+        transition: transform 0.3s ease-in-out, width 0.3s ease-in-out; /* Ajoute une transition fluide pour la largeur */
+        width: calc(100% - 20px); /* Réduit légèrement la largeur des champs */
+    }
+
+    /* Effet d'agrandissement au survol des champs de texte */
+    .form-control:hover {
+        transform: scale(1.1);
+    }
+</style>
+
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card p-4 shadow-lg card-container">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4" style="color: #563d7c;">Connexion</h3>
+            <form>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-default">User</span>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" @bind="loginModel.UserName" />
+                </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-default">Password</span>
+                <input type="Password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" @bind="loginModel.PasswordHash" />
+            </div>
+            <button type="button" class="btn btn-danger" @onclick="HandleLogin">Se connecter</button>
+    </form>
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+    private string errorMessage;
+    [Inject]
+    private AppDbContext DbContext { get; set; }
+
+    [Inject]
+    private CustomAuthenticationStateProvider AuthStateProvider { get; set; }
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+
+
+    private async Task HandleLogin()
+    {
+        if (!Validator.TryValidateObject(loginModel, new ValidationContext(loginModel), null))
+        {
+            errorMessage = "Veuillez remplir tous les champs.";
+            return;
+        }
+
+        // Vérification des informations d'identification dans la base de données
+        var user = await DbContext.Users.SingleOrDefaultAsync(u => u.UserName == loginModel.UserName && u.PasswordHash == loginModel.PasswordHash);
+        if (user != null)
+        {
+            AuthStateProvider.MarkUserAsAuthenticated(loginModel.UserName);
+             NavigationManager.NavigateTo("/admin"); // Redirection vers la page d'accueil -->
+        }
+        else
+        {
+            errorMessage = "Nom d'utilisateur ou mot de passe incorrect.";
+            NavigationManager.NavigateTo("/not-authorized");
+
+        }
+    }
+
+    public class LoginModel
+    {
+        [Required(ErrorMessage = "Le nom d'utilisateur est requis.")]
+        public string UserName { get; set; }
+
+        [Required(ErrorMessage = "Le mot de passe est requis.")]
+        public string PasswordHash { get; set; }
+    }
+}
