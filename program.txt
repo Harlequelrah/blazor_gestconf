@@ -22,7 +22,6 @@ builder.Services.AddAuthorizationCore();
 // Add other necessary services and configurations
 
 builder.Services.AddScoped<SignInManager<Utilisateur>>();
-builder.Services.AddScoped<UserManager<Utilisateur>>();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddRazorComponents()
@@ -105,7 +104,7 @@ app.UseStaticFiles();
 app.UseAntiforgery();
 app.UseAuthentication();
 app.UseAuthorization();
-// app.MapRazorPages();
+app.MapRazorPages();
 // app.UseRouting();
 // app.UseEndpoints(endpoints =>
 // {

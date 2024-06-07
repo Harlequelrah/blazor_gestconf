@@ -1,33 +1,30 @@
 @page "/admin"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
-@using blazor_gestconf.Models
-
 @attribute [Authorize(Roles = "Administrateur")]
+
+@inject NavigationManager NavigationManager
 
 <h3>Admin Page</h3>
 
 <p>Only users with the Admin role can access this page.</p>
 
 @code {
-    [Inject]
-    protected NavigationManager NavigationManager { get; set; }
-
+    // Si vous avez besoin d'accéder aux informations utilisateur, injectez l'état d'authentification
     [CascadingParameter]
-    protected Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private ClaimsPrincipal user;
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateTask;
-        var user = authState.User;
+        var authState = await authenticationStateTask;
+        user = authState.User;
 
-        if (!user.Identity.IsAuthenticated)
+        if (user == null || !user.Identity.IsAuthenticated)
         {
+            // Gérer le cas où l'utilisateur n'est pas authentifié
             NavigationManager.NavigateTo("/login");
-        }
-        else if (!user.IsInRole("Admin"))
-        {
-            NavigationManager.NavigateTo("/error");
         }
     }
 }

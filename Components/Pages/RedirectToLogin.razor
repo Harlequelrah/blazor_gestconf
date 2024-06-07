@@ -1,0 +1,30 @@
+@page "/RedirectToLogin"
+@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@code {
+    private bool isAuthenticated;
+    [Parameter] public string ReturnUrl { get; set; }
+
+    protected override async void OnInitialized()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        isAuthenticated = user.Identity.IsAuthenticated;
+
+        if (string.IsNullOrEmpty(ReturnUrl))
+        {
+            ReturnUrl = "/";
+        }
+
+        if (isAuthenticated)
+        {
+            NavigationManager.NavigateTo(ReturnUrl, forceLoad: true);
+        }
+        else
+        {
+            NavigationManager.NavigateTo($"Identity/Account/Login?returnUrl=", forceLoad: true);
+        }
+    }
+}

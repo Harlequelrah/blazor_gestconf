@@ -1,0 +1,12 @@
+@page "/authenticated"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@attribute [Authorize(Policy = "RequireLoggedIn")]
+<CascadingAuthenticationState>
+    <Authorized>
+        <!-- Contenu pour les utilisateurs authentifiés -->
+    </Authorized>
+    <NotAuthorized>
+        <!-- Contenu pour les utilisateurs non authentifiés -->
+    </NotAuthorized>
+</CascadingAuthenticationState>
