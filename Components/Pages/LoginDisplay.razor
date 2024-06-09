@@ -1,9 +1,14 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@using blazor_gestconf.Models
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<Utilisateur> UserManager
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 @page "/displayuser"
 
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Administrateur")]
 
 @code {
     private ClaimsPrincipal User { get; set; }
@@ -12,17 +17,26 @@
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         User = authState.User;
+        var user = await UserManager.GetUserAsync(authState.User);
+        var roles = await UserManager.GetRolesAsync(user);
+        foreach (var role in roles)
+        {
+            Console.WriteLine($"Roles:{role}");
+        }
+    }
+
+    private void Logout()
+    {
+        NavigationManager.NavigateTo("/Account/LogOut", true);
     }
 }
 
 @if (User.Identity.IsAuthenticated)
 {
     <h3>Bienvenue, @User.Identity.Name!</h3>
-    <form method="post" action="Identity/Account/LogOut">
-        <button type="submit" class="btn btn-danger">Déconnexion</button>
-    </form>
+    <button type="button" @onclick="Logout" class="btn btn-danger">Déconnexion</button>
 }
 else
 {
-    <p>Vous n'êtes pas connecté. <a href="Identity/Account/Login">Se connecter</a></p>
+    <p>Vous n'êtes pas connecté. <a href="Account/Login">Se connecter</a></p>
 }
