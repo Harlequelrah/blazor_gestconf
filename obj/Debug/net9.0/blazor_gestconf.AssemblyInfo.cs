@@ -10,10 +10,12 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.AspNetCore.Identity.UI.UIFrameworkAttribute("Bootstrap5")]
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("aspnet-blazor_gestconf-185543fc-c8c0-4ad3-8d1a-112e7567ebde")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("blazor_gestconf")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+357b2681a38a2d90ee81837cb86a5665749b175d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+18984d644fd81155abe03c40344bcd4a800a7229")]
 [assembly: System.Reflection.AssemblyProductAttribute("blazor_gestconf")]
 [assembly: System.Reflection.AssemblyTitleAttribute("blazor_gestconf")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

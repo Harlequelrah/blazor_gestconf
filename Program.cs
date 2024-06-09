@@ -1,63 +1,72 @@
-using blazor_gestconf.Components;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using blazor_gestconf.Data;
+using blazor_gestconf.Components.Account;
+
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using blazor_gestconf.Components;
+using blazor_gestconf.Components.Pages;
 using blazor_gestconf.Models;
 using blazor_gestconf.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Components.Authorization;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
-
-using System.Threading.Tasks;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddScoped<CustomAuthenticationStateProvider>();
-builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<CustomAuthenticationStateProvider>());
-builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-builder.Services.AddAuthorizationCore();
-// Add other necessary services and configurations
+builder.Services.AddSingleton(TimeProvider.System);
 
+builder.Services.AddSingleton<IEmailSender<Utilisateur>, IdentityNoOpEmailSender>();
+
+
+
+// Configuration de l'authentification
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<AuthenticationStateProvider,IdentityRevalidatingAuthenticationStateProvider>();
+builder.Services.AddScoped<IdentityUserAccessor>();
+builder.Services.AddScoped<IdentityRedirectManager>();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+}).AddCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+    options.Cookie.Domain = "localhost"; // Juste le domaine, sans protocole
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.Cookie.Path = "/";
+    options.SlidingExpiration = true;
+}).AddIdentityCookies();
+
+
+builder.Services.AddAuthorizationCore();
+
+// Connexion à la base de données
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddRazorPages();
 builder.Services.AddScoped<SignInManager<Utilisateur>>();
 builder.Services.AddScoped<UserManager<Utilisateur>>();
-builder.Services.AddRazorPages();
+
 builder.Services.AddServerSideBlazor();
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Identity/Account/Login";
-            options.LogoutPath = "/Identity/Account/Logout";
-            options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-    });
-
-
-builder.Services.AddAuthorization(options =>
+builder.Services.AddIdentityCore<Utilisateur>(options =>
 {
-    options.AddPolicy("RequireLoggedIn", policy =>policy.RequireAuthenticatedUser());
-    options.AddPolicy("Administrateur", policy => policy.RequireRole("Administrateur"));
-});
-// Add database context
-var connectionString = builder.Configuration.GetConnectionString("blazor_gestconf");
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-
-builder.Services.AddIdentity<Utilisateur, IdentityRole<int>>(options =>
-{
-    // Configure password requirements if needed
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 6; // Example requirement
+    options.SignIn.RequireConfirmedAccount = true;
 })
-.AddEntityFrameworkStores<AppDbContext>()
-.AddDefaultTokenProviders();
+  .AddRoles<IdentityRole<int>>()
+  .AddEntityFrameworkStores<ApplicationDbContext>()
+  .AddDefaultTokenProviders()
+  .AddSignInManager();
 
 builder.Services.AddScoped<ArticleService>();
 builder.Services.AddScoped<AuteurService>();
@@ -72,15 +81,13 @@ builder.Services.AddScoped<ArticleRelecteurService>();
 
 var app = builder.Build();
 
-// Create a scope to obtain the RoleManager service
+// Créer les rôles lors de la première exécution
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
 
-
     // Créer les rôles
     string[] roleNames = { "Administrateur", "Auteur", "MembreComite", "Participant" };
-
     foreach (var roleName in roleNames)
     {
         var roleExist = await roleManager.RoleExistsAsync(roleName);
@@ -92,28 +99,26 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+// Configurer le pipeline HTTP
+if (app.Environment.IsDevelopment())
 {
-    // app.UseExceptionHandler("/error", createScopeForErrors: true);
-    // app.UseHsts();
+    // app.UseMigrationsEndPoint(); // Facultatif pour l'initialisation de la base de données
 }
-
-// app.UseHttpsRedirection();
-
-app.UseStaticFiles();
-app.UseAntiforgery();
+else
+{
+    app.UseExceptionHandler("/Error");
+}
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-// app.MapRazorPages();
-// app.UseRouting();
-// app.UseEndpoints(endpoints =>
-// {
-//     endpoints.MapBlazorHub();
-//     endpoints.MapFallbackToPage("/_Host");
-// });
 
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+app.UseStaticFiles();
+// app.UseHeaderCheckMiddleware();
+// Ajoutez cette ligne pour l'utilisation des routes
 
+app.UseAntiforgery();
+
+
+app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
+app.MapAdditionalIdentityEndpoints();
 app.Run();

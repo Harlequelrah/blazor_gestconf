@@ -1,0 +1,6 @@
+
+internal class RevalidatingIdentityAuthenticationStateProvider<T>
+{
+}
+
+
