@@ -17,7 +17,8 @@ namespace blazor_gestconf.Services
         {
             try
             {
-                return await _context.Articles.ToListAsync();
+                return await _context.Articles.Include(a => a.Conference)
+                                              .ToListAsync();
             }
             catch (Exception ex)
             {
