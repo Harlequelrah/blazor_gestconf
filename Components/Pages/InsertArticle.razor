@@ -1,0 +1,55 @@
+﻿@page "/add/Article"
+@using blazor_gestconf.Models
+@using blazor_gestconf.Services
+@rendermode InteractiveServer
+@inject ArticleService articleCrud
+<h3>InsertArticle</h3>
+<EditForm Model="Art" method="Post" OnValidSubmit="Inserer">
+    <DataAnnotationsValidator/>
+    <div class="mb-3">
+        <label for="title" class="form-label">Titre :</label>
+        <InputText @bind-Value="Art.Titre" class="form-control" id="title"></InputText>
+        <ValidationMessage For="@(()=>Art.Titre)" />
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description :</label>
+        <InputText @bind-Value="Art.Description" class="form-control" id="description"></InputText>
+        <ValidationMessage For="@(()=>Art.Description)" />
+    </div>
+    <div class="mb-3">
+        <label for="file" class="form-label">Fichier(pdf) :</label>
+        <InputFile OnChange="HandleFileSelected" @bind-Value="Art.FichierPdf" class="form-control" id="file"></InputFile>
+        <ValidationMessage For="@(()=>Art.FichierPdf)" />
+    </div>
+    <div class="mb-3">
+        <label for="Conf" class="form-label">Id de la conférence :</label>
+        <InputNumber @bind-Value="Art.ConferenceId" id="Conf"class="form-control"></InputNumber>
+    </div>
+    <div class="mb-3">
+        <button type="submit" class="btn-dark">Enrégistrer</button>
+    </div>
+</EditForm>
+@code {
+    [SupplyParameterFromForm]
+    public Article Art { get; set; } = new Article();
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            using var ms = new MemoryStream();
+            await file.OpenReadStream().CopyToAsync(ms);
+            Art.FichierPdf = ms.ToArray();
+        }
+    }
+
+    public async Task Inserer()
+    {
+        bool ex = await articleCrud.AddAsync(Art);
+        if (ex)
+        {
+            Art = new Article();
+        }
+    }
+}

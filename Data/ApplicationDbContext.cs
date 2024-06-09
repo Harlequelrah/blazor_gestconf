@@ -135,8 +135,10 @@ namespace blazor_gestconf.Data
             {
                 entity.Property(e => e.Titre).HasColumnType("varchar(100)");
                 entity.Property(e => e.Description).HasColumnType("varchar(150)");
-                entity.Property(e => e.FichierPdf).HasColumnType("varchar(255)");
                 entity.Property(e => e.Statut).HasColumnType("varchar(100)");
+                entity.HasOne(a => a.Conference)
+                      .WithMany(c => c.Articles)
+                      .HasForeignKey(a => a.ConferenceId);
             });
         }
     }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using blazor_gestconf.Data;
 
@@ -11,9 +12,11 @@ using blazor_gestconf.Data;
 namespace blazor_gestconf.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240609125856_InsertArticle")]
+    partial class InsertArticle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,9 +170,9 @@ namespace blazor_gestconf.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(150)");
 
-                    b.Property<byte[]>("FichierPdf")
+                    b.Property<string>("FichierPdf")
                         .IsRequired()
-                        .HasColumnType("longblob");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("RelectureId")
                         .HasColumnType("longtext");
@@ -270,26 +273,6 @@ namespace blazor_gestconf.Migrations
                     b.ToTable("Conferences");
                 });
 
-            modelBuilder.Entity("blazor_gestconf.Models.Entreprise", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Adresse")
-                        .HasColumnType("varchar(155)");
-
-                    b.Property<string>("Nom")
-                        .IsRequired()
-                        .HasColumnType("varchar(155)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Entreprises");
-                });
-
             modelBuilder.Entity("blazor_gestconf.Models.ParticipantConference", b =>
                 {
                     b.Property<int>("ParticipantId")
@@ -336,26 +319,6 @@ namespace blazor_gestconf.Migrations
                     b.HasIndex("RelecteurId");
 
                     b.ToTable("Relectures");
-                });
-
-            modelBuilder.Entity("blazor_gestconf.Models.Universite", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Adresse")
-                        .HasColumnType("varchar(155)");
-
-                    b.Property<string>("Nom")
-                        .IsRequired()
-                        .HasColumnType("varchar(155)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Universites");
                 });
 
             modelBuilder.Entity("blazor_gestconf.Models.Utilisateur", b =>
@@ -445,15 +408,13 @@ namespace blazor_gestconf.Migrations
                 {
                     b.HasBaseType("blazor_gestconf.Models.Utilisateur");
 
-                    b.Property<int>("EntrepriseId")
-                        .HasColumnType("int");
+                    b.Property<string>("Entreprise")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
 
-                    b.Property<int>("UniversiteId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("EntrepriseId");
-
-                    b.HasIndex("UniversiteId");
+                    b.Property<string>("Universite")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
 
                     b.HasDiscriminator().HasValue("Auteur");
                 });
@@ -613,25 +574,6 @@ namespace blazor_gestconf.Migrations
                         .IsRequired();
 
                     b.Navigation("Relecteur");
-                });
-
-            modelBuilder.Entity("blazor_gestconf.Models.Auteur", b =>
-                {
-                    b.HasOne("blazor_gestconf.Models.Entreprise", "Entreprise")
-                        .WithMany()
-                        .HasForeignKey("EntrepriseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("blazor_gestconf.Models.Universite", "Universite")
-                        .WithMany()
-                        .HasForeignKey("UniversiteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Entreprise");
-
-                    b.Navigation("Universite");
                 });
 
             modelBuilder.Entity("blazor_gestconf.Models.Article", b =>

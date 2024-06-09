@@ -1,0 +1,48 @@
+﻿@page "/show/article"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using blazor_gestconf.Models
+@using blazor_gestconf.Services
+@inject ArticleService articleCrud
+@attribute [Authorize(Roles ="Administrateur")]
+
+<h3>Liste des articles</h3>
+<AuthorizeView>
+    <Authorized>
+        <p>Bonjour</p>
+    </Authorized>
+</AuthorizeView>
+@if (Articles == null)
+{
+    <p>Aucun Article n'a été ajouté</p>
+}
+else
+{
+     <table class="table table-bordered">
+        <tr>
+            <th>Titre</th>
+            <th>Description</th>
+            <th>Article</th>
+            <th>Conference</th>
+        </tr>
+    @foreach(var a in Articles)
+        {
+            <tr>
+                <td>@a.Titre</td>
+                <td>@a.Description</td>
+                <td>
+                    <a class="btn btn-primary" href="@($"data:application/pdf;base64,{Convert.ToBase64String(a.FichierPdf)}")" download="@a.Titre">Télécharger</a>
+                </td>
+                <td>@a.Conference.Nom</td>
+            </tr>
+        }
+    </table>
+}
+
+@code {
+    public List<Article>? Articles;
+    protected override async  Task OnInitializedAsync()
+    {
+        Articles = await articleCrud.GetAllAsync();
+    }
+}
