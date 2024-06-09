@@ -1,4 +1,4 @@
-﻿@page "/Account/Register/{role}"
+@page "/Account/Register"
 
 @using System.ComponentModel.DataAnnotations
 @using System.Text
@@ -22,7 +22,7 @@
 <div class="row">
     <div class="col-md-4">
         <StatusMessage Message="@Message" />
-        <EditForm Model="Input" OnValidSubmit="RegisterUser" FormName="register">
+        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
             <DataAnnotationsValidator />
             <h2>Create a new account.</h2>
             <hr />
@@ -42,38 +42,13 @@
                 <label for="confirm-password">Confirm Password</label>
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
             </div>
-            @if (Input.Role == "Auteur")
-            {
-                <div class="form-floating mb-3">
-                    <select @bind="Input.Universite" class="form-control">
-                        <option value="">Select University</option>
-                        <option value="Université 1">Université 1</option>
-                        <option value="Université 2">Université 2</option>
-                        <!-- Add more options as needed -->
-                    </select>
-                    <label for="universite">Universite</label>
-                    <ValidationMessage For="() => Input.Universite" class="text-danger" />
-                </div>
-                <div class="form-floating mb-3">
-                    <select @bind="Input.Entreprise" class="form-control">
-                        <option value="">Select Company</option>
-                        <option value="Entreprise 1">Entreprise 1</option>
-                        <option value="Entreprise 2">Entreprise 2</option>
-                        <!-- Add more options as needed -->
-                    </select>
-                    <label for="entreprise">Entreprise</label>
-                    <ValidationMessage For="() => Input.Entreprise" class="text-danger" />
-                </div>
-            }
             <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </EditForm>
     </div>
+
 </div>
 
 @code {
-    [Parameter]
-    public string Role { get; set; } = "User";
-
     private IEnumerable<IdentityError>? identityErrors;
 
     [SupplyParameterFromForm]
@@ -84,14 +59,10 @@
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
-    protected override void OnInitialized()
-    {
-        Input.Role = Role;
-    }
-
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
+
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -105,17 +76,6 @@
 
         Logger.LogInformation("User created a new account with password.");
 
-        // Assign the role to the user
-        if (!await UserManager.IsInRoleAsync(user, Input.Role))
-        {
-            var roleResult = await UserManager.AddToRoleAsync(user, Input.Role);
-            if (!roleResult.Succeeded)
-            {
-                identityErrors = roleResult.Errors;
-                return;
-            }
-        }
-
         var userId = await UserManager.GetUserIdAsync(user);
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -124,7 +84,6 @@
             new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
 
         await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
-
 
         if (UserManager.Options.SignIn.RequireConfirmedAccount)
         {
@@ -160,28 +119,28 @@
     }
 
     private sealed class InputModel
-    {
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; } = "";
+{
+    [Required]
+    [EmailAddress]
+    [Display(Name = "Email")]
+    public string Email { get; set; } = "";
 
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-        [DataType(DataType.Password)]
-        [Display(Name = "Password")]
-        public string Password { get; set; } = "";
+    [Required]
+    [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+    [DataType(DataType.Password)]
+    [Display(Name = "Password")]
+    public string Password { get; set; } = "";
 
-        [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        public string ConfirmPassword { get; set; } = "";
+    [DataType(DataType.Password)]
+    [Display(Name = "Confirm password")]
+    [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+    public string ConfirmPassword { get; set; } = "";
 
-        [Required]
-        [Display(Name = "Role")]
-        public string Role { get; set; } = "Utilisateur"; // Default role
-        public string? Discriminator { get; set; }
-        public string? Universite { get; set; }
-        public string? Entreprise { get; set; }
-    }
+    [Required]
+    [Display(Name = "Role")]
+    public string Role { get; set; } = "Utilisateur"; // Default role
+
+    public string? Universite { get; set; }
+    public string? Entreprise { get; set; }
+}
 }
