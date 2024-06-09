@@ -138,17 +138,39 @@
     }
 
     private Utilisateur CreateUser()
+{
+    string role=Input.Role;
+    try
     {
-        try
+        switch (role.ToLower())
         {
-            return Activator.CreateInstance<Utilisateur>();
-        }
-        catch
-        {
-            throw new InvalidOperationException($"Can't create an instance of '{nameof(Utilisateur)}'. " +
-                $"Ensure that '{nameof(Utilisateur)}' is not an abstract class and has a parameterless constructor.");
+            case "participant":
+                return new Participant();
+            case "membrecomite":
+                return new MembreComite();
+            case "auteur":
+                var auteur = new Auteur
+                {
+                    Entreprise = Input.Entreprise,
+                    Universite = Input.Universite
+                };
+                Console.WriteLine("stade 1");
+                Console.WriteLine("Hello, auteur");
+                Console.WriteLine($"{Input.Entreprise}");
+                Console.WriteLine($"{auteur.Entreprise}");
+                return auteur;
+            case "administrateur":
+                return new Administrateur();
+            default:
+                return new Utilisateur();
         }
     }
+    catch (Exception ex)
+    {
+        // Gérer l'exception ici (journalisation, notification, etc.)
+        throw new InvalidOperationException($"Erreur lors de la création de l'utilisateur avec le rôle '{role}'.", ex);
+    }
+}
 
     private IUserEmailStore<Utilisateur> GetEmailStore()
     {
