@@ -131,10 +131,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXFJlZ2lzdGVyQ29uZmlybWF0aW9uLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Programmation/Visual Studio 2022/source/blazor_gestconf/Components/Account/Pages/RegisterPages/RegisterParticipant.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXFJlZ2lzdGVyUGFnZXNcUmVnaXN0ZXJQYXJ0aWNpcGFudC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
 [E:/Programmation/Visual Studio 2022/source/blazor_gestconf/Components/Account/Pages/ResendEmailConfirmation.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXFJlc2VuZEVtYWlsQ29uZmlybWF0aW9uLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 

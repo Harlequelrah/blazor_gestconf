@@ -18,6 +18,8 @@ namespace blazor_gestconf.Data
         public DbSet<ArticleRelecteur> ArticleRelecteurs { get; set; }
         public DbSet<Conference> Conferences { get; set; }
         public DbSet<Administrateur> Administrateurs { get; set; }
+        public DbSet<Universite> Universites { get; set; }
+        public DbSet<Entreprise> Entreprises { get; set; }
         public DbSet<MembreComite> MembreComites { get; set; }
         public DbSet<Relecteur> Relecteurs { get; set; }
         public DbSet<Participant> Participants { get; set; }
@@ -26,7 +28,34 @@ namespace blazor_gestconf.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);  // Important d'appeler la base!
+            base.OnModelCreating(modelBuilder);
+            // Configuration de la relation entre Auteur et Entreprise
+            modelBuilder.Entity<Auteur>()
+                .HasOne(a => a.Entreprise)
+                .WithMany()
+                .HasForeignKey(a => a.EntrepriseId);
+
+            modelBuilder.Entity<Entreprise>(entity =>
+            {
+                entity.HasKey(a => a.Id);
+                entity.Property(a => a.Nom).HasColumnType("varchar(155)");
+                entity.Property(a => a.Adresse).HasColumnType("varchar(155)");
+            });
+
+
+            modelBuilder.Entity<Universite>(entity =>
+            {
+                entity.HasKey(a => a.Id);
+                entity.Property(a => a.Nom).HasColumnType("varchar(155)");
+                entity.Property(a => a.Adresse).HasColumnType("varchar(155)");
+            });
+
+
+            // Configuration de la relation entre Auteur et Universite
+            modelBuilder.Entity<Auteur>()
+                .HasOne(a => a.Universite)
+                .WithMany()
+                .HasForeignKey(a => a.UniversiteId);  // Important d'appeler la base!
 
             modelBuilder.Entity<IdentityUserLogin<int>>()
                 .HasKey(login => login.UserId);
@@ -95,11 +124,6 @@ namespace blazor_gestconf.Data
                 entity.Property(e => e.Theme).HasColumnType("varchar(155)");
             });
 
-            modelBuilder.Entity<Auteur>(entity =>
-            {
-                entity.Property(e => e.Entreprise).HasColumnType("varchar(100)");
-                entity.Property(e => e.Universite).HasColumnType("varchar(100)");
-            });
 
             modelBuilder.Entity<Relecture>(entity =>
             {

@@ -6,6 +6,9 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using blazor_gestconf.Data
+@using blazor_gestconf.Services
+@inject EntrepriseService EntrepriseService
+@inject UniversiteService UniversiteService
 
 @inject UserManager<Utilisateur> UserManager
 @inject IUserStore<Utilisateur> UserStore
@@ -43,34 +46,40 @@
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
             </div>
             @if (Input.Role == "Auteur")
+{
+    <div class="form-floating mb-3">
+        <InputSelect @bind-Value="Input.UniversiteId" class="form-control">
+            <option value="">Select University</option>
+            @foreach (var universite in ListUniversites)
             {
-                <div class="form-floating mb-3">
-                    <select @bind="Input.Universite" class="form-control">
-                        <option value="">Select University</option>
-                        <option value="Université 1">Université 1</option>
-                        <option value="Université 2">Université 2</option>
-                        <!-- Add more options as needed -->
-                    </select>
-                    <label for="universite">Universite</label>
-                    <ValidationMessage For="() => Input.Universite" class="text-danger" />
-                </div>
-                <div class="form-floating mb-3">
-                    <select @bind="Input.Entreprise" class="form-control">
-                        <option value="">Select Company</option>
-                        <option value="Entreprise 1">Entreprise 1</option>
-                        <option value="Entreprise 2">Entreprise 2</option>
-                        <!-- Add more options as needed -->
-                    </select>
-                    <label for="entreprise">Entreprise</label>
-                    <ValidationMessage For="() => Input.Entreprise" class="text-danger" />
-                </div>
+                <option value="@universite.Id">@universite.Nom</option>
             }
+        </InputSelect>
+        <label for="universite">Université</label>
+        <ValidationMessage For="() => Input.UniversiteId" class="text-danger" />
+    </div>
+
+    <div class="form-floating mb-3">
+        <InputSelect @bind-Value="Input.EntrepriseId" class="form-control">
+            <option value="">Select Company</option>
+            @foreach (var entreprise in ListEntreprises)
+            {
+                <option value="@entreprise.Id">@entreprise.Nom</option>
+            }
+        </InputSelect>
+        <label for="entreprise">Entreprise</label>
+        <ValidationMessage For="() => Input.EntrepriseId" class="text-danger" />
+    </div>
+}
+
             <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </EditForm>
     </div>
 </div>
 
 @code {
+    private List<Entreprise> ListEntreprises = new List<Entreprise>();
+    private List<Universite> ListUniversites = new List<Universite>();
     [Parameter]
     public string Role { get; set; } = "User";
 
@@ -84,58 +93,71 @@
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
-    protected override void OnInitialized()
+    protected override async Task  OnInitializedAsync()
     {
         Input.Role = Role;
+        ListEntreprises = await EntrepriseService.GetAllAsync();
+        ListUniversites = await UniversiteService.GetAllAsync();
+
     }
 
     public async Task RegisterUser(EditContext editContext)
-    {
-        var user = CreateUser();
-        await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-        var emailStore = GetEmailStore();
-        await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-        var result = await UserManager.CreateAsync(user, Input.Password);
+{
+    var user = CreateUser();
+    await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+    var emailStore = GetEmailStore();
+    await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
-        if (!result.Succeeded)
+    if (Input.Role == "Auteur")
+    {
+        var auteur = user as Auteur;
+        if (auteur != null)
         {
-            identityErrors = result.Errors;
+            auteur.UniversiteId = Input.UniversiteId ?? 0; // Assuming 0 is an invalid ID
+            auteur.EntrepriseId = Input.EntrepriseId ?? 0; // Assuming 0 is an invalid ID
+        }
+    }
+
+    var result = await UserManager.CreateAsync(user, Input.Password);
+    if (!result.Succeeded)
+    {
+        identityErrors = result.Errors;
+        return;
+    }
+
+    Logger.LogInformation("User created a new account with password.");
+
+    if (!await UserManager.IsInRoleAsync(user, Input.Role))
+    {
+        var roleResult = await UserManager.AddToRoleAsync(user, Input.Role);
+        if (!roleResult.Succeeded)
+        {
+            identityErrors = roleResult.Errors;
             return;
         }
-
-        Logger.LogInformation("User created a new account with password.");
-
-        // Assign the role to the user
-        if (!await UserManager.IsInRoleAsync(user, Input.Role))
-        {
-            var roleResult = await UserManager.AddToRoleAsync(user, Input.Role);
-            if (!roleResult.Succeeded)
-            {
-                identityErrors = roleResult.Errors;
-                return;
-            }
-        }
-
-        var userId = await UserManager.GetUserIdAsync(user);
-        var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
-        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
-            NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
-            new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
-
-        await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
-
-
-        if (UserManager.Options.SignIn.RequireConfirmedAccount)
-        {
-            RedirectManager.RedirectTo(
-                "Account/RegisterConfirmation",
-                new() { ["email"] = Input.Email, ["returnUrl"] = ReturnUrl });
-        }
-
-        await SignInManager.SignInAsync(user, isPersistent: false);
-        RedirectManager.RedirectTo(ReturnUrl);
     }
+
+    var userId = await UserManager.GetUserIdAsync(user);
+    var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+    var callbackUrl = NavigationManager.GetUriWithQueryParameters(
+        NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
+        new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
+
+    await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
+
+    if (UserManager.Options.SignIn.RequireConfirmedAccount)
+    {
+        RedirectManager.RedirectTo(
+            "Account/RegisterConfirmation",
+            new() { ["email"] = Input.Email, ["returnUrl"] = ReturnUrl });
+    }
+
+    await SignInManager.SignInAsync(user, isPersistent: false);
+    RedirectManager.RedirectTo(ReturnUrl);
+}
+
+
 
     private Utilisateur CreateUser()
 {
@@ -149,16 +171,7 @@
             case "membrecomite":
                 return new MembreComite();
             case "auteur":
-                var auteur = new Auteur
-                {
-                    Entreprise = Input.Entreprise,
-                    Universite = Input.Universite
-                };
-                Console.WriteLine("stade 1");
-                Console.WriteLine("Hello, auteur");
-                Console.WriteLine($"{Input.Entreprise}");
-                Console.WriteLine($"{auteur.Entreprise}");
-                return auteur;
+                return new Auteur();
             case "administrateur":
                 return new Administrateur();
             default:
@@ -182,28 +195,35 @@
     }
 
     private sealed class InputModel
-    {
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; } = "";
+{
+    [Required]
+    [EmailAddress]
+    [Display(Name = "Email")]
+    public string Email { get; set; } = "";
 
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-        [DataType(DataType.Password)]
-        [Display(Name = "Password")]
-        public string Password { get; set; } = "";
+    [Required]
+    [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+    [DataType(DataType.Password)]
+    [Display(Name = "Password")]
+    public string Password { get; set; } = "";
 
-        [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        public string ConfirmPassword { get; set; } = "";
+    [DataType(DataType.Password)]
+    [Display(Name = "Confirm password")]
+    [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+    public string ConfirmPassword { get; set; } = "";
 
-        [Required]
-        [Display(Name = "Role")]
-        public string Role { get; set; } = "Utilisateur"; // Default role
-        public string? Discriminator { get; set; }
-        public string? Universite { get; set; }
-        public string? Entreprise { get; set; }
-    }
+    [Required]
+    [Display(Name = "Role")]
+    public string Role { get; set; } = "Utilisateur"; // Default role
+
+    [Display(Name = "Université")]
+    public int? UniversiteId { get; set; } // Changed to int?
+
+    [Display(Name = "Entreprise")]
+    public int? EntrepriseId { get; set; } // Changed to int?
+
+    public Universite Universite { get; set; }
+    public Entreprise Entreprise { get; set; }
+}
+
 }

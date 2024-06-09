@@ -68,6 +68,9 @@ builder.Services.AddIdentityCore<Utilisateur>(options =>
   .AddDefaultTokenProviders()
   .AddSignInManager();
 
+
+builder.Services.AddScoped<UniversiteService>();
+builder.Services.AddScoped<EntrepriseService>();
 builder.Services.AddScoped<ArticleService>();
 builder.Services.AddScoped<AuteurService>();
 builder.Services.AddScoped<RelecteurService>();

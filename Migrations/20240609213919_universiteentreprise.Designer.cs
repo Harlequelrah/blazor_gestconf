@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using blazor_gestconf.Data;
 
@@ -11,9 +12,11 @@ using blazor_gestconf.Data;
 namespace blazor_gestconf.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240609213919_universiteentreprise")]
+    partial class universiteentreprise
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -277,13 +280,6 @@ namespace blazor_gestconf.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Adresse")
-                        .HasColumnType("varchar(155)");
-
-                    b.Property<string>("Nom")
-                        .IsRequired()
-                        .HasColumnType("varchar(155)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Entreprises");
@@ -344,13 +340,6 @@ namespace blazor_gestconf.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Adresse")
-                        .HasColumnType("varchar(155)");
-
-                    b.Property<string>("Nom")
-                        .IsRequired()
-                        .HasColumnType("varchar(155)");
 
                     b.HasKey("Id");
 
