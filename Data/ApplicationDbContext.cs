@@ -93,6 +93,13 @@ namespace blazor_gestconf.Data
                 entity.Property(e => e.Nom).HasColumnType("varchar(155)");
                 entity.Property(e => e.Sigle).HasColumnType("varchar(155)");
                 entity.Property(e => e.Theme).HasColumnType("varchar(155)");
+                entity.Property(e => e.DateSoumissionDebut).HasColumnType("Date");
+                entity.Property(e => e.DateSoumissionFin).HasColumnType("Date");
+                entity.Property(e => e.DateRemiseResultats).HasColumnType("Date");
+                entity.Property(e => e.DateInscriptionDebut).HasColumnType("Date");
+                entity.Property(e => e.DateInscriptionFin).HasColumnType("Date");
+                entity.Property(e => e.DateConferenceDebut).HasColumnType("Date");
+                entity.Property(e => e.DateConferenceFin).HasColumnType("Date");
             });
 
             modelBuilder.Entity<Auteur>(entity =>

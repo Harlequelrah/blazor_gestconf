@@ -22,16 +22,24 @@
         <ValidationMessage For="@(()=>Art.FichierPdf)" />
     </div>
     <div class="mb-3">
-        <label for="Conf" class="form-label">Id de la conférence :</label>
-        <InputNumber @bind-Value="Art.ConferenceId" id="Conf"class="form-control"></InputNumber>
-    </div>
-    <div class="mb-3">
         <button type="submit" class="btn-dark">Enrégistrer</button>
     </div>
 </EditForm>
+
+@if (showConfirmation)
+{
+    <ModalSave Title="Confirmation" OnClose="CloseConfirmation">
+        <p>L'Article a été bien enrégistrée.</p>
+    </ModalSave>
+}
+
 @code {
     [SupplyParameterFromForm]
     public Article Art { get; set; } = new Article();
+    [SupplyParameterFromQuery]
+    public int id { get; set; }
+    public bool showConfirmation { get; set; } = false;
+
 
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
@@ -46,10 +54,16 @@
 
     public async Task Inserer()
     {
+        Art.ConferenceId = id;
         bool ex = await articleCrud.AddAsync(Art);
+        showConfirmation = true;
         if (ex)
         {
             Art = new Article();
         }
+    }
+    private void CloseConfirmation()
+    {
+        showConfirmation = false;
     }
 }

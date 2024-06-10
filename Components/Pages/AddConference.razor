@@ -1,0 +1,82 @@
+﻿@page "/add/Conference"
+@using blazor_gestconf.Models
+@using blazor_gestconf.Services
+@rendermode InteractiveServer
+@inject ConferenceService confCrud
+<h3>Ajouter une conférence</h3>
+
+<EditForm Model="Conf" method="Post" OnValidSubmit="Inserer">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label for="name" class="form-label">Nom :</label>
+        <InputText @bind-Value="Conf.Nom" class="form-control" id="name"></InputText>
+        <ValidationMessage For="@(()=>Conf.Nom)" />
+    </div>
+    <div class="mb-3">
+        <label for="sigle" class="form-label">Sigle :</label>
+        <InputText @bind-Value="Conf.Sigle" class="form-control" id="sigle"></InputText>
+        <ValidationMessage For="@(()=>Conf.Sigle)" />
+    </div>
+    <div class="mb-3">
+        <label for="theme" class="form-label">Thème :</label>
+        <InputText @bind-Value="Conf.Theme" id="theme" class="form-control"></InputText>
+    </div>
+    <div class="mb-3">
+        <label for="dateDebutSoumission" class="form-label">Date d'ouverture pour la soumission d'articles :</label>
+        <InputDate @bind-Value="Conf.DateSoumissionDebut" id="dateDebutSoumission" class="form-control"/>
+    </div>
+    <div class="mb-3">
+        <label for="dateFinSoumission" class="form-label">Date limite pour la soumission d'articles :</label>
+        <InputDate @bind-Value="Conf.DateSoumissionFin" id="dateFinSoumission" class="form-control"/>
+    </div>
+    <div class="mb-3">
+        <label for="dateResultat" class="form-label">Date de remise des résultats :</label>
+        <InputDate @bind-Value="Conf.DateRemiseResultats" id="dateResultat" class="form-control"/>
+    </div>
+    <div class="mb-3">
+        <label for="dateOuvertureInscription" class="form-label">Date d'ouverture des inscriptions :</label>
+        <InputDate @bind-Value="Conf.DateInscriptionDebut" id="dateOuvertreInscription" class="form-control"/>
+    </div>
+    <div class="mb-3">
+        <label for="dateClotureInscription" class="form-label">Date limite d'inscriptions :</label>
+        <InputDate @bind-Value="Conf.DateInscriptionFin" id="dateClotureInscription" class="form-control"/>
+    </div>
+    <div class="mb-3">
+        <label for="dateDebutConference" class="form-label">Date d'ouverture de la conférence :</label>
+        <InputDate @bind-Value="Conf.DateConferenceDebut" id="dateDebutConference" class="form-control"/>
+    </div>
+    <div class="mb-3">
+        <label for="dateFinConference" class="form-label">Date de clôture de la conférence :</label>
+        <InputDate @bind-Value="Conf.DateConferenceFin" id="dateFinConference" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <button type="submit" class="btn-dark">Enrégistrer</button>
+    </div>
+</EditForm>
+
+@if (showConfirmation)
+{
+    <ModalSave Title="Confirmation" OnClose="CloseConfirmation">
+        <p>La conférence a été bien enrégistrée.</p>
+    </ModalSave>
+}
+@code {
+    [SupplyParameterFromForm]
+    public Conference Conf { get; set; } = new Conference();
+    public bool showConfirmation{get;set;} = false;
+
+
+    public async Task Inserer()
+    {
+        bool ex = await confCrud.AddAsync(Conf);
+        if (ex)
+        {
+            Conf = new Conference();
+            showConfirmation = true;
+        }
+    }
+    private void CloseConfirmation()
+    {
+        showConfirmation = false;
+    }
+}

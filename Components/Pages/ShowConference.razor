@@ -1,0 +1,67 @@
+﻿@page "/show/conference"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using blazor_gestconf.Models
+@using blazor_gestconf.Services
+@inject ConferenceService confCrud
+@rendermode InteractiveServer
+
+<h3>Liste des conférences</h3>
+
+@if (Conf == null)
+{
+    <p>Aucun Article n'a été ajouté</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <tr>
+            <th>Nom</th>
+            <th>Sigle</th>
+            <th>Thème</th>
+            <th colspan="3">Actions</th>
+        </tr>
+        @foreach (var a in Conf)
+        {
+            <tr>
+                <td>@a.Nom</td>
+                <td>@a.Sigle</td>
+                <td>@a.Theme</td>
+                <td><a class="btn-warning" href=@($"/update/conference?id={a.Id}")><i class="bi bi-pencil-square"></i></a></td>
+                <td><button @onclick="()=>ShowDeleteConfirmation(a.Id)">Delete</button></td>
+                <td><a class="btn-btn-primary" href=@($"/details/conference?id={a.Id}")><i class="bi bi-arrows-angle-expand"></i></a></td>
+            </tr>
+        }
+    </table>
+}
+
+@if (showDeleteConfirmationModal)
+{
+    <ConfirmModalDelete Title="Confirmation de suppression" OnConfirm="DeleteConf" OnClose="CloseDeleteConfirmation">
+        <p>Êtes-vous sûr de vouloir supprimer cet article ?</p>
+    </ConfirmModalDelete>
+}
+
+@code {
+    public List<Conference>? Conf;
+    public bool showDeleteConfirmationModal { get; set; } = false;
+    public int articleIdToDelete { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Conf = await confCrud.GetAllAsync();
+    }
+    public async Task DeleteConf(){
+        await confCrud.DeleteAsync(articleIdToDelete);
+        CloseDeleteConfirmation();
+        OnInitialized();
+    }
+    public void ShowDeleteConfirmation(int articleId)
+    {
+        articleIdToDelete = articleId;
+        showDeleteConfirmationModal = true;
+    }
+    public void CloseDeleteConfirmation()
+    {
+        showDeleteConfirmationModal = false;
+    }
+}
