@@ -4,7 +4,8 @@ obj/
 
 # Fichiers spécifiques à l'environnement de développement Visual Studio
 .vs/
-
+appsettings.Development.json
+appsettings.json
 # Fichiers de configuration spécifiques à l'utilisateur
 *.suo
 *.user
