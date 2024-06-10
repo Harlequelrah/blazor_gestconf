@@ -4,14 +4,9 @@
 @using blazor_gestconf.Models
 @using blazor_gestconf.Services
 @inject ArticleService articleCrud
-@attribute [Authorize(Roles ="Administrateur")]
 
 <h3>Liste des articles</h3>
-<AuthorizeView>
-    <Authorized>
-        <p>Bonjour</p>
-    </Authorized>
-</AuthorizeView>
+
 @if (Articles == null)
 {
     <p>Aucun Article n'a été ajouté</p>

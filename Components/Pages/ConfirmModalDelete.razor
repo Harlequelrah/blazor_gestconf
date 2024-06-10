@@ -1,0 +1,55 @@
+﻿@* ConfirmDeleteModal.razor *@
+
+<!-- _Host.cshtml -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BlazorApp</title>
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+</head>
+<body>
+    <app>
+        <component type="typeof(App)" render-mode="ServerPrerendered" />
+    </app>
+    @* Modal.razor *@
+    <div class="confirm-modal-overlay" @onclick="Close">
+        <div class="confirm-modal-container" @onclick:stopPropagation="true">
+            <div class="confirm-modal-header">
+                <h5 class="confirm-modal-title">@Title</h5>
+                <button type="button" class="close" @onclick="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="confirm-modal-body">
+                @ChildContent
+            </div>
+            <div class="confirm-modal-footer">
+                <button type="button" class="btn btn-confirm-danger" @onclick="Confirm">Oui</button>
+                <button type="button" class="btn btn-confirm-secondary" @onclick="Close">Non</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="_framework/blazor.server.js"></script>
+</body>
+</html>
+
+@code {
+    [Parameter] public string Title { get; set; }
+    [Parameter] public EventCallback OnConfirm { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    private void Close()
+    {
+        OnClose.InvokeAsync(null);
+    }
+
+    private void Confirm()
+    {
+        OnConfirm.InvokeAsync(null);
+    }
+}
