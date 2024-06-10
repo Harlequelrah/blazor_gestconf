@@ -1,0 +1,51 @@
+@page "/add/entreprise"
+@using blazor_gestconf.Models
+@using blazor_gestconf.Services
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+@inject EntrepriseService entrepriseService
+<h3>InsertEntreprise</h3>
+<EditForm Model="Entreprise" method="Post" OnValidSubmit="Inserer">
+    <DataAnnotationsValidator/>
+    <div class="mb-3">
+        <label for="nom" class="form-label">Nom :</label>
+        <InputText @bind-Value="Entreprise.Nom" class="form-control" id="title"></InputText>
+        <ValidationMessage For="@(()=>Entreprise.Nom)" />
+    </div>
+    <div class="mb-3">
+        <label for="adresse" class="form-label">Adresse :</label>
+        <InputText @bind-Value="Entreprise.Adresse" class="form-control" id="adresse"></InputText>
+        <ValidationMessage For="@(()=>Entreprise.Adresse)" />
+    </div>
+    <div class="mb-3">
+        <button type="submit" class="btn-dark">Enrégistrer</button>
+    </div>
+</EditForm>
+@code {
+
+    private string? message = "";
+    private string? tag = "";
+    [SupplyParameterFromForm]
+    public Entreprise Entreprise { get; set; } = new Entreprise();
+
+
+
+
+    public async Task Inserer()
+    {
+        bool ex = await entrepriseService.AddAsync(Entreprise);
+        if (ex)
+        {
+            Entreprise = new Entreprise();
+            message = "L'entreprise a été modifiée avec succès";
+            tag = "alert alert-success";
+        }
+        else
+        {
+            message = "Échec de la suppression de l'entreprise";
+            tag = "alert alert-danger";
+        }
+        Navigation.NavigateTo($"show/entreprise?message={Uri.EscapeDataString(message)}&tag={Uri.EscapeDataString(tag)}");
+
+    }
+}

@@ -1,0 +1,87 @@
+@page "/update/entreprise/{id:int}"
+@using blazor_gestconf.Models
+@using blazor_gestconf.Services
+@inject EntrepriseService entrepriseCrud
+@inject NavigationManager Navigation
+@inject ILogger<Entreprise> logger
+@rendermode InteractiveServer
+
+<h3>Modifier une entreprise</h3>
+<div>
+@if(!string.IsNullOrEmpty(message))
+{
+    <ul class="messages">
+        <li class="@tag">@message</li>
+    </ul>
+}
+</div>
+@if (entreprise == null)
+{
+    <p>Le Entreprise est inexistant</p>
+}
+else
+{
+    <EditForm Model="entreprise" method="post" FormName="EditEntreprise" OnValidSubmit="ModifierEntreprise" Enhance>
+        <DataAnnotationsValidator />
+       <ValidationSummary/>
+
+        <div class="mb-3">
+            <input type="hidden" name="entreprise.Id" class="form-control" value="@entreprise.Id" />
+        </div>
+        <div class="mb-3">
+            <label for="nom" class="form-label">Nom :</label>
+            <InputText @bind-Value="entreprise.Nom" class="form-control" id="name" placeholder="KOUDJI"></InputText>
+            <ValidationMessage For="@(()=>entreprise.Nom)" />
+        </div>
+        <div class="mb-3">
+            <label for="adresse" class="form-label">Adresse :</label>
+            <InputText @bind-Value="entreprise.Adresse" class="form-control" id="tel" placeholder="Rue Nyekonakope"></InputText>
+            <ValidationMessage For="@(()=>entreprise.Adresse)" />
+        </div>
+        <div class="mb-3">
+           <button type="submit" class="btn-dark">Editer</button>
+        </div>
+
+
+    </EditForm>
+}
+
+
+@code {
+
+    private string? message = "";
+    private string? tag = "";
+
+    [SupplyParameterFromForm(FormName = "EditEntreprise")]
+    public Entreprise? entreprise { get; set; }
+
+    [Parameter]
+    public int id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        entreprise = await entrepriseCrud.GetByIdAsync(id);
+    }
+
+    public void verifier()
+    {
+        logger.LogInformation("Fonctionne");
+    }
+
+    public async Task ModifierEntreprise()
+    {
+        logger.LogInformation($"Entreprise {entreprise?.Nom}");
+        bool result = await entrepriseCrud.UpdateAsync(entreprise!);
+        if (result)
+        {
+            message = "L'entreprise a été modifiée avec succès";
+            tag = "alert alert-success";
+        }
+        else
+        {
+            message = "Échec de la suppression de l'entreprise";
+            tag = "alert alert-danger";
+        }
+        Navigation.NavigateTo($"show/entreprise?message={Uri.EscapeDataString(message)}&tag={Uri.EscapeDataString(tag)}");
+    }
+}

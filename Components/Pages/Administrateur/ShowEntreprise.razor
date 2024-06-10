@@ -1,0 +1,94 @@
+@page "/show/entreprise"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using blazor_gestconf.Models
+@using blazor_gestconf.Services
+@using Microsoft.AspNetCore.WebUtilities
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+@inject EntrepriseService entrepriseService
+@attribute [Authorize(Roles ="Administrateur")]
+
+<h3>Liste des entreprises</h3>
+
+<p><a href="add/entreprise" class="btn btn-success btn-sm mx-1">Ajouter une nouvelle Entreprise</a></p>
+
+<div>
+@if(!string.IsNullOrEmpty(message))
+{
+    <ul class="messages">
+        <li class="@tag">@message</li>
+    </ul>
+}
+</div>
+
+@if (Entreprises == null)
+{
+    <p>Aucun Entreprise n'a été ajouté</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <tr>
+            <th>Id</th>
+            <th>Nom</th>
+            <th>Adresse</th>
+            <th>Actions</th>
+        </tr>
+        @foreach(var a in Entreprises)
+        {
+            <tr>
+                <td>@a.Id</td>
+                <td>@a.Nom</td>
+                <td>@a.Adresse</td>
+                <td>
+                    <a href="@($"/update/entreprise/{a.Id}")" class="btn btn-warning btn-sm mx-1" title="Modifier">
+                        <i class="bi bi-pencil-square"></i> Modifier
+                    </a>
+                    <button class="btn btn-danger text-dark" @onclick="() => Delete(a.Id)" title="Supprimer">
+                        <i class="bi bi-trash"></i> Supprimer
+                    </button>
+                </td>
+            </tr>
+        }
+    </table>
+
+
+}
+
+@code {
+    private string? message = "";
+    private string? tag = "";
+
+    public List<Entreprise>? Entreprises;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Entreprises = await entrepriseService.GetAllAsync();
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("message", out var msg))
+        {
+            message = msg;
+        }
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("tag", out var tg))
+        {
+            tag = tg;
+        }
+    }
+
+    protected async Task Delete(int id)
+    {
+        bool result = await entrepriseService.DeleteAsync(id);
+        if (result)
+        {
+            message = "L'entreprise a été supprimée avec succès";
+            tag = "alert alert-success";
+            Entreprises = await entrepriseService.GetAllAsync();
+        }
+        else
+        {
+            message = "Échec de la suppression de l'entreprise";
+            tag = "alert alert-danger";
+        }
+    }
+}

@@ -1,0 +1,87 @@
+@page "/update/universite/{id:int}"
+@using blazor_gestconf.Models
+@using blazor_gestconf.Services
+@inject UniversiteService universiteCrud
+@inject NavigationManager Navigation
+@inject ILogger<Universite> logger
+@rendermode InteractiveServer
+
+<h3>Modifier une universite</h3>
+<div>
+@if(!string.IsNullOrEmpty(message))
+{
+    <ul class="messages">
+        <li class="@tag">@message</li>
+    </ul>
+}
+</div>
+@if (universite == null)
+{
+    <p>Le Universite est inexistant</p>
+}
+else
+{
+    <EditForm Model="universite" method="post" FormName="EditUniversite" OnValidSubmit="ModifierUniversite" Enhance>
+        <DataAnnotationsValidator />
+       <ValidationSummary/>
+
+        <div class="mb-3">
+            <input type="hidden" name="universite.Id" class="form-control" value="@universite.Id" />
+        </div>
+        <div class="mb-3">
+            <label for="nom" class="form-label">Nom :</label>
+            <InputText @bind-Value="universite.Nom" class="form-control" id="name" placeholder="KOUDJI"></InputText>
+            <ValidationMessage For="@(()=>universite.Nom)" />
+        </div>
+        <div class="mb-3">
+            <label for="adresse" class="form-label">Adresse :</label>
+            <InputText @bind-Value="universite.Adresse" class="form-control" id="tel" placeholder="Rue Nyekonakope"></InputText>
+            <ValidationMessage For="@(()=>universite.Adresse)" />
+        </div>
+        <div class="mb-3">
+           <button type="submit" class="btn-dark">Editer</button>
+        </div>
+
+
+    </EditForm>
+}
+
+
+@code {
+
+    private string? message = "";
+    private string? tag = "";
+
+    [SupplyParameterFromForm(FormName = "EditUniversite")]
+    public Universite? universite { get; set; }
+
+    [Parameter]
+    public int id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        universite = await universiteCrud.GetByIdAsync(id);
+    }
+
+    public void verifier()
+    {
+        logger.LogInformation("Fonctionne");
+    }
+
+    public async Task ModifierUniversite()
+    {
+        logger.LogInformation($"Universite {universite?.Nom}");
+        bool result = await universiteCrud.UpdateAsync(universite!);
+        if (result)
+        {
+            message = "L'universite a été modifiée avec succès";
+            tag = "alert alert-success";
+        }
+        else
+        {
+            message = "Échec de la suppression de l'universite";
+            tag = "alert alert-danger";
+        }
+        Navigation.NavigateTo($"show/universite?message={Uri.EscapeDataString(message)}&tag={Uri.EscapeDataString(tag)}");
+    }
+}

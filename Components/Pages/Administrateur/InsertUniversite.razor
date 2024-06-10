@@ -1,0 +1,51 @@
+@page "/add/universite"
+@using blazor_gestconf.Models
+@using blazor_gestconf.Services
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+@inject UniversiteService universiteService
+<h3>InsertUniversite</h3>
+<EditForm Model="Universite" method="Post" OnValidSubmit="Inserer">
+    <DataAnnotationsValidator/>
+    <div class="mb-3">
+        <label for="nom" class="form-label">Nom :</label>
+        <InputText @bind-Value="Universite.Nom" class="form-control" id="title"></InputText>
+        <ValidationMessage For="@(()=>Universite.Nom)" />
+    </div>
+    <div class="mb-3">
+        <label for="adresse" class="form-label">Adresse :</label>
+        <InputText @bind-Value="Universite.Adresse" class="form-control" id="adresse"></InputText>
+        <ValidationMessage For="@(()=>Universite.Adresse)" />
+    </div>
+    <div class="mb-3">
+        <button type="submit" class="btn-dark">Enrégistrer</button>
+    </div>
+</EditForm>
+@code {
+
+    private string? message = "";
+    private string? tag = "";
+    [SupplyParameterFromForm]
+    public Universite Universite { get; set; } = new Universite();
+
+
+
+
+    public async Task Inserer()
+    {
+        bool ex = await universiteService.AddAsync(Universite);
+        if (ex)
+        {
+            Universite = new Universite();
+            message = "L'universite a été modifiée avec succès";
+            tag = "alert alert-success";
+        }
+        else
+        {
+            message = "Échec de la suppression de l'universite";
+            tag = "alert alert-danger";
+        }
+        Navigation.NavigateTo($"show/universite?message={Uri.EscapeDataString(message)}&tag={Uri.EscapeDataString(tag)}");
+
+    }
+}
