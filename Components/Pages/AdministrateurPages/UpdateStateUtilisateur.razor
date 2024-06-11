@@ -1,0 +1,87 @@
+@page "/update-state-user"
+
+@using blazor_gestconf.Services
+@using blazor_gestconf.Models
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Authorization
+@inject UtilisateurService UtilisateurService
+@inject ILogger<UpdateStateUtilisateur> Logger
+
+@rendermode InteractiveServer
+
+@implements IDisposable
+
+<h3>Liste des Utilisateurs</h3>
+
+@if (users == null)
+{
+    <p>Chargement...</p>
+}
+else
+{
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Discriminator</th>
+                <th scope="col">Email</th>
+                <th scope="col">IsActive</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.GetType().Name</td>
+                    <td>@user.Email</td>
+                    <td>@user.IsActive</td>
+                    <td>
+                        <button class="btn btn-sm btn-success" @onclick="() => SetUserActiveStatus(user.Id, true)">
+                            <i class="bi bi-check-circle"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" @onclick="() => SetUserActiveStatus(user.Id, false)">
+                            <i class="bi bi-x-circle"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Utilisateur>? users;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            users = await UtilisateurService.GetAllUsersAsync();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError("Erreur lors du chargement des utilisateurs : {Message}", ex.Message);
+        }
+    }
+
+    private async Task SetUserActiveStatus(int userId, bool isActive)
+    {
+        try
+        {
+            await UtilisateurService.SetUserActiveStatus(userId, isActive);
+            users = await UtilisateurService.GetAllUsersAsync(); // Recharger la liste pour refléter les modifications
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError("Erreur lors de la mise à jour de l'utilisateur : {Message}", ex.Message);
+        }
+    }
+
+    public void Dispose()
+    {
+        // Dispose resources if needed
+    }
+}
