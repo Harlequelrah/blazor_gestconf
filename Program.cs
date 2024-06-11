@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using blazor_gestconf.Data;
 using blazor_gestconf.Components.Account;
-
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using blazor_gestconf.Components;
 using blazor_gestconf.Components.Pages;

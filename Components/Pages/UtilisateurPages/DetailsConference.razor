@@ -1,0 +1,62 @@
+﻿@page "/details/conference"
+@using Microsoft.AspNetCore.Components.Authorization
+@using blazor_gestconf.Models
+@using blazor_gestconf.Services
+@inject ConferenceService confCrud
+
+<h3>Détails de la Conférence</h3>
+
+@if (conf == null)
+{
+    <p>Chargement des détails de la conférence...</p>
+}
+else if (conf.Id == 0)
+{
+    <p>Conférence introuvable.</p>
+}
+else
+{
+    <dl class="list-group">
+        <dt class="list-group-item-dark">Nom:</dt>
+        <dd class="list-group-item-dark">@conf.Nom</dd>
+        <dt class="list-group-item-dark">Sigle:</dt>
+        <dd class="list-group-item-dark">@conf.Sigle</dd>
+        <dt class="list-group-item-dark">Thème:</dt>
+        <dd class="list-group-item-dark">@conf.Theme</dd>
+        <dt class="list-group-item-dark">Date d'ouverture pour la soumission d'articles :</dt>
+        <dd class="list-group-item-dark">@conf.DateSoumissionDebut.ToString("yyyy-MM-dd")</dd>
+        <dt class="list-group-item-dark">Date limite pour la soumission d'articles :</dt>
+        <dd class="list-group-item-dark">@conf.DateSoumissionFin.ToString("yyyy-MM-dd")</dd>
+        <dt class="list-group-item-dark">Date de remise des résultats :</dt>
+        <dd class="list-group-item-dark">@conf.DateRemiseResultats.ToString("yyyy-MM-dd")</dd>
+        <dt class="list-group-item-dark">Date d'ouverture des inscriptions :</dt>
+        <dd class="list-group-item-dark">@conf.DateInscriptionDebut.ToString("yyyy-MM-dd")</dd>
+        <dt class="list-group-item-dark">Date limite d'inscriptions :</dt>
+        <dd class="list-group-item-dark">@conf.DateInscriptionFin.ToString("yyyy-MM-dd")</dd>
+        <dt class="list-group-item-dark">Date d'ouverture de la conférence :</dt>
+        <dd class="list-group-item-dark">@conf.DateConferenceDebut.ToString("yyyy-MM-dd")</dd>
+        <dt class="list-group-item-dark">Date de clôture de la conférence :</dt>
+        <dd class="list-group-item-dark">@conf.DateConferenceFin.ToString("yyyy-MM-dd")</dd>
+    </dl>
+    @* <AuthorizeView Role="Auteur">
+        <Authorized> *@
+            <a href=@($"/add/Article?id={conf.Id}")><button class="btn-primary">Soumettre un article</button></a>
+    @*     </Authorized>
+    </AuthorizeView> *@
+}
+
+
+
+@code {
+    [SupplyParameterFromQuery]
+    public int id{ get; set; }
+
+    Conference? conf = new Conference();
+
+    protected override async Task OnInitializedAsync()
+    {
+        conf = await confCrud.GetByIdAsync(id);
+    }
+
+
+}

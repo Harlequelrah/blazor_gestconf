@@ -51,9 +51,14 @@ else
         Conf = await confCrud.GetAllAsync();
     }
     public async Task DeleteConf(){
-        await confCrud.DeleteAsync(articleIdToDelete);
-        CloseDeleteConfirmation();
-        OnInitialized();
+        bool result=await confCrud.DeleteAsync(articleIdToDelete);
+        if(result){
+            Conf = new List<Conference>();
+            OnInitializedAsync();
+            CloseDeleteConfirmation();
+        }
+
+
     }
     public void ShowDeleteConfirmation(int articleId)
     {
