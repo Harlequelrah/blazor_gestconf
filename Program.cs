@@ -89,7 +89,7 @@ using (var scope = app.Services.CreateScope())
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
 
     // Créer les rôles
-    string[] roleNames = { "Administrateur", "Auteur", "MembreComite", "Participant" };
+    string[] roleNames = { "Administrateur", "Auteur", "MembreComite", "Participant","Relecteur" };
     foreach (var roleName in roleNames)
     {
         var roleExist = await roleManager.RoleExistsAsync(roleName);
@@ -113,11 +113,7 @@ else
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseStaticFiles();
-// app.UseHeaderCheckMiddleware();
-// Ajoutez cette ligne pour l'utilisation des routes
-
 app.UseAntiforgery();
 
 

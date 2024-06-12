@@ -8,8 +8,7 @@ namespace blazor_gestconf.Models
     {
         [Key]
         public int Id { get; set; }
-        public string? RelectureId { get; set; }
-        [Required(ErrorMessage ="Titre obligatioire")]
+
         public string Titre { get; set; }
         [Required(ErrorMessage ="Description obligatoire")]
         public string Description { get; set; }

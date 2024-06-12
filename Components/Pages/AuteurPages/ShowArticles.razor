@@ -29,6 +29,25 @@ else
                     <a class="btn btn-primary" href="@($"data:application/pdf;base64,{Convert.ToBase64String(a.FichierPdf)}")" download="@a.Titre">Télécharger</a>
                 </td>
                 <td>@a.Conference.Nom</td>
+                <AuthorizeView Role="Relecteur">
+                    <Authorized>
+                        <td>
+                            <a href="@($"/evaluer/article/{a.Id}")" class="btn btn-warning btn-sm mx-1" title="Evaluer">
+                            <i class="bi bi-pencil-square"></i> Evaluer
+                            </a>
+                        </td>
+                    </Authorized>
+                </AuthorizeView>
+                <AuthorizeView Role="Auteur">
+                    <Authorized>
+                        <td>
+                            <a href="@($"/soumettre/article/{a.Id}")" class="btn btn-warning btn-sm mx-1" title="Evaluer">
+                            <i class="bi bi-pencil-square"></i> Soumettre
+                            </a>
+                        </td>
+                    </Authorized>
+                </AuthorizeView>
+
             </tr>
         }
     </table>
