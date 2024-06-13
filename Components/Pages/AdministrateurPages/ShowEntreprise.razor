@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using blazor_gestconf.Models
+@inject IJSRuntime JS
 @using blazor_gestconf.Services
 @using Microsoft.AspNetCore.WebUtilities
 @rendermode InteractiveServer
@@ -78,7 +79,9 @@ else
 
     protected async Task Delete(int id)
     {
-        bool result = await entrepriseService.DeleteAsync(id);
+        var confirmDelete = await JS.InvokeAsync<bool>("confirm", "Voulez-vous vraiment supprimer cette entreprise ?");
+        if (confirmDelete){
+            bool result = await entrepriseService.DeleteAsync(id);
         if (result)
         {
             message = "L'entreprise a été supprimée avec succès";
@@ -90,5 +93,8 @@ else
             message = "Échec de la suppression de l'entreprise";
             tag = "alert alert-danger";
         }
+
+        }
+
     }
 }

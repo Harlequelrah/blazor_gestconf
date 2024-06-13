@@ -8,7 +8,6 @@ namespace blazor_gestconf.Models
     {
         [Key]
         public int Id { get; set; }
-
         public string Titre { get; set; }
         [Required(ErrorMessage ="Description obligatoire")]
         public string Description { get; set; }
@@ -21,7 +20,8 @@ namespace blazor_gestconf.Models
         public Conference Conference { get; set; }
 
         public ICollection<ArticleAuteur> Auteurs { get; set; } = new List<ArticleAuteur>();
-        public ICollection<ArticleRelecteur> Relecteurs { get; set; } = new List<ArticleRelecteur>();
+        public ICollection<Relecture> Relectures { get; set; } = new List<Relecture>();
+        // public ICollection<ArticleRelecteur> Relecteurs { get; set; } = new List<ArticleRelecteur>();
 
         public Article(){
 

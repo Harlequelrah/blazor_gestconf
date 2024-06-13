@@ -1,0 +1,83 @@
+@page "/affecter/relecteur/article/{ArticleId:int}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject IJSRuntime JS
+@using Microsoft.AspNetCore.Identity
+@using blazor_gestconf.Models
+@using blazor_gestconf.Services
+@rendermode InteractiveServer
+@inject UserManager<Utilisateur> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ArticleService ArticleService
+@inject NavigationManager Navigation
+@inject RelecteurService relecteurService
+@inject RelectureService RelectureService
+@attribute [Authorize(Roles ="MembreComite")]
+
+
+
+<h3>Liste des relecteurs</h3>
+
+
+@if (Relecteurs == null)
+{
+    <p>Aucun Relecteur disponible</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <tr>
+            <th>Id</th>
+            <th>Email</th>
+        </tr>
+        @foreach(var a in Relecteurs)
+        {
+            <tr>
+                <td>@a.Id</td>
+                <td>@a.Email</td>
+                <td>
+                    <button class="btn btn-danger text-dark" @onclick="() => Affecter(a.Id)" title="Affecter">
+                        <i class="bi bi-trash"></i> Affecter
+                    </button>
+                </td>
+            </tr>
+        }
+    </table>
+
+
+}
+
+@code {
+    public List<Relecteur>? Relecteurs;
+    Relecture? Relecture ;
+
+    [Parameter]
+    public int ArticleId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Relecteurs = await relecteurService.GetAllAsync();
+        Relecture = new Relecture();
+
+    }
+
+    protected async Task Affecter(int id)
+    {
+        Article article = await ArticleService.GetByIdAsync(ArticleId);
+
+        Relecture.Article = article;
+       // Relecture.ArticleId=ArticleId;
+        Relecture.RelecteurId=id;
+        var confirmAffectation = await JS.InvokeAsync<bool>("confirm", "Voulez-vous vraiment Affecter ce relecteur ?");
+        if (confirmAffectation){
+            bool result = await RelectureService.AddAsync(Relecture);
+        if (result)
+        {
+            Relecteurs = await relecteurService.GetAllAsync();
+            Relecture = new Relecture();
+        }
+        }
+        Navigation.NavigateTo("show/article");
+
+    }
+}

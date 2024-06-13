@@ -1,8 +1,14 @@
 ﻿@page "/add/Article"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
 @using blazor_gestconf.Models
 @using blazor_gestconf.Services
+@inject UserManager<Utilisateur> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @rendermode InteractiveServer
 @inject ArticleService articleCrud
+@inject ArticleAuteurService ArtAutService
 <h3>InsertArticle</h3>
 <EditForm Model="Art" method="Post" OnValidSubmit="Inserer">
     <DataAnnotationsValidator/>
@@ -40,6 +46,20 @@
     public int id { get; set; }
     public bool showConfirmation { get; set; } = false;
 
+    public ArticleAuteur articleauteur = new ArticleAuteur();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var userid = UserManager.GetUserId(user);
+        int userId=int.Parse(userid);
+        articleauteur.AuteurId=userId;
+
+
+
+    }
+
 
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
@@ -56,10 +76,19 @@
     {
         Art.ConferenceId = id;
         bool ex = await articleCrud.AddAsync(Art);
-        showConfirmation = true;
+
         if (ex)
         {
             Art = new Article();
+
+            int Artid = await articleCrud.GetLastInsertedId();
+            articleauteur.ArticleId=Artid;
+            bool ex2 = await ArtAutService.AddAsync(articleauteur);
+            if (ex2){
+                showConfirmation = true;
+                articleauteur = new ArticleAuteur();
+            }
+
         }
     }
     private void CloseConfirmation()

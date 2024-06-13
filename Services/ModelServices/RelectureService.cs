@@ -25,6 +25,19 @@ namespace blazor_gestconf.Services
                 return new List<Relecture>();
             }
         }
+        public async Task<Relecture> GetByArticleAndRelecteurAsync(int articleId, int relecteurId)
+{
+    try
+    {
+        return await _context.Relectures
+            .FirstOrDefaultAsync(r => r.ArticleId == articleId && r.RelecteurId == relecteurId);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error in GetByArticleAndRelecteurAsync: {ex.Message}");
+        return null;
+    }
+}
 
         public override async Task<Relecture> GetByIdAsync(int id)
         {

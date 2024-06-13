@@ -15,7 +15,7 @@ namespace blazor_gestconf.Data
         public DbSet<Article> Articles { get; set; }
         public DbSet<ArticleAuteur> ArticleAuteurs { get; set; }
         public DbSet<ParticipantConference> ParticipantConferences { get; set; }
-        public DbSet<ArticleRelecteur> ArticleRelecteurs { get; set; }
+        // public DbSet<ArticleRelecteur> ArticleRelecteurs { get; set; }
         public DbSet<Conference> Conferences { get; set; }
         public DbSet<Administrateur> Administrateurs { get; set; }
         public DbSet<Universite> Universites { get; set; }
@@ -68,17 +68,6 @@ namespace blazor_gestconf.Data
                 b.HasKey(ut => new { ut.UserId, ut.LoginProvider, ut.Name });
             });
 
-            modelBuilder.Entity<ArticleAuteur>()
-                .HasKey(aa => new { aa.ArticleId, aa.AuteurId });
-
-            modelBuilder.Entity<ParticipantConference>()
-                .HasKey(aa => new { aa.ParticipantId, aa.ConferenceId });
-
-            modelBuilder.Entity<ArticleAuteur>()
-                .HasOne(aa => aa.Article)
-                .WithMany(a => a.Auteurs)
-                .HasForeignKey(aa => aa.ArticleId);
-
             modelBuilder.Entity<ParticipantConference>()
                 .HasOne(aa => aa.Participant)
                 .WithMany(a => a.Conferences)
@@ -89,33 +78,66 @@ namespace blazor_gestconf.Data
                 .WithMany(a => a.Participants)
                 .HasForeignKey(aa => aa.ConferenceId);
 
+            modelBuilder.Entity<ParticipantConference>()
+                .HasKey(aa => new { aa.ParticipantId, aa.ConferenceId });
+
+            modelBuilder.Entity<Relecture>()
+                .HasKey(apr => new { apr.ArticleId, apr.RelecteurId });
+
+            modelBuilder.Entity<Relecture>()
+            .HasOne(r => r.Article)
+            .WithMany(a => a.Relectures)
+            .HasForeignKey(r => r.ArticleId)
+            .OnDelete(DeleteBehavior.Cascade); // ou DeleteBehavior.Restrict selon votre logique métier
+
+        modelBuilder.Entity<Relecture>()
+            .HasOne(r => r.Relecteur)
+            .WithMany(a => a.Relectures)
+            .HasForeignKey(r => r.RelecteurId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ArticleAuteur>()
+                .HasKey(aa => new { aa.ArticleId, aa.AuteurId });
+
+
+
+            modelBuilder.Entity<ArticleAuteur>()
+                .HasOne(aa => aa.Article)
+                .WithMany(a => a.Auteurs)
+                .HasForeignKey(aa => aa.ArticleId);
+
+
+
             modelBuilder.Entity<ArticleAuteur>()
                 .HasOne(aa => aa.Auteur)
                 .WithMany(a => a.Articles)
                 .HasForeignKey(aa => aa.AuteurId);
 
-            modelBuilder.Entity<ArticleRelecteur>()
-                .HasKey(apr => new { apr.ArticleId, apr.RelecteurId });
 
-            modelBuilder.Entity<ArticleRelecteur>()
-                .HasOne(apr => apr.Article)
-                .WithMany(a => a.Relecteurs)
-                .HasForeignKey(apr => apr.ArticleId);
+            // modelBuilder.Entity<ArticleRelecteur>()
+            //     .HasKey(apr => new { apr.ArticleId, apr.RelecteurId });
 
-            modelBuilder.Entity<ArticleRelecteur>()
-                .HasOne(apr => apr.Relecteur)
-                .WithMany(pr => pr.Articles)
-                .HasForeignKey(apr => apr.RelecteurId);
 
-            modelBuilder.Entity<Relecture>()
-                .HasOne(r => r.ArticleRelecteur)
-                .WithOne(apr => apr.Relecture)
-                .HasForeignKey<ArticleRelecteur>(apr => apr.RelectureId);
+            // modelBuilder.Entity<ArticleRelecteur>()
+            //     .HasOne(apr => apr.Article)
+            //     .WithMany(a => a.Relecteurs)
+            //     .HasForeignKey(apr => apr.ArticleId);
 
-            modelBuilder.Entity<Relecteur>()
-                .HasMany(pr => pr.Relectures)
-                .WithOne(r => r.Relecteur)
-                .HasForeignKey(r => r.RelecteurId);
+
+            // modelBuilder.Entity<ArticleRelecteur>()
+            //     .HasOne(apr => apr.Relecteur)
+            //     .WithMany(pr => pr.Articles)
+            //     .HasForeignKey(apr => apr.RelecteurId);
+
+            // modelBuilder.Entity<Relecture>()
+            //     .HasOne(r => r.ArticleRelecteur)
+            //     .WithOne(apr => apr.Relecture)
+            //     .HasForeignKey<ArticleRelecteur>(apr => apr.RelectureId);
+
+            // modelBuilder.Entity<Relecteur>()
+            //     .HasMany(pr => pr.Relectures)
+            //     .WithOne(r => r.Relecteur)
+            //     .HasForeignKey(r => r.RelecteurId);
 
             modelBuilder.Entity<Conference>(entity =>
             {
@@ -135,7 +157,7 @@ namespace blazor_gestconf.Data
             modelBuilder.Entity<Relecture>(entity =>
             {
                 entity.Property(e => e.Justification).HasColumnType("varchar(100)");
-                entity.Property(e => e.Comments).HasColumnType("varchar(100)");
+                entity.Property(e => e.Avis).HasColumnType("varchar(100)");
             });
 
             modelBuilder.Entity<Article>(entity =>

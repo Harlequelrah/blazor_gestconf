@@ -1,0 +1,44 @@
+@page "/consuler/article/{ArticleId}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@using blazor_gestconf.Models
+@using blazor_gestconf.Services
+@inject UserManager<Utilisateur> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ArticleService ArticleService
+
+<h1>@article.Titre</h1>
+<h3>@article.Description</h3>
+
+<p> Statut Global : @article.Statut? </p>
+    <table class="table table-bordered">
+
+    @foreach(var r in Relectures)
+        {
+        <tr>
+            <th>Relecteur</th>
+            <th>Avis</th>
+            <th>Justification</th>
+        </tr>
+            <tr>
+                <td>@r.Relecteur.UserName</td>
+                <td>@r.Avis</td>
+                <td>@r.Justification</td>
+            </tr>
+        }
+    </table>
+
+@code {
+    private Article? article;
+    [Parameter]
+    public int ArticleId { get; set; }
+
+    private List<Relecture>? Relectures ;
+
+    protected override async Task OnInitializedAsync()
+    {
+        article = await ArticleService.GetByIdAsync(ArticleId);
+        Relectures=article.Relectures.ToList();
+    }
+}
