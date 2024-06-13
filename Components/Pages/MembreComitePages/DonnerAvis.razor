@@ -1,0 +1,62 @@
+@page "/donneravis/article/{RelecteurId:int}/{r.ArticleId:int}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@using blazor_gestconf.Models
+@using blazor_gestconf.Services
+@rendermode InteractiveServer
+@inject UserManager<Utilisateur> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ArticleService ArticleService
+@inject NavigationManager Navigation
+@inject RelectureService RelectureService
+
+<h1>@article?.Titre</h1>
+<h3>@article?.Description</h3>
+
+<EditForm Model="@Relecture" method="post" FormName="EditRelecture" OnValidSubmit="ModifierRelecture" Enhance>
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <div class="mb-3">
+            <label for="Justification" class="form-label"> :</label>
+            <InputText @bind-Value="Relecture.Justification" class="form-control" id="name" placeholder="KOUDJI"></InputText>
+            <ValidationMessage For="@(()=>Relecture.Justification)" />
+        </div>
+        <div class="mb-3">
+            <label for="Avis" class="form-label">Avis :</label>
+            <InputText @bind-Value="Relecture.Avis" class="form-control" id="tel" placeholder="Rue Nyekonakope"></InputText>
+            <ValidationMessage For="@(()=>Relecture.Avis)" />
+        </div>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-dark">Enrégistrer</button>
+    </div>
+</EditForm>
+
+@code {
+    private Article? article;
+    [Parameter]
+    public int ArticleId { get; set; }
+
+    [Parameter]
+    public int RelecteurId { get; set; }
+
+    [SupplyParameterFromForm(FormName="EditRelecture")]
+    public Relecture? Relecture { get; set; } = new Relecture();
+
+    protected override async Task OnInitializedAsync()
+    {
+        article = await ArticleService.GetByIdAsync(ArticleId);
+
+        Relecture = await RelectureService.GetByArticleAndRelecteurAsync(ArticleId,RelecteurId);
+    }
+
+    public async Task ModifierRelecture()
+    {
+        bool ex = await RelectureService.UpdateAsync(Relecture);
+        if (ex)
+        {
+            Relecture = new Relecture();
+        }
+        Navigation.NavigateTo("show/article");
+    }
+}

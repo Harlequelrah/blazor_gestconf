@@ -53,7 +53,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AdministrateurOnly", policy => policy.RequireRole("Administrateur"));
     options.AddPolicy("ParticipantOnly", policy => policy.RequireRole("Participant"));
     options.AddPolicy("MembreComiteOnly", policy => policy.RequireRole("MembreComite"));
-    // Ajoutez d'autres policies si nécessaire
+
 });
 // Connexion à la base de données
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");

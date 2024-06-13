@@ -7,11 +7,11 @@ namespace blazor_gestconf.Models
     public class Auteur : Utilisateur
     {
 
-        public int UniversiteId { get; set; }
+        public int? UniversiteId { get; set; }
         [ForeignKey("UniversiteId")] // Spécifie la clé étrangère
         public Universite Universite { get; set; }
 
-        public int EntrepriseId { get; set; }
+        public int? EntrepriseId { get; set; }
         [ForeignKey("EntrepriseId")] // Spécifie la clé étrangère
         public Entreprise Entreprise { get; set; }
         public ICollection<ArticleAuteur> Articles { get; set; } = new List<ArticleAuteur>();

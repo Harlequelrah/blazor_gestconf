@@ -18,6 +18,10 @@ namespace blazor_gestconf.Models
         public Article Article { get; set; }
         public int RelecteurId { get; set; }
 
+        [ForeignKey("AuteurId")]
+        public Auteur Auteur { get; set; }
+        public int  AuteurId { get; set; }
+
         [ForeignKey("RelecteurId")]
         public Relecteur Relecteur { get; set; }
         // public ArticleRelecteur ArticleRelecteur { get; set; }

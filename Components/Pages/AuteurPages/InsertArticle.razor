@@ -8,9 +8,12 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @rendermode InteractiveServer
 @inject ArticleService articleCrud
-<h3>Ajouter un Article</h3>
+
+@inject AuteurService AuteurService
 @inject ArticleAuteurService ArtAutService
 <h3>InsertArticle</h3>
+
+
 <EditForm Model="Art" method="Post" OnValidSubmit="Inserer">
     <DataAnnotationsValidator/>
     <div class="mb-3">
@@ -32,6 +35,36 @@
         <button type="submit" class="btn-dark">Enrégistrer</button>
     </div>
 </EditForm>
+<h4>Liste des Auteurs</h4>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Email</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var auteur in Auteurs)
+        {
+            <tr>
+                <td>@auteur.Id</td>
+                <td>@auteur.Email</td>
+                <td>
+                    @if (auteur.Id != userId)
+                    {
+                        <button class="btn btn-primary" @onclick="() => AjouterAuteur(auteur.Id)">Ajouter</button>
+                    }
+                    else
+                    {
+                        <p>Moi-même</p>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 @if (showConfirmation)
 {
@@ -48,17 +81,28 @@
     public bool showConfirmation { get; set; } = false;
 
     public ArticleAuteur articleauteur = new ArticleAuteur();
+    private List<Auteur> Auteurs { get; set; } = new List<Auteur>();
+
+    int userId;
 
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         var userid = UserManager.GetUserId(user);
+
         int userId=int.Parse(userid!);
+
+        userId=int.Parse(userid);
+
         articleauteur.AuteurId=userId;
+        Auteurs = await LoadAuteurs();
 
 
-
+    }
+    private async Task<List<Auteur>> LoadAuteurs()
+    {
+        return await AuteurService.GetAllAsync();
     }
 
 
@@ -90,6 +134,24 @@
                 articleauteur = new ArticleAuteur();
             }
 
+        }
+    }
+    private async Task AjouterAuteur(int auteurId)
+    {
+        // Créer une nouvelle instance d'ArticleAuteur
+        int Artid = await articleCrud.GetLastInsertedId();
+        var articleAuteur = new ArticleAuteur
+        {
+            ArticleId = Artid,// Assurez-vous d'avoir l'ID correct de l'article ici
+            AuteurId = auteurId
+        };
+
+        // Ajouter l'ArticleAuteur via votre service
+        bool result = await ArtAutService.AddAsync(articleAuteur);
+
+        if (result)
+        {
+            showConfirmation = true;
         }
     }
     private void CloseConfirmation()
