@@ -5,6 +5,10 @@
 @inject NavigationManager Navigation
 @inject ILogger<Entreprise> logger
 @rendermode InteractiveServer
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+
+@attribute [Authorize(Roles="Administrateur")]
 
 <h3>Modifier une entreprise</h3>
 <div>

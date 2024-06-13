@@ -1,4 +1,5 @@
 ﻿@page "/details/conference"
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Identity
 @using blazor_gestconf.Models
@@ -9,7 +10,7 @@
 @inject UserManager<Utilisateur> UserManager
 @inject IHttpContextAccessor HttpContextAccessor
 @rendermode InteractiveServer
-
+@attribute [Authorize(Roles="Auteur,Participant")]
 <h3>Détails de la Conférence</h3>
 
 @if (conf == null)

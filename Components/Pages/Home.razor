@@ -16,6 +16,9 @@
     <h1 class="my-5">Bienvenue @User.Identity.Name sur la plateforme de gestion des conférences scientifiques au Togo</h1>
 
 }
+else{
+        <h1 class="my-5">Bienvenue Nouvel Arrivant sur la plateforme de gestion des conférences scientifiques au Togo</h1>
+}
 
 
     <div class="row">
@@ -38,7 +41,7 @@
                 <button class="btn btn-primary mb-3" @onclick="RegisterSelectedType">Enregistrer</button>
             }
 
-
+<div class="mb-3">
             @if (!authenticationState.User.Identity.IsAuthenticated)
             {
                 <NavLink class="btn btn-success me-2" href="/Account/Login">Se connecter</NavLink>
@@ -47,6 +50,7 @@
             {
                 <button class="btn btn-danger mb-3" @onclick="Logout">Se déconnecter</button>
             }
+</div>
         </div>
     </div>
 </div>

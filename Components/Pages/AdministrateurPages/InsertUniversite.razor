@@ -4,6 +4,10 @@
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 @inject UniversiteService universiteService
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+
+@attribute [Authorize(Roles="Administrateur")]
 <h3>InsertUniversite</h3>
 <EditForm Model="Universite" method="Post" OnValidSubmit="Inserer">
 <DataAnnotationsValidator/>

@@ -1,4 +1,9 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+
+@attribute [Authorize]
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">blazor_gestconf</a>
     </div>
@@ -14,11 +19,63 @@
             </NavLink>
         </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="show/article">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Liste Article
+        <AuthorizeView Policy="AdministrateurOnly">
+            <Authorized>
+            <div class="nav-item px-3">
+            <NavLink class="nav-link" href="show/entreprise">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>Gerer Entreprises
             </NavLink>
         </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="show/universite">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>Gerer Universites
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="update-state-user">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>Gerer les comptes
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="Account/Register/MembreComite">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>Creer un Membre comite
+            </NavLink>
+        </div>
+            </Authorized>
+        </AuthorizeView>
+
+        <AuthorizeView Policy="MembreComiteAuteurParticipant">
+            <Authorized>
+            <div class="nav-item px-3">
+            <NavLink class="nav-link" href="show/conference">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>Gerer Conference
+            </NavLink>
+        </div>
+            </Authorized>
+        </AuthorizeView>
+        <AuthorizeView Policy="MembreComiteOnly">
+            <Authorized>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="add/conference">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>Ajouter Conference
+            </NavLink>
+        </div>
+        </Authorized>
+        </AuthorizeView>
+        <AuthorizeView Policy="RelecteurAuteurMembreComite">
+            <Authorized>
+            <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="show/article">
+                            <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true">
+                            </span> Liste Article
+                        </NavLink>
+                </div>
+        </Authorized>
+        </AuthorizeView>
+
+
+         <!--
+
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="Account/Login">
                 <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> LOGIN
@@ -35,21 +92,8 @@
             </NavLink>
         </div>
 
-         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="show/entreprise">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>Entreprise
-            </NavLink>
-        </div>
-         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="show/universite">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>Universite
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="update-state-user">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>Gerer les comptes
-            </NavLink>
-        </div>
+
+         -->
 
 
 

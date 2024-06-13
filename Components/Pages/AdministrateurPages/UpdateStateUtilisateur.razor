@@ -6,6 +6,10 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @inject UtilisateurService UtilisateurService
 @inject ILogger<UpdateStateUtilisateur> Logger
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+
+@attribute [Authorize(Roles="Administrateur")]
 
 @rendermode InteractiveServer
 

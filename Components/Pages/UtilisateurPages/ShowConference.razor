@@ -6,6 +6,8 @@
 @inject ConferenceService confCrud
 @rendermode InteractiveServer
 
+@attribute [Authorize(Roles="MembreComite,Auteur,Participant")]
+
 <h3>Liste des conférences</h3>
 
 @if (Conf == null)
@@ -27,9 +29,17 @@ else
                 <td>@a.Nom</td>
                 <td>@a.Sigle</td>
                 <td>@a.Theme</td>
+                <AuthorizeView Policy="MembreComiteOnly">
+                    <Authorized>
                 <td><a class="btn-warning" href=@($"/update/conference?id={a.Id}")><i class="bi bi-pencil-square"></i></a></td>
                 <td><button @onclick="()=>ShowDeleteConfirmation(a.Id)">Delete</button></td>
+                </Authorized>
+        </AuthorizeView>
+        <AuthorizeView Policy="AuteurParticipant">
+                    <Authorized>
                 <td><a class="btn-btn-primary" href=@($"/details/conference?id={a.Id}")><i class="bi bi-arrows-angle-expand"></i></a></td>
+        </Authorized>
+        </AuthorizeView>
             </tr>
         }
     </table>

@@ -1,8 +1,12 @@
 ﻿@page "/add/conference"
 @using blazor_gestconf.Models
 @using blazor_gestconf.Services
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components
 @rendermode InteractiveServer
 @inject ConferenceService confCrud
+@attribute [Authorize(Roles="MembreComite")]
 <h3>Ajouter une conférence</h3>
 
 <EditForm Model="Conf" method="Post" OnValidSubmit="Inserer">

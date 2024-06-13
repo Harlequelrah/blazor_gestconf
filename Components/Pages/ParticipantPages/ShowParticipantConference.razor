@@ -1,8 +1,12 @@
 ﻿@page "/show/participant/conference"
 @using blazor_gestconf.Models
 @using blazor_gestconf.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
 @inject ParticipantConferenceService parConfCrud
 @rendermode InteractiveServer
+@attribute [Authorize(Roles="Participant")]
 
 
 <h3>Afficher Conference pour un participant</h3>

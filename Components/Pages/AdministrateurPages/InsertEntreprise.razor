@@ -4,6 +4,10 @@
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 @inject EntrepriseService entrepriseService
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+
+@attribute [Authorize(Roles="Administrateur")]
 <h3>InsertEntreprise</h3>
 <EditForm Model="Entreprise" method="Post" OnValidSubmit="Inserer">
     <DataAnnotationsValidator/>

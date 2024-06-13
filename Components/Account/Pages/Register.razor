@@ -3,13 +3,15 @@
 @using System.ComponentModel.DataAnnotations
 @using System.Text
 @using System.Text.Encodings.Web
+@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using blazor_gestconf.Data
 @using blazor_gestconf.Services
 @inject EntrepriseService EntrepriseService
 @inject UniversiteService UniversiteService
-
+@using Microsoft.AspNetCore.Identity
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<Utilisateur> UserManager
 @inject IUserStore<Utilisateur> UserStore
 @inject SignInManager<Utilisateur> SignInManager
@@ -17,6 +19,8 @@
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+
+
 
 <PageTitle>Register</PageTitle>
 
@@ -98,6 +102,18 @@
         Input.Role = Role;
         ListEntreprises = await EntrepriseService.GetAllAsync();
         ListUniversites = await UniversiteService.GetAllAsync();
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        var user = authState.User;
+
+        // Vérification des rôles et redirection
+        if (!user.Identity.IsAuthenticated && (!user.IsInRole("Administrateur") && (Role == "Administrateur" || Role == "MembreComite")))
+        {
+            NavigationManager.NavigateTo("/Account/AccessDenied");
+            return;
+        }
+
 
     }
 

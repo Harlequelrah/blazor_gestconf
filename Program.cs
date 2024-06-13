@@ -53,6 +53,20 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AdministrateurOnly", policy => policy.RequireRole("Administrateur"));
     options.AddPolicy("ParticipantOnly", policy => policy.RequireRole("Participant"));
     options.AddPolicy("MembreComiteOnly", policy => policy.RequireRole("MembreComite"));
+    options.AddPolicy("MembreComiteAuteurParticipant", policy =>
+        policy.RequireAssertion(context =>
+            context.User.IsInRole("MembreComite") ||
+            context.User.IsInRole("Auteur") ||
+            context.User.IsInRole("Participant")));
+    options.AddPolicy("AuteurParticipant", policy =>
+        policy.RequireAssertion(context =>
+            context.User.IsInRole("Auteur") ||
+            context.User.IsInRole("Participant")));
+    options.AddPolicy("RelecteurAuteurMembreComite", policy =>
+        policy.RequireAssertion(context =>
+            context.User.IsInRole("MembreComite") ||
+            context.User.IsInRole("Auteur") ||
+            context.User.IsInRole("Relecteur")));
 
 });
 // Connexion à la base de données
