@@ -1,8 +1,14 @@
 ﻿@page "/details/conference"
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
 @using blazor_gestconf.Models
 @using blazor_gestconf.Services
 @inject ConferenceService confCrud
+@inject ParticipantService parCrud
+@inject ParticipantConferenceService parConfCrud
+@inject UserManager<Utilisateur> UserManager
+@inject IHttpContextAccessor HttpContextAccessor
+@rendermode InteractiveServer
 
 <h3>Détails de la Conférence</h3>
 
@@ -38,25 +44,65 @@ else
         <dt class="list-group-item-dark">Date de clôture de la conférence :</dt>
         <dd class="list-group-item-dark">@conf.DateConferenceFin.ToString("yyyy-MM-dd")</dd>
     </dl>
-    @* <AuthorizeView Role="Auteur">
-        <Authorized> *@
-            <a href=@($"/add/Article?id={conf.Id}")><button class="btn-primary">Soumettre un article</button></a>
-    @*     </Authorized>
-    </AuthorizeView> *@
+    <div class="display-3">
+    <AuthorizeView Roles="Auteur">
+            <Authorized>
+                @if (conf.DateSoumissionFin >= dat)
+                {
+                    <a href=@($"/add/Article?id={conf.Id}")><button class="btn btn-primary mb-3">Soumettre un article</button></a>
+                }
+                else
+                {
+                    <p>Nous n'acceptions plus d'articles</p>
+                }
+            </Authorized>
+    </AuthorizeView>
+    <AuthorizeView Roles="Participant">
+        <Authorized>
+                @if (conf.DateInscriptionFin >= dat)
+                {
+                    <button class="btn btn-primary mb-3" @onclick="()=>AddParticipant()">Participer</button>
+                    <a href=@($"/show/participant/conference?id={userId}") class="text-decoration-none btn btn-info">go to conference reserved</a>
+                }
+                else
+                {
+                    <p>Vous ne pouvez plus réserver pour cette conférence</p>
+                }
+            </Authorized>
+    </AuthorizeView>
+    </div>
+
+
 }
 
 
 
 @code {
+
     [SupplyParameterFromQuery]
     public int id{ get; set; }
 
-    Conference? conf = new Conference();
+    private int userId{ get; set; }
+
+    public DateTime dat { get; set; } = DateTime.Now;
+
+    ParticipantConference? parConf = new ParticipantConference();
+
+    Conference conf = new Conference();
+
+    Participant par = new Participant();
 
     protected override async Task OnInitializedAsync()
     {
         conf = await confCrud.GetByIdAsync(id);
+        var user = await UserManager.GetUserAsync(HttpContextAccessor.HttpContext.User);
+        if (user != null)
+        {
+            userId = user.Id;
+        }
     }
-
-
+    public async Task AddParticipant()
+    {
+        await parConfCrud.AddConferenceToParticipantAsync(userId, id);
+    }
 }

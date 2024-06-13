@@ -76,6 +76,7 @@ builder.Services.AddScoped<RelecteurService>();
 builder.Services.AddScoped<ConferenceService>();
 builder.Services.AddScoped<RelectureService>();
 builder.Services.AddScoped<ParticipantService>();
+builder.Services.AddScoped<ParticipantConferenceService>();
 builder.Services.AddScoped<MembreComiteService>();
 builder.Services.AddScoped<AdministrateurService>();
 builder.Services.AddScoped<ArticleAuteurService>();

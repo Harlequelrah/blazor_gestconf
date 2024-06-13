@@ -1,0 +1,47 @@
+﻿@page "/show/participant/conference"
+@using blazor_gestconf.Models
+@using blazor_gestconf.Services
+@inject ParticipantConferenceService parConfCrud
+@rendermode InteractiveServer
+
+
+<h3>Afficher Conference pour un participant</h3>
+<br/>
+
+@if (conf == null)
+{
+    <p>Vous ne participez à aucune conférence actuellement</p>
+}
+else{
+    <table class="table table-bordered">
+        <tr>
+            <th>Nom</th>
+            <th>Sigle</th>
+            <th>Thème</th>
+            <th>Date d'ouverture de la conférence</th>
+            <th>Date de clôture de la conférence</th>
+        </tr>
+        @foreach(var c in conf!)
+    {
+        <tr>
+                <td>@c.Nom</td>
+                <td>@c.Sigle</td>
+                <td>@c.Theme</td>
+                <td>@c.DateConferenceDebut</td>
+                <td>@c.DateConferenceFin</td>
+        </tr>
+    }
+</table>
+}
+
+@code {
+    public List<Conference>? conf{ get; set; }
+
+    [SupplyParameterFromQuery]
+    public int id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        conf = await parConfCrud.GetAllParticipantConference(id);
+    }
+}

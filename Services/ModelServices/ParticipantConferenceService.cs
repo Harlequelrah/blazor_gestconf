@@ -5,16 +5,22 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using blazor_gestconf.Data;
 using blazor_gestconf.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace blazor_gestconf.Services
 {
-    public class ParticipantConferenceService : GenericCrudService<ParticipantConference>
+    public class ParticipantConferenceService
     {
-        public ParticipantConferenceService(ApplicationDbContext context) : base(context)
+        protected readonly ApplicationDbContext _context;
+        protected readonly UserManager<Utilisateur>? _userManager;
+
+
+        public ParticipantConferenceService(ApplicationDbContext context)
         {
+            _context = context;
         }
 
-        public override async Task<List<ParticipantConference>> GetAllAsync()
+        public async Task<List<ParticipantConference>> GetAllAsync()
         {
             try
             {
@@ -27,7 +33,7 @@ namespace blazor_gestconf.Services
             }
         }
 
-        public override async Task<ParticipantConference> GetByIdsAsync(int participantId, int conferenceId)
+        public async Task<ParticipantConference> GetByIdsAsync(int participantId, int conferenceId)
         {
             try
             {
@@ -41,22 +47,29 @@ namespace blazor_gestconf.Services
             }
         }
 
-        public override async Task<bool> AddAsync(ParticipantConference participantConference)
+        public async Task<bool> AddConferenceToParticipantAsync(int participantId, int conferenceId)
         {
             try
             {
+                var participantConference = new ParticipantConference
+                {
+                    ParticipantId = participantId,
+                    ConferenceId = conferenceId
+                };
+
                 _context.ParticipantConferences.Add(participantConference);
                 await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in AddAsync: {ex.Message}");
+                // Log the exception (you can use a logging framework here)
+                Console.WriteLine($"Error adding conference to participant: {ex.Message}");
                 return false;
             }
         }
 
-        public override async Task<bool> UpdateAsync(ParticipantConference participantConference)
+        public async Task<bool> UpdateAsync(ParticipantConference participantConference)
         {
             try
             {
@@ -71,7 +84,7 @@ namespace blazor_gestconf.Services
             }
         }
 
-        public override async Task<bool> DeletesAsync(int participantId, int conferenceId)
+        public async Task<bool> DeletesAsync(int participantId, int conferenceId)
         {
             try
             {
@@ -89,6 +102,14 @@ namespace blazor_gestconf.Services
                 Console.WriteLine($"Error in DeleteAsync: {ex.Message}");
                 return false;
             }
+        }
+        public async Task<List<Conference>> GetAllParticipantConference(int idParticipant)
+        {
+            return await _context.ParticipantConferences
+                .Where(pc => pc.ParticipantId == idParticipant)
+                .Select(pc => pc.Conference)
+                .ToListAsync();
+
         }
     }
 }

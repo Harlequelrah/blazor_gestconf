@@ -15,7 +15,7 @@ namespace blazor_gestconf.Data
         public DbSet<Article> Articles { get; set; }
         public DbSet<ArticleAuteur> ArticleAuteurs { get; set; }
         public DbSet<ParticipantConference> ParticipantConferences { get; set; }
-        public DbSet<ArticleRelecteur> ArticleRelecteurs { get; set; }
+        public DbSet<ArticleRelecteur> ArticleRelecteurs { get; set; }  
         public DbSet<Conference> Conferences { get; set; }
         public DbSet<Administrateur> Administrateurs { get; set; }
         public DbSet<Universite> Universites { get; set; }
@@ -71,8 +71,6 @@ namespace blazor_gestconf.Data
             modelBuilder.Entity<ArticleAuteur>()
                 .HasKey(aa => new { aa.ArticleId, aa.AuteurId });
 
-            modelBuilder.Entity<ParticipantConference>()
-                .HasKey(aa => new { aa.ParticipantId, aa.ConferenceId });
 
             modelBuilder.Entity<ArticleAuteur>()
                 .HasOne(aa => aa.Article)
@@ -80,14 +78,17 @@ namespace blazor_gestconf.Data
                 .HasForeignKey(aa => aa.ArticleId);
 
             modelBuilder.Entity<ParticipantConference>()
-                .HasOne(aa => aa.Participant)
-                .WithMany(a => a.Conferences)
-                .HasForeignKey(aa => aa.ParticipantId);
+            .HasKey(pc => new { pc.ParticipantId, pc.ConferenceId });
 
             modelBuilder.Entity<ParticipantConference>()
-                .HasOne(aa => aa.Conference)
-                .WithMany(a => a.Participants)
-                .HasForeignKey(aa => aa.ConferenceId);
+                .HasOne(pc => pc.Participant)
+                .WithMany(p => p.ParticipantConferences)
+                .HasForeignKey(pc => pc.ParticipantId);
+
+            modelBuilder.Entity<ParticipantConference>()
+                .HasOne(pc => pc.Conference)
+                .WithMany(c => c.ParticipantConferences)
+                .HasForeignKey(pc => pc.ConferenceId);
 
             modelBuilder.Entity<ArticleAuteur>()
                 .HasOne(aa => aa.Auteur)

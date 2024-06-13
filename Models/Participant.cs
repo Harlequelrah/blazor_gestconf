@@ -6,7 +6,7 @@ namespace blazor_gestconf.Models
     {
 
 
-        public ICollection<ParticipantConference> Conferences { get; set; } = new List<ParticipantConference>();
+        public ICollection<ParticipantConference> ParticipantConferences { get; set; }
 
         public Participant() : base()
         {

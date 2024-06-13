@@ -4,9 +4,6 @@ namespace blazor_gestconf.Models
 {
     public class Relecteur : Utilisateur
     {
-
-
-
         public Relecteur() : base()
         {
         }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using blazor_gestconf.Data;
 
@@ -11,9 +12,11 @@ using blazor_gestconf.Data;
 namespace blazor_gestconf.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240612121209_fifth")]
+    partial class fifth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -594,13 +597,13 @@ namespace blazor_gestconf.Migrations
             modelBuilder.Entity("blazor_gestconf.Models.ParticipantConference", b =>
                 {
                     b.HasOne("blazor_gestconf.Models.Conference", "Conference")
-                        .WithMany("ParticipantConferences")
+                        .WithMany("Participants")
                         .HasForeignKey("ConferenceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("blazor_gestconf.Models.Participant", "Participant")
-                        .WithMany("ParticipantConferences")
+                        .WithMany("Conferences")
                         .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -659,7 +662,7 @@ namespace blazor_gestconf.Migrations
                 {
                     b.Navigation("Articles");
 
-                    b.Navigation("ParticipantConferences");
+                    b.Navigation("Participants");
                 });
 
             modelBuilder.Entity("blazor_gestconf.Models.Relecture", b =>
@@ -675,7 +678,7 @@ namespace blazor_gestconf.Migrations
 
             modelBuilder.Entity("blazor_gestconf.Models.Participant", b =>
                 {
-                    b.Navigation("ParticipantConferences");
+                    b.Navigation("Conferences");
                 });
 
             modelBuilder.Entity("blazor_gestconf.Models.Relecteur", b =>

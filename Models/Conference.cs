@@ -34,7 +34,7 @@ namespace blazor_gestconf.Models
         public DateTime DateConferenceFin { get; set; } = DateTime.Now.Date;
         [Required(ErrorMessage = "Veuillez renseigner toutes les dates")]
 
-        public ICollection<ParticipantConference> Participants { get; set; } = new List<ParticipantConference>();
+        public ICollection<ParticipantConference> ParticipantConferences { get; set; }
         public ICollection<Article> Articles { get; set; }
     }
 }

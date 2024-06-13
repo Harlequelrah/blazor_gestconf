@@ -46,6 +46,8 @@ else
     public List<Conference>? Conf;
     public bool showDeleteConfirmationModal { get; set; } = false;
     public int articleIdToDelete { get; set; }
+    [SupplyParameterFromQuery]
+    public int idPar_Aut { get; set; }
     protected override async Task OnInitializedAsync()
     {
         Conf = await confCrud.GetAllAsync();

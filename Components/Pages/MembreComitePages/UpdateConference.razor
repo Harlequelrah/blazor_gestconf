@@ -1,15 +1,17 @@
 ﻿@page "/update/conference"
 @using blazor_gestconf.Models
 @using blazor_gestconf.Services
+@using Microsoft.AspNetCore.Components
 @inject ConferenceService confCrud
 @rendermode InteractiveServer
 
 <h3>Modifier une conférence</h3>
+
 <EditForm Model="Conf" method="Post" OnValidSubmit="Editer" FormName="Edition" >
     <DataAnnotationsValidator />
     <div class="mb-3">
         <label for="name" class="form-label">Nom :</label>
-        <InputText @bind-Value="Conf.Nom" class="form-control" id="name"></InputText>
+        <InputText @bind-Value="Conf!.Nom" class="form-control" id="name"></InputText>
         <ValidationMessage For="@(()=>Conf.Nom)" />
     </div>
     <div class="mb-3">
@@ -50,16 +52,28 @@
         <InputDate @bind-Value="Conf.DateConferenceFin" id="dateFinConference" class="form-control" />
     </div>
     <div class="mb-3">
-        <button type="submit" class="btn-dark">Modifier</button>
+        <button type="submit" class="btn-primary">Modifier</button>
     </div>
 </EditForm>
+
+@* @if (showConfirmation)
+{
+    <ModalSave Title="Confirmation" OnClose="CloseConfirmation">
+        <p>La conférence a bien été modifiée.</p>
+        
+    </ModalSave>
+} *@
 
 @code {
 
     [SupplyParameterFromQuery]
     public int id { get; set; }
-    [SupplyParameterFromForm(FormName ="Edition")]
-    public Conference Conf { get; set; } = new Conference();
+
+    [SupplyParameterFromForm(FormName = "Edition")]
+    public Conference? Conf { get; set; } = new Conference();
+
+    public bool showConfirmation { get; set; } = false;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -67,7 +81,14 @@
     }
     public async Task Editer()
     {
-        await confCrud.UpdateAsync(Conf);
+        await confCrud.UpdateAsync(Conf!);
+        showConfirmation = true;
+
     }
+
+    // private void CloseConfirmation()
+    // {
+    //     showConfirmation = false;
+    // }
 
 }
