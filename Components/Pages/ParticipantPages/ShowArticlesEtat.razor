@@ -1,0 +1,72 @@
+﻿@page "/showEtat/articles"
+@using blazor_gestconf.Models
+@using blazor_gestconf.Services
+@inject ArticleService artCrud
+@inject ArticleAuteurService artAutCrud
+@inject ConferenceService confCrud
+@rendermode InteractiveServer
+
+<h3>Consulter les articles</h3>
+
+@if (Arts == null)
+{
+    <p>Aucun Article n'a encore été soumis</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <tr>
+            <th>Titre</th>
+            <th>Article</th>
+            <th>Auteurs</th>
+            <th>Statut</th>
+            <th colspan="2">Action</th>
+        </tr>
+        @foreach (var a in Arts)
+        {
+            <tr>
+                <td>@a.Titre</td>
+                <td><a class="btn btn-primary text-decoration-none" href="@($"data:application/pdf;base64,{Convert.ToBase64String(a.FichierPdf)}")" download="@a.Titre">Consulter</a></td>
+                <td>
+                    @foreach(var at in Auts!){
+                        <span>@at.UserName</span>
+                    }
+                </td>
+                <td>@a.Statut</td>
+                @if (dat <= Conf!.DateConferenceFin)
+                {
+                    <td><a href=@($"/add/avis?id={a.Id}") class="btn btn-primary text-decoration-none">Donner Avis</a></td>
+                }
+                <td><a href=@($"/show/avis?id={a.Id}") class="btn btn-primary text-decoration-none">Voir tous les Avis</a></td>
+            </tr>
+        }
+    </table>
+}
+
+@code {
+    [SupplyParameterFromQuery]
+    public int id{ get; set; }
+    [SupplyParameterFromQuery]
+    public int conferenceId{ get; set; }
+
+    public List<Article>? Arts { get; set; }
+
+    public List<Auteur>? Auts{ get; set; }
+
+    public Conference? Conf { get; set; } = new Conference();
+
+    public DateTime dat { get; set; } = DateTime.Now;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Conference Conf = await confCrud.GetByIdAsync(conferenceId);
+        Arts = await artCrud.GetArticlesByConference(id);
+
+        foreach(var a in Arts)
+        {
+            Auts = await artAutCrud.GetArticlesByAuteurAsync(a.Id);
+        }
+        
+    }
+}

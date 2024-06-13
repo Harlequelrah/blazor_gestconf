@@ -8,12 +8,9 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @rendermode InteractiveServer
 @inject ArticleService articleCrud
-<<<<<<< HEAD
 <h3>Ajouter un Article</h3>
-=======
 @inject ArticleAuteurService ArtAutService
 <h3>InsertArticle</h3>
->>>>>>> origin/maxime
 <EditForm Model="Art" method="Post" OnValidSubmit="Inserer">
     <DataAnnotationsValidator/>
     <div class="mb-3">
@@ -57,7 +54,7 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         var userid = UserManager.GetUserId(user);
-        int userId=int.Parse(userid);
+        int userId=int.Parse(userid!);
         articleauteur.AuteurId=userId;
 
 

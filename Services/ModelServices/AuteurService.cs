@@ -78,7 +78,6 @@ namespace blazor_gestconf.Services
                 return false;
             }
         }
-
         public override async Task<bool> DeleteAsync(int id)
         {
             try

@@ -12,8 +12,8 @@ using blazor_gestconf.Data;
 namespace blazor_gestconf.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240612165306_six")]
-    partial class six
+    [Migration("20240613072821_nine")]
+    partial class nine
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -203,27 +203,6 @@ namespace blazor_gestconf.Migrations
                     b.ToTable("ArticleAuteurs");
                 });
 
-            modelBuilder.Entity("blazor_gestconf.Models.ArticleRelecteur", b =>
-                {
-                    b.Property<int>("ArticleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RelecteurId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RelectureId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ArticleId", "RelecteurId");
-
-                    b.HasIndex("RelecteurId");
-
-                    b.HasIndex("RelectureId")
-                        .IsUnique();
-
-                    b.ToTable("ArticleRelecteurs");
-                });
-
             modelBuilder.Entity("blazor_gestconf.Models.Conference", b =>
                 {
                     b.Property<int>("Id")
@@ -290,6 +269,25 @@ namespace blazor_gestconf.Migrations
                     b.ToTable("Entreprises");
                 });
 
+            modelBuilder.Entity("blazor_gestconf.Models.ParticipantAvis", b =>
+                {
+                    b.Property<int>("ParticipantId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ArticleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Avis")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("ParticipantId", "ArticleId");
+
+                    b.HasIndex("ArticleId");
+
+                    b.ToTable("ParticipantAviss");
+                });
+
             modelBuilder.Entity("blazor_gestconf.Models.ParticipantConference", b =>
                 {
                     b.Property<int>("ParticipantId")
@@ -307,17 +305,16 @@ namespace blazor_gestconf.Migrations
 
             modelBuilder.Entity("blazor_gestconf.Models.Relecture", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("ArticleId")
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("ArticleId")
-                        .IsRequired()
+                    b.Property<int>("RelecteurId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Comments")
+                    b.Property<int?>("AuteurId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Avis")
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Justification")
@@ -332,12 +329,9 @@ namespace blazor_gestconf.Migrations
                     b.Property<int>("NotePertinenceScientifique")
                         .HasColumnType("int");
 
-                    b.Property<int>("RelecteurId")
-                        .HasColumnType("int");
+                    b.HasKey("ArticleId", "RelecteurId");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("ArticleId");
+                    b.HasIndex("AuteurId");
 
                     b.HasIndex("RelecteurId");
 
@@ -569,29 +563,23 @@ namespace blazor_gestconf.Migrations
                     b.Navigation("Auteur");
                 });
 
-            modelBuilder.Entity("blazor_gestconf.Models.ArticleRelecteur", b =>
+            modelBuilder.Entity("blazor_gestconf.Models.ParticipantAvis", b =>
                 {
                     b.HasOne("blazor_gestconf.Models.Article", "Article")
-                        .WithMany("Relecteurs")
+                        .WithMany("ParticipantAviss")
                         .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("blazor_gestconf.Models.Relecteur", "Relecteur")
-                        .WithMany("Articles")
-                        .HasForeignKey("RelecteurId")
+                    b.HasOne("blazor_gestconf.Models.Participant", "Participant")
+                        .WithMany("ParticipantAviss")
+                        .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("blazor_gestconf.Models.Relecture", "Relecture")
-                        .WithOne("ArticleRelecteur")
-                        .HasForeignKey("blazor_gestconf.Models.ArticleRelecteur", "RelectureId");
-
                     b.Navigation("Article");
 
-                    b.Navigation("Relecteur");
-
-                    b.Navigation("Relecture");
+                    b.Navigation("Participant");
                 });
 
             modelBuilder.Entity("blazor_gestconf.Models.ParticipantConference", b =>
@@ -616,10 +604,14 @@ namespace blazor_gestconf.Migrations
             modelBuilder.Entity("blazor_gestconf.Models.Relecture", b =>
                 {
                     b.HasOne("blazor_gestconf.Models.Article", "Article")
-                        .WithMany()
+                        .WithMany("Relectures")
                         .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("blazor_gestconf.Models.Auteur", null)
+                        .WithMany("Relectures")
+                        .HasForeignKey("AuteurId");
 
                     b.HasOne("blazor_gestconf.Models.Relecteur", "Relecteur")
                         .WithMany("Relectures")
@@ -655,7 +647,9 @@ namespace blazor_gestconf.Migrations
                 {
                     b.Navigation("Auteurs");
 
-                    b.Navigation("Relecteurs");
+                    b.Navigation("ParticipantAviss");
+
+                    b.Navigation("Relectures");
                 });
 
             modelBuilder.Entity("blazor_gestconf.Models.Conference", b =>
@@ -665,26 +659,22 @@ namespace blazor_gestconf.Migrations
                     b.Navigation("ParticipantConferences");
                 });
 
-            modelBuilder.Entity("blazor_gestconf.Models.Relecture", b =>
-                {
-                    b.Navigation("ArticleRelecteur")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("blazor_gestconf.Models.Auteur", b =>
                 {
                     b.Navigation("Articles");
+
+                    b.Navigation("Relectures");
                 });
 
             modelBuilder.Entity("blazor_gestconf.Models.Participant", b =>
                 {
+                    b.Navigation("ParticipantAviss");
+
                     b.Navigation("ParticipantConferences");
                 });
 
             modelBuilder.Entity("blazor_gestconf.Models.Relecteur", b =>
                 {
-                    b.Navigation("Articles");
-
                     b.Navigation("Relectures");
                 });
 #pragma warning restore 612, 618

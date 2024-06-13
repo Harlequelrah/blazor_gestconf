@@ -266,6 +266,25 @@ namespace blazor_gestconf.Migrations
                     b.ToTable("Entreprises");
                 });
 
+            modelBuilder.Entity("blazor_gestconf.Models.ParticipantAvis", b =>
+                {
+                    b.Property<int>("ParticipantId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ArticleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Avis")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("ParticipantId", "ArticleId");
+
+                    b.HasIndex("ArticleId");
+
+                    b.ToTable("ParticipantAviss");
+                });
+
             modelBuilder.Entity("blazor_gestconf.Models.ParticipantConference", b =>
                 {
                     b.Property<int>("ParticipantId")
@@ -289,18 +308,10 @@ namespace blazor_gestconf.Migrations
                     b.Property<int>("RelecteurId")
                         .HasColumnType("int");
 
-<<<<<<< HEAD
-                    b.Property<int?>("ArticleId")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comments")
-=======
                     b.Property<int?>("AuteurId")
                         .HasColumnType("int");
 
                     b.Property<string>("Avis")
->>>>>>> origin/maxime
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Justification")
@@ -318,8 +329,6 @@ namespace blazor_gestconf.Migrations
                     b.HasKey("ArticleId", "RelecteurId");
 
                     b.HasIndex("AuteurId");
-
-                    b.HasIndex("ArticleId");
 
                     b.HasIndex("RelecteurId");
 
@@ -551,6 +560,25 @@ namespace blazor_gestconf.Migrations
                     b.Navigation("Auteur");
                 });
 
+            modelBuilder.Entity("blazor_gestconf.Models.ParticipantAvis", b =>
+                {
+                    b.HasOne("blazor_gestconf.Models.Article", "Article")
+                        .WithMany("ParticipantAviss")
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("blazor_gestconf.Models.Participant", "Participant")
+                        .WithMany("ParticipantAviss")
+                        .HasForeignKey("ParticipantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Article");
+
+                    b.Navigation("Participant");
+                });
+
             modelBuilder.Entity("blazor_gestconf.Models.ParticipantConference", b =>
                 {
                     b.HasOne("blazor_gestconf.Models.Conference", "Conference")
@@ -573,22 +601,15 @@ namespace blazor_gestconf.Migrations
             modelBuilder.Entity("blazor_gestconf.Models.Relecture", b =>
                 {
                     b.HasOne("blazor_gestconf.Models.Article", "Article")
-<<<<<<< HEAD
-                        .WithMany()
-=======
                         .WithMany("Relectures")
->>>>>>> origin/maxime
                         .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-<<<<<<< HEAD
-=======
                     b.HasOne("blazor_gestconf.Models.Auteur", null)
                         .WithMany("Relectures")
                         .HasForeignKey("AuteurId");
 
->>>>>>> origin/maxime
                     b.HasOne("blazor_gestconf.Models.Relecteur", "Relecteur")
                         .WithMany("Relectures")
                         .HasForeignKey("RelecteurId")
@@ -623,6 +644,8 @@ namespace blazor_gestconf.Migrations
                 {
                     b.Navigation("Auteurs");
 
+                    b.Navigation("ParticipantAviss");
+
                     b.Navigation("Relectures");
                 });
 
@@ -642,6 +665,8 @@ namespace blazor_gestconf.Migrations
 
             modelBuilder.Entity("blazor_gestconf.Models.Participant", b =>
                 {
+                    b.Navigation("ParticipantAviss");
+
                     b.Navigation("ParticipantConferences");
                 });
 

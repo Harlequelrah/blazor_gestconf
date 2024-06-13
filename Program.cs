@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System;
+using blazor_gestconf.Services.ModelServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -84,6 +85,7 @@ builder.Services.AddScoped<RelecteurService>();
 builder.Services.AddScoped<ConferenceService>();
 builder.Services.AddScoped<RelectureService>();
 builder.Services.AddScoped<ParticipantService>();
+builder.Services.AddScoped<ParticipantAvisService>();
 builder.Services.AddScoped<ParticipantConferenceService>();
 builder.Services.AddScoped<MembreComiteService>();
 builder.Services.AddScoped<AdministrateurService>();

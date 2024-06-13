@@ -15,11 +15,9 @@ namespace blazor_gestconf.Data
         public DbSet<Article> Articles { get; set; }
         public DbSet<ArticleAuteur> ArticleAuteurs { get; set; }
         public DbSet<ParticipantConference> ParticipantConferences { get; set; }
-<<<<<<< HEAD
-        public DbSet<ArticleRelecteur> ArticleRelecteurs { get; set; }  
-=======
-        // public DbSet<ArticleRelecteur> ArticleRelecteurs { get; set; }
->>>>>>> origin/maxime
+        public DbSet<ParticipantAvis> ParticipantAviss { get; set; }
+        //public DbSet<ArticleRelecteur> ArticleRelecteurs { get; set; }  
+
         public DbSet<Conference> Conferences { get; set; }
         public DbSet<Administrateur> Administrateurs { get; set; }
         public DbSet<Universite> Universites { get; set; }
@@ -72,7 +70,6 @@ namespace blazor_gestconf.Data
                 b.HasKey(ut => new { ut.UserId, ut.LoginProvider, ut.Name });
             });
 
-<<<<<<< HEAD
             modelBuilder.Entity<ArticleAuteur>()
                 .HasKey(aa => new { aa.ArticleId, aa.AuteurId });
 
@@ -82,8 +79,20 @@ namespace blazor_gestconf.Data
                 .WithMany(a => a.Auteurs)
                 .HasForeignKey(aa => aa.ArticleId);
 
-=======
->>>>>>> origin/maxime
+            modelBuilder.Entity<ParticipantAvis>()
+                .HasKey(pa => new { pa.ParticipantId, pa.ArticleId });
+
+            modelBuilder.Entity<ParticipantAvis>()
+                .HasOne(pa => pa.Participant)
+                .WithMany(p => p.ParticipantAviss)
+                .HasForeignKey(pa => pa.ParticipantId);
+
+            modelBuilder.Entity<ParticipantAvis>()
+                .HasOne(pa=>pa.Article)
+                .WithMany(a => a.ParticipantAviss)
+                .HasForeignKey(pa=>pa.ArticleId);
+
+
             modelBuilder.Entity<ParticipantConference>()
             .HasKey(pc => new { pc.ParticipantId, pc.ConferenceId });
 

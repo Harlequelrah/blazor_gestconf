@@ -40,6 +40,15 @@ namespace blazor_gestconf.Services
             }
         }
 
+        public async Task<List<Auteur>> GetArticlesByAuteurAsync(int articleId)
+        {
+            return await _context.ArticleAuteurs
+           .Where(aa => aa.ArticleId == articleId)
+           .Include(aa => aa.Auteur)
+           .Select(aa => aa.Auteur)
+           .ToListAsync();
+        }
+
         public  override async Task<bool> AddAsync(ArticleAuteur articleAuteur)
         {
             try

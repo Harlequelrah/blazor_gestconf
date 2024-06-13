@@ -20,6 +20,7 @@ else{
             <th>Thème</th>
             <th>Date d'ouverture de la conférence</th>
             <th>Date de clôture de la conférence</th>
+            <th>Article</th>
         </tr>
         @foreach(var c in conf!)
     {
@@ -29,6 +30,7 @@ else{
                 <td>@c.Theme</td>
                 <td>@c.DateConferenceDebut</td>
                 <td>@c.DateConferenceFin</td>
+                <td><a href=@($"/showEtat/articles?id={c.Id}") class="btn btn-primary">Consulter artciles</a></td>
         </tr>
     }
 </table>

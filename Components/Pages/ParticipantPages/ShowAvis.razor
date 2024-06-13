@@ -1,0 +1,48 @@
+﻿@page "/show/avis"
+@using blazor_gestconf.Models
+@using blazor_gestconf.Services.ModelServices
+@rendermode InteractiveServer
+@inject ParticipantAvisService paraCrud
+
+<h3>Voir les Avis</h3>
+
+@if (paras == null)
+{
+    <p>Aucun avis n'a été donné pour cet article</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <tr>
+            <td>Nom</td>
+            <td>Commentaire</td>
+        </tr>
+        @foreach (var p in paras!)
+        {
+            <tr>
+
+                <td>@p?.Participant?.UserName!.ToString()</td>
+                <td>@p.Avis</td>
+            </tr>
+        }
+    </table>
+}
+
+
+@code {
+    [SupplyParameterFromQuery]
+    public int id { get; set; }
+
+    public List<ParticipantAvis>? paras { get; set; }
+
+    public List<Participant>? pas { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        paras = await paraCrud.ShowAllAvis(id);
+        foreach(var p in paras)
+        {
+            pas = await paraCrud.GetParticipantsByArticleIdAsync(p.ArticleId);
+        }
+    }
+}

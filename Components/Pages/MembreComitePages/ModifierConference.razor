@@ -7,7 +7,7 @@
 
 <h3>Modifier une conférence</h3>
 
-<EditForm Model="Conf" method="Post" OnValidSubmit="Editer" FormName="Edition" >
+<EditForm Model="Conf" method="Post" OnValidSubmit="Editer" FormName="Edition">
     <DataAnnotationsValidator />
     <div class="mb-3">
         <label for="name" class="form-label">Nom :</label>
@@ -52,17 +52,17 @@
         <InputDate @bind-Value="Conf.DateConferenceFin" id="dateFinConference" class="form-control" />
     </div>
     <div class="mb-3">
-        <button type="submit" class="btn-primary">Modifier</button>
+        <button type="submit" class="btn-primary" @onclick="()=>Editer()">Modifier</button>
     </div>
 </EditForm>
 
-@* @if (showConfirmation)
+@if (showConfirmation)
 {
     <ModalSave Title="Confirmation" OnClose="CloseConfirmation">
         <p>La conférence a bien été modifiée.</p>
-        
+
     </ModalSave>
-} *@
+}
 
 @code {
 
@@ -86,9 +86,9 @@
 
     }
 
-    // private void CloseConfirmation()
-    // {
-    //     showConfirmation = false;
-    // }
+    private void CloseConfirmation()
+    {
+        showConfirmation = false;
+    }
 
 }

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace blazor_gestconf.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class seven : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

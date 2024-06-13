@@ -93,6 +93,14 @@ namespace blazor_gestconf.Services
                 .ToListAsync();
         }
 
+        public async Task<List<Article>> GetArticlesByConference(int conferenceId)
+        {
+            return await _context.Articles
+                .Where(a => a.ConferenceId == conferenceId)
+                .Include(a => a.Conference)
+                .ToListAsync();
+        }
+
         public async Task<List<Article>> GetArticlesByRelecteurAsync(int relecteurId)
         {
             return await _context.Articles

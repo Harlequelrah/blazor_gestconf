@@ -1,0 +1,62 @@
+﻿@page "/add/avis"
+@using Microsoft.AspNetCore.Identity
+@using blazor_gestconf.Models
+@using blazor_gestconf.Services.ModelServices
+@inject UserManager<Utilisateur> UserManager
+@inject IHttpContextAccessor HttpContextAccessor
+@rendermode InteractiveServer
+@inject ParticipantAvisService paraCrud
+
+<h3>Ajouter Un Avis</h3>
+
+<EditForm Model="paras" method="Post" OnValidSubmit="Inserer" FormName="AjouterAvis">
+    <DataAnnotationsValidator/>
+    <div class="mb-3">
+        <label class="form-label"></label>
+        <InputTextArea @bind-Value="paras!.Avis" class="form-control"></InputTextArea>
+        <ValidationMessage For="@(()=>paras!.Avis)"/>
+    </div>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-warning"  @onclick="()=>Inserer()">Ajouter</button>
+    </div>
+</EditForm>
+    
+
+@code {
+    [SupplyParameterFromQuery]
+    public int id { get; set; }
+
+    public int userId { get; set; }
+
+    [SupplyParameterFromForm]
+    public ParticipantAvis? paras { get; set; } = new ParticipantAvis();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await UserManager.GetUserAsync(HttpContextAccessor.HttpContext.User);
+        if (user != null)
+        {
+            userId = user.Id;
+        }
+    }
+    public async Task Inserer()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(paras!.Avis))
+            {
+                // Gestion des validations de base
+                throw new ArgumentException("L'avis ne peut pas être vide.");
+            }
+
+            await paraCrud.GiveAvis(userId, id, paras.Avis);
+            paras = new ParticipantAvis(); // Réinitialisation du formulaire après l'ajout
+        }
+        catch (Exception ex)
+        {
+            // Gestion des erreurs, par exemple en affichant un message d'erreur à l'utilisateur
+            Console.WriteLine($"Erreur: {ex.Message}");
+        }
+    }
+
+}
