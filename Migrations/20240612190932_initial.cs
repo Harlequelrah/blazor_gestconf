@@ -7,36 +7,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace blazor_gestconf.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Articles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    RelectureId = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Titre = table.Column<string>(type: "varchar(100)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "varchar(150)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    FichierPdf = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Statut = table.Column<string>(type: "varchar(100)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ConferenceId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Articles", x => x.Id);
-                })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
@@ -59,17 +35,127 @@ namespace blazor_gestconf.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Conferences",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Nom = table.Column<string>(type: "varchar(155)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Sigle = table.Column<string>(type: "varchar(155)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Theme = table.Column<string>(type: "varchar(155)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DateSoumissionDebut = table.Column<DateTime>(type: "Date", nullable: false),
+                    DateRemiseResultats = table.Column<DateTime>(type: "Date", nullable: false),
+                    DateSoumissionFin = table.Column<DateTime>(type: "Date", nullable: false),
+                    DateInscriptionDebut = table.Column<DateTime>(type: "Date", nullable: false),
+                    DateInscriptionFin = table.Column<DateTime>(type: "Date", nullable: false),
+                    DateConferenceDebut = table.Column<DateTime>(type: "Date", nullable: false),
+                    DateConferenceFin = table.Column<DateTime>(type: "Date", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Conferences", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Entreprises",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Nom = table.Column<string>(type: "varchar(155)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Adresse = table.Column<string>(type: "varchar(155)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Entreprises", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Universites",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Nom = table.Column<string>(type: "varchar(155)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Adresse = table.Column<string>(type: "varchar(155)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Universites", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "AspNetRoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    ClaimType = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ClaimValue = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Articles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Titre = table.Column<string>(type: "varchar(100)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Description = table.Column<string>(type: "varchar(150)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    FichierPdf = table.Column<byte[]>(type: "longblob", nullable: false),
+                    Statut = table.Column<string>(type: "varchar(100)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ConferenceId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Articles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Articles_Conferences_ConferenceId",
+                        column: x => x.ConferenceId,
+                        principalTable: "Conferences",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Discriminator = table.Column<string>(type: "varchar(21)", maxLength: 21, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Universite = table.Column<string>(type: "varchar(100)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Entreprise = table.Column<string>(type: "varchar(100)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UniversiteId = table.Column<int>(type: "int", nullable: true),
+                    EntrepriseId = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
@@ -96,54 +182,16 @@ namespace blazor_gestconf.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Conferences",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Nom = table.Column<string>(type: "varchar(155)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Sigle = table.Column<string>(type: "varchar(155)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Theme = table.Column<string>(type: "varchar(155)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    DateSoumissionDebut = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DateRemiseResultats = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DateSoumissionFin = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DateInscriptionDebut = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DateInscriptionFin = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DateConferenceDebut = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DateConferenceFin = table.Column<DateTime>(type: "datetime(6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Conferences", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    ClaimType = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ClaimValue = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
+                        name: "FK_AspNetUsers_Entreprises_EntrepriseId",
+                        column: x => x.EntrepriseId,
+                        principalTable: "Entreprises",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Universites_UniversiteId",
+                        column: x => x.UniversiteId,
+                        principalTable: "Universites",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -272,33 +320,6 @@ namespace blazor_gestconf.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Relectures",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    RelecteurId = table.Column<int>(type: "int", nullable: false),
-                    NoteFond = table.Column<int>(type: "int", nullable: false),
-                    NoteForme = table.Column<int>(type: "int", nullable: false),
-                    NotePertinenceScientifique = table.Column<int>(type: "int", nullable: false),
-                    Justification = table.Column<string>(type: "varchar(100)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Comments = table.Column<string>(type: "varchar(100)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Relectures", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Relectures_AspNetUsers_RelecteurId",
-                        column: x => x.RelecteurId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "ParticipantConferences",
                 columns: table => new
                 {
@@ -324,33 +345,40 @@ namespace blazor_gestconf.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "ArticleRelecteurs",
+                name: "Relectures",
                 columns: table => new
                 {
                     ArticleId = table.Column<int>(type: "int", nullable: false),
                     RelecteurId = table.Column<int>(type: "int", nullable: false),
-                    RelectureId = table.Column<int>(type: "int", nullable: true)
+                    NoteFond = table.Column<int>(type: "int", nullable: false),
+                    NoteForme = table.Column<int>(type: "int", nullable: false),
+                    NotePertinenceScientifique = table.Column<int>(type: "int", nullable: false),
+                    Justification = table.Column<string>(type: "varchar(100)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Avis = table.Column<string>(type: "varchar(100)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    AuteurId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ArticleRelecteurs", x => new { x.ArticleId, x.RelecteurId });
+                    table.PrimaryKey("PK_Relectures", x => new { x.ArticleId, x.RelecteurId });
                     table.ForeignKey(
-                        name: "FK_ArticleRelecteurs_Articles_ArticleId",
+                        name: "FK_Relectures_Articles_ArticleId",
                         column: x => x.ArticleId,
                         principalTable: "Articles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ArticleRelecteurs_AspNetUsers_RelecteurId",
+                        name: "FK_Relectures_AspNetUsers_AuteurId",
+                        column: x => x.AuteurId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Relectures_AspNetUsers_RelecteurId",
                         column: x => x.RelecteurId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ArticleRelecteurs_Relectures_RelectureId",
-                        column: x => x.RelectureId,
-                        principalTable: "Relectures",
-                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -360,15 +388,9 @@ namespace blazor_gestconf.Migrations
                 column: "AuteurId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ArticleRelecteurs_RelecteurId",
-                table: "ArticleRelecteurs",
-                column: "RelecteurId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ArticleRelecteurs_RelectureId",
-                table: "ArticleRelecteurs",
-                column: "RelectureId",
-                unique: true);
+                name: "IX_Articles_ConferenceId",
+                table: "Articles",
+                column: "ConferenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -397,6 +419,16 @@ namespace blazor_gestconf.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_EntrepriseId",
+                table: "AspNetUsers",
+                column: "EntrepriseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_UniversiteId",
+                table: "AspNetUsers",
+                column: "UniversiteId");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -406,6 +438,11 @@ namespace blazor_gestconf.Migrations
                 name: "IX_ParticipantConferences_ConferenceId",
                 table: "ParticipantConferences",
                 column: "ConferenceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relectures_AuteurId",
+                table: "Relectures",
+                column: "AuteurId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Relectures_RelecteurId",
@@ -418,9 +455,6 @@ namespace blazor_gestconf.Migrations
         {
             migrationBuilder.DropTable(
                 name: "ArticleAuteurs");
-
-            migrationBuilder.DropTable(
-                name: "ArticleRelecteurs");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -441,19 +475,25 @@ namespace blazor_gestconf.Migrations
                 name: "ParticipantConferences");
 
             migrationBuilder.DropTable(
-                name: "Articles");
-
-            migrationBuilder.DropTable(
                 name: "Relectures");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Conferences");
+                name: "Articles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Conferences");
+
+            migrationBuilder.DropTable(
+                name: "Entreprises");
+
+            migrationBuilder.DropTable(
+                name: "Universites");
         }
     }
 }

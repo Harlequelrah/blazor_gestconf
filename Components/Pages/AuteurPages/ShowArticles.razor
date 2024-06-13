@@ -1,10 +1,14 @@
 ﻿@page "/show/article"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
 @using blazor_gestconf.Models
 @using blazor_gestconf.Services
-@inject ArticleService articleCrud
+@inject UserManager<Utilisateur> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ArticleService ArticleService
 
+@attribute [Authorize(Roles = "Relecteur,Auteur,MembreComite")]
 <h3>Liste des articles</h3>
 
 @if (Articles == null)
@@ -19,6 +23,7 @@ else
             <th>Description</th>
             <th>Article</th>
             <th>Conference</th>
+            <th>Operation</th>
         </tr>
     @foreach(var a in Articles)
         {
@@ -29,7 +34,16 @@ else
                     <a class="btn btn-primary" href="@($"data:application/pdf;base64,{Convert.ToBase64String(a.FichierPdf)}")" download="@a.Titre">Télécharger</a>
                 </td>
                 <td>@a.Conference.Nom</td>
-                <AuthorizeView Role="Relecteur">
+                <AuthorizeView Policy="AuteurOnly">
+                    <Authorized>
+                        <td>
+                            <a href="@($"/consulter/article/{a.Id}")" class="btn btn-warning btn-sm mx-1" title="Evaluer">
+                            <i class="bi bi-pencil-square"></i> Consulter Statut
+                            </a>
+                        </td>
+                    </Authorized>
+                </AuthorizeView>
+                <AuthorizeView Policy="RelecteurOnly">
                     <Authorized>
                         <td>
                             <a href="@($"/evaluer/article/{a.Id}")" class="btn btn-warning btn-sm mx-1" title="Evaluer">
@@ -38,11 +52,11 @@ else
                         </td>
                     </Authorized>
                 </AuthorizeView>
-                <AuthorizeView Role="Auteur">
+                <AuthorizeView Policy="MembreComiteOnly">
                     <Authorized>
                         <td>
-                            <a href="@($"/soumettre/article/{a.Id}")" class="btn btn-warning btn-sm mx-1" title="Evaluer">
-                            <i class="bi bi-pencil-square"></i> Soumettre
+                            <a href="@($"/affecter/relecteur/article/{a.Id}")" class="btn btn-warning btn-sm mx-1" title="Evaluer">
+                            <i class="bi bi-pencil-square"></i> Affecter relecteur
                             </a>
                         </td>
                     </Authorized>
@@ -54,9 +68,27 @@ else
 }
 
 @code {
-    public List<Article>? Articles;
-    protected override async  Task OnInitializedAsync()
+    private List<Article>? Articles;
+
+    protected override async Task OnInitializedAsync()
     {
-        Articles = await articleCrud.GetAllAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var userid = UserManager.GetUserId(user);
+        int userId=int.Parse(userid);
+
+
+        if (user.IsInRole("Auteur"))
+        {
+            Articles = await ArticleService.GetArticlesByAuteurAsync(userId);
+        }
+        else if (user.IsInRole("Relecteur"))
+        {
+            Articles = await ArticleService.GetArticlesByRelecteurAsync(userId);
+        }
+        else if (user.IsInRole("MembreComite"))
+        {
+            Articles = await ArticleService.GetAllAsync();
+        }
     }
 }

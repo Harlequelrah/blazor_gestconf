@@ -55,6 +55,8 @@ namespace blazor_gestconf.Services
             }
         }
 
+
+
         public override async Task<bool> UpdateAsync(ArticleAuteur articleAuteur)
         {
             try

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using blazor_gestconf.Data;
 using blazor_gestconf.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace blazor_gestconf.Services
 {
@@ -58,6 +59,16 @@ namespace blazor_gestconf.Services
             }
         }
 
+        public async Task <int> GetLastInsertedId()
+    {
+        var task = Task.Run(() =>
+    {
+        return _context.Articles.OrderByDescending(a => a.Id).FirstOrDefault().Id;
+    });
+
+    return await task;
+    }
+
         public override async Task<bool> UpdateAsync(Article article)
         {
             try
@@ -73,6 +84,24 @@ namespace blazor_gestconf.Services
                 return false;
             }
         }
+
+        public async Task<List<Article>> GetArticlesByAuteurAsync(int auteurId)
+        {
+            return await _context.Articles
+                .Where(a => a.Auteurs.Any(aa => aa.AuteurId == auteurId))
+                .Include(a => a.Conference) // Inclure la conférence si nécessaire
+                .ToListAsync();
+        }
+
+        public async Task<List<Article>> GetArticlesByRelecteurAsync(int relecteurId)
+        {
+            return await _context.Articles
+                .Where(a => a.Relectures.Any(r => r.RelecteurId == relecteurId))
+                .Include(a => a.Conference) // Inclure la conférence si nécessaire
+                .ToListAsync();
+        }
+
+
 
         public override async Task<bool> DeleteAsync(int id)
         {

@@ -15,6 +15,7 @@ namespace blazor_gestconf.Models
         [ForeignKey("EntrepriseId")] // Spécifie la clé étrangère
         public Entreprise Entreprise { get; set; }
         public ICollection<ArticleAuteur> Articles { get; set; } = new List<ArticleAuteur>();
+        public ICollection<Relecture> Relectures { get; set; } = new List<Relecture>();
 
 
 

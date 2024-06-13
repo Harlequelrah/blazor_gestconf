@@ -45,7 +45,15 @@ builder.Services.AddAuthentication(options =>
 
 
 builder.Services.AddAuthorizationCore();
-
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RelecteurOnly", policy => policy.RequireRole("Relecteur"));
+    options.AddPolicy("AuteurOnly", policy => policy.RequireRole("Auteur"));
+    options.AddPolicy("AdministrateurOnly", policy => policy.RequireRole("Administrateur"));
+    options.AddPolicy("ParticipantOnly", policy => policy.RequireRole("Participant"));
+    options.AddPolicy("MembreComiteOnly", policy => policy.RequireRole("MembreComite"));
+    // Ajoutez d'autres policies si nécessaire
+});
 // Connexion à la base de données
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
@@ -80,7 +88,7 @@ builder.Services.AddScoped<ParticipantConferenceService>();
 builder.Services.AddScoped<MembreComiteService>();
 builder.Services.AddScoped<AdministrateurService>();
 builder.Services.AddScoped<ArticleAuteurService>();
-builder.Services.AddScoped<ArticleRelecteurService>();
+// builder.Services.AddScoped<ArticleRelecteurService>();
 
 var app = builder.Build();
 

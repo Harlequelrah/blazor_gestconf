@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using blazor_gestconf.Models
 @using blazor_gestconf.Services
+@inject IJSRuntime JS
 @using Microsoft.AspNetCore.WebUtilities
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
@@ -78,7 +79,9 @@ else
 
     protected async Task Delete(int id)
     {
-        bool result = await universiteService.DeleteAsync(id);
+        var confirmDelete = await JS.InvokeAsync<bool>("confirm", "Voulez-vous vraiment supprimer cette universite ?");
+        if (confirmDelete){
+            bool result = await universiteService.DeleteAsync(id);
         if (result)
         {
             message = "L'universite a été supprimée avec succès";
@@ -90,5 +93,8 @@ else
             message = "Échec de la suppression de l'universite";
             tag = "alert alert-danger";
         }
+
+        }
+
     }
 }
