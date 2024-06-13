@@ -21,7 +21,7 @@ namespace blazor_gestconf.Models
 
         public ICollection<ArticleAuteur> Auteurs { get; set; } = new List<ArticleAuteur>();
         public ICollection<Relecture> Relectures { get; set; } = new List<Relecture>();
-        public ICollection<ParticipantAvis> ParticipantAviss { get; set; }
+        public ICollection<ParticipantAvis> ParticipantAvis { get; set; }
         // public ICollection<ArticleRelecteur> Relecteurs { get; set; } = new List<ArticleRelecteur>();
 
         public Article(){

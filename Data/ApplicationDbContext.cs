@@ -15,6 +15,7 @@ namespace blazor_gestconf.Data
         public DbSet<Article> Articles { get; set; }
         public DbSet<ArticleAuteur> ArticleAuteurs { get; set; }
         public DbSet<ParticipantConference> ParticipantConferences { get; set; }
+        public DbSet<ParticipantAvis> ParticipantAvis { get; set; }
 
 
 
@@ -130,6 +131,19 @@ namespace blazor_gestconf.Data
                 .HasOne(aa => aa.Auteur)
                 .WithMany(a => a.Articles)
                 .HasForeignKey(aa => aa.AuteurId);
+
+            modelBuilder.Entity<ParticipantAvis>()
+                .HasKey(pa => new { pa.ParticipantId, pa.ArticleId });
+
+            modelBuilder.Entity<ParticipantAvis>()
+                .HasOne(pa => pa.Participant)
+                .WithMany(p => p.ParticipantAvis)
+                .HasForeignKey(pa => pa.ParticipantId);
+
+            modelBuilder.Entity<ParticipantAvis>()
+                .HasOne(pa=>pa.Article)
+                .WithMany(a => a.ParticipantAvis)
+                .HasForeignKey(pa=>pa.ArticleId);
 
 
             // modelBuilder.Entity<ArticleRelecteur>()

@@ -7,7 +7,7 @@ namespace blazor_gestconf.Models
 
 
         public ICollection<ParticipantConference> ParticipantConferences { get; set; }
-        public ICollection<ParticipantAvis> ParticipantAviss { get; set; }
+        public ICollection<ParticipantAvis> ParticipantAvis { get; set; }
 
         public Participant() : base()
         {

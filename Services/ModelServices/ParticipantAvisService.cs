@@ -18,19 +18,19 @@ namespace blazor_gestconf.Services.ModelServices
         }
         public async Task<List<Participant>> GetParticipantsByArticleIdAsync(int articleId)
         {
-            return await _context.ParticipantAviss
+            return await _context.ParticipantAvis
                 .Where(pa => pa.ArticleId == articleId)
                 .Include(pa => pa.Participant)
                 .Select(pa => pa.Participant)
                 .ToListAsync();
-        }   
+        }
 
         public async Task GiveAvis(int participantId, int articleId, string avis)
         {
             try
             {
                 // Vérifier si un avis existe déjà
-                var existingAvis = await _context.ParticipantAviss
+                var existingAvis = await _context.ParticipantAvis
                     .FirstOrDefaultAsync(pa => pa.ParticipantId == participantId && pa.ArticleId == articleId);
 
                 if (existingAvis != null)
@@ -46,7 +46,7 @@ namespace blazor_gestconf.Services.ModelServices
                     Avis = avis // Assurez-vous que la propriété Avis est correctement assignée
                 };
 
-                _context.ParticipantAviss.Add(participantAvis);
+                _context.ParticipantAvis.Add(participantAvis);
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -59,7 +59,7 @@ namespace blazor_gestconf.Services.ModelServices
 
         public async Task<List<ParticipantAvis>> ShowAllAvis(int articleId)
         {
-            return await _context.ParticipantAviss
+            return await _context.ParticipantAvis
                 .Where(pa=>pa.ArticleId==articleId)
                 .Include(pa=>pa.Participant)
                 .Include(pa=>pa.Article)
