@@ -1,4 +1,4 @@
-@page "/consuler/article/{ArticleId}"
+@page "/consulter/article/{ArticleId:int}"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Identity
@@ -7,38 +7,55 @@
 @inject UserManager<Utilisateur> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ArticleService ArticleService
+@attribute [Authorize(Roles = "Auteur,MembreComite")]
+<h1>@article?.Titre</h1>
+<h3>@article?.Description</h3>
 
-<h1>@article.Titre</h1>
-<h3>@article.Description</h3>
+<p> Statut Global : @article?.Statut ?? "Indisponible" </p>
 
-<p> Statut Global : @article.Statut? </p>
+@if (Relectures != null && Relectures.Any())
+{
     <table class="table table-bordered">
-
-    @foreach(var r in Relectures)
-        {
-        <tr>
-            <th>Relecteur</th>
-            <th>Avis</th>
-            <th>Justification</th>
-        </tr>
+        <thead>
             <tr>
-                <td>@r.Relecteur.UserName</td>
-                <td>@r.Avis</td>
-                <td>@r.Justification</td>
+                <th>Relecteur</th>
+                <th>Avis</th>
+                <th>Justification</th>
             </tr>
-        }
+        </thead>
+        <tbody>
+            @foreach(var r in Relectures)
+            {
+                <tr>
+                    <td>@r.Relecteur?.UserName</td>
+                    <td>@r.Avis</td>
+                    <td>@r.Justification</td>
+                    <td>
+                        <a href="@($"/donneravis/article/{r.RelecteurId}/{r.ArticleId}")" class="btn btn-warning btn-sm mx-1" title="Evaluer">
+                        <i class="bi bi-pencil-square"></i> Donner Avis et Justificatif
+                        </a>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
     </table>
+}
+else
+{
+    <p>Aucune relecture trouvée pour cet article.</p>
+}
 
 @code {
-    private Article? article;
+    private Article article;
+    private List<Relecture> Relectures;
+
     [Parameter]
     public int ArticleId { get; set; }
-
-    private List<Relecture>? Relectures ;
 
     protected override async Task OnInitializedAsync()
     {
         article = await ArticleService.GetByIdAsync(ArticleId);
-        Relectures=article.Relectures.ToList();
+        Relectures = article?.Relectures.ToList() ?? new List<Relecture>();
     }
 }

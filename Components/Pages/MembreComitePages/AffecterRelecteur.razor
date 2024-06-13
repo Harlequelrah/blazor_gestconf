@@ -37,7 +37,7 @@ else
                 <td>@a.Email</td>
                 <td>
                     <button class="btn btn-danger text-dark" @onclick="() => Affecter(a.Id)" title="Affecter">
-                        <i class="bi bi-trash"></i> Affecter
+                        <i class="bi bi-pencil-square"></i> Affecter
                     </button>
                 </td>
             </tr>
@@ -54,20 +54,30 @@ else
     [Parameter]
     public int ArticleId { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected  override async Task OnInitializedAsync()
     {
         Relecteurs = await relecteurService.GetAllAsync();
         Relecture = new Relecture();
 
     }
 
-    protected async Task Affecter(int id)
+    protected  async Task Affecter(int id)
     {
         Article article = await ArticleService.GetByIdAsync(ArticleId);
+        List<ArticleAuteur> auteurs = article.Auteurs.ToList();
 
-        Relecture.Article = article;
-       // Relecture.ArticleId=ArticleId;
-        Relecture.RelecteurId=id;
+        if (auteurs.Any())
+{
+    // Récupérez l'Id du premier auteur
+    int premierAuteurId = auteurs.First().AuteurId;
+
+    // Initialisez votre objet Relecture
+    Relecture relecture = new Relecture
+    {      // Assignez l'article
+        ArticleId = ArticleId,      // Assignez l'Id de l'article (optionnel)
+        RelecteurId = id,           // Assignez l'Id du relecteur
+        AuteurId = premierAuteurId  // Assignez l'Id du premier auteur
+    };
         var confirmAffectation = await JS.InvokeAsync<bool>("confirm", "Voulez-vous vraiment Affecter ce relecteur ?");
         if (confirmAffectation){
             bool result = await RelectureService.AddAsync(Relecture);
@@ -76,8 +86,10 @@ else
             Relecteurs = await relecteurService.GetAllAsync();
             Relecture = new Relecture();
         }
-        }
         Navigation.NavigateTo("show/article");
+        }
+
 
     }
+}
 }

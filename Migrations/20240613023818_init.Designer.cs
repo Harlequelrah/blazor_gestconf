@@ -12,8 +12,8 @@ using blazor_gestconf.Data;
 namespace blazor_gestconf.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240612190932_initial")]
-    partial class initial
+    [Migration("20240613023818_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -547,13 +547,13 @@ namespace blazor_gestconf.Migrations
             modelBuilder.Entity("blazor_gestconf.Models.ParticipantConference", b =>
                 {
                     b.HasOne("blazor_gestconf.Models.Conference", "Conference")
-                        .WithMany("Participants")
+                        .WithMany("ParticipantConferences")
                         .HasForeignKey("ConferenceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("blazor_gestconf.Models.Participant", "Participant")
-                        .WithMany("Conferences")
+                        .WithMany("ParticipantConferences")
                         .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -616,7 +616,7 @@ namespace blazor_gestconf.Migrations
                 {
                     b.Navigation("Articles");
 
-                    b.Navigation("Participants");
+                    b.Navigation("ParticipantConferences");
                 });
 
             modelBuilder.Entity("blazor_gestconf.Models.Auteur", b =>
@@ -628,7 +628,7 @@ namespace blazor_gestconf.Migrations
 
             modelBuilder.Entity("blazor_gestconf.Models.Participant", b =>
                 {
-                    b.Navigation("Conferences");
+                    b.Navigation("ParticipantConferences");
                 });
 
             modelBuilder.Entity("blazor_gestconf.Models.Relecteur", b =>

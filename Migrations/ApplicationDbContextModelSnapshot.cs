@@ -289,18 +289,10 @@ namespace blazor_gestconf.Migrations
                     b.Property<int>("RelecteurId")
                         .HasColumnType("int");
 
-<<<<<<< HEAD
-                    b.Property<int?>("ArticleId")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comments")
-=======
-                    b.Property<int?>("AuteurId")
+                    b.Property<int>("AuteurId")
                         .HasColumnType("int");
 
                     b.Property<string>("Avis")
->>>>>>> origin/maxime
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Justification")
@@ -318,8 +310,6 @@ namespace blazor_gestconf.Migrations
                     b.HasKey("ArticleId", "RelecteurId");
 
                     b.HasIndex("AuteurId");
-
-                    b.HasIndex("ArticleId");
 
                     b.HasIndex("RelecteurId");
 
@@ -436,10 +426,10 @@ namespace blazor_gestconf.Migrations
                 {
                     b.HasBaseType("blazor_gestconf.Models.Utilisateur");
 
-                    b.Property<int>("EntrepriseId")
+                    b.Property<int?>("EntrepriseId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UniversiteId")
+                    b.Property<int?>("UniversiteId")
                         .HasColumnType("int");
 
                     b.HasIndex("EntrepriseId");
@@ -573,22 +563,17 @@ namespace blazor_gestconf.Migrations
             modelBuilder.Entity("blazor_gestconf.Models.Relecture", b =>
                 {
                     b.HasOne("blazor_gestconf.Models.Article", "Article")
-<<<<<<< HEAD
-                        .WithMany()
-=======
                         .WithMany("Relectures")
->>>>>>> origin/maxime
                         .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-<<<<<<< HEAD
-=======
-                    b.HasOne("blazor_gestconf.Models.Auteur", null)
+                    b.HasOne("blazor_gestconf.Models.Auteur", "Auteur")
                         .WithMany("Relectures")
-                        .HasForeignKey("AuteurId");
+                        .HasForeignKey("AuteurId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
->>>>>>> origin/maxime
                     b.HasOne("blazor_gestconf.Models.Relecteur", "Relecteur")
                         .WithMany("Relectures")
                         .HasForeignKey("RelecteurId")
@@ -597,6 +582,8 @@ namespace blazor_gestconf.Migrations
 
                     b.Navigation("Article");
 
+                    b.Navigation("Auteur");
+
                     b.Navigation("Relecteur");
                 });
 
@@ -604,15 +591,11 @@ namespace blazor_gestconf.Migrations
                 {
                     b.HasOne("blazor_gestconf.Models.Entreprise", "Entreprise")
                         .WithMany()
-                        .HasForeignKey("EntrepriseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EntrepriseId");
 
                     b.HasOne("blazor_gestconf.Models.Universite", "Universite")
                         .WithMany()
-                        .HasForeignKey("UniversiteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UniversiteId");
 
                     b.Navigation("Entreprise");
 

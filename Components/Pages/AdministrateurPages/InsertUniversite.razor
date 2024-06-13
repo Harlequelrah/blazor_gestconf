@@ -6,7 +6,7 @@
 @inject UniversiteService universiteService
 <h3>InsertUniversite</h3>
 <EditForm Model="Universite" method="Post" OnValidSubmit="Inserer">
-    <DataAnnotationsValidator/>
+<DataAnnotationsValidator/>
     <div class="mb-3">
         <label for="nom" class="form-label">Nom :</label>
         <InputText @bind-Value="Universite.Nom" class="form-control" id="title"></InputText>
